@@ -2,16 +2,28 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### 1. Set up environment variables
+
+Create a `.env.local` file in the root directory with your database credentials:
 
 ```bash
-npm run dev
+DATABASE_URL="your-neon-database-url"
+```
+
+### 2. Generate and apply database migrations
+
+```bash
+pnpm drizzle-kit generate  # Generate migration files from schema
+pnpm drizzle-kit migrate   # Apply migrations to database
+```
+
+### 3. Run the development server
+
+```bash
+pnpm dev          # Start development server
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm build        # Build for production
+pnpm start        # Start production server
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
