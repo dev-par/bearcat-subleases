@@ -8,6 +8,13 @@
       "when": 1772259341131,
       "tag": "0000_thankful_bruce_banner",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772295103013,
+      "tag": "0001_aromatic_captain_cross",
+      "breakpoints": true
     }
   ]
 }

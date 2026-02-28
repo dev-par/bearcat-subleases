@@ -1,27 +1,37 @@
-import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { varchar, pgTable, uuid, boolean, smallint, timestamp, integer, date, pgEnum } from 'drizzle-orm/pg-core';
 
-export const usersTable = pgTable('users_table', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  age: integer('age').notNull(),
-  email: text('email').notNull().unique(),
+export const User = pgTable('user', {
+  id: uuid().defaultRandom().primaryKey(),
+  email: varchar({ length: 255 }).notNull().unique(),
+  name: varchar({ length: 255 }).notNull(),
+  email_verified: boolean().default(false),
+  grad_year: smallint(),
+  major: varchar({ length: 100 }),
+  bio: varchar({ length: 512 }),
+  created_at: timestamp().defaultNow(),
+  updated_at: timestamp().defaultNow(),
 });
 
-export const postsTable = pgTable('posts_table', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  content: text('content').notNull(),
-  userId: integer('user_id')
-    .notNull()
-    .references(() => usersTable.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at')
-    .notNull()
-    .$onUpdate(() => new Date()),
-});
 
-export type InsertUser = typeof usersTable.$inferInsert;
-export type SelectUser = typeof usersTable.$inferSelect;
+export const statusEnum = pgEnum('status', ['active', 'inactive'])
 
-export type InsertPost = typeof postsTable.$inferInsert;
-export type SelectPost = typeof postsTable.$inferSelect;
+export const roomTypeEnum = pgEnum('room_type', ['private', 'shared'])
+
+export const Listing = pgTable('listing', {
+    id: uuid().defaultRandom().primaryKey(),
+    title: varchar({ length: 255 }).notNull(),
+    description: varchar({ length: 512 }),
+    address: varchar({ length: 255 }),
+    rent_cents: integer().notNull(),
+    start_date: date().notNull(),
+    end_date: date().notNull(),
+    room_type: roomTypeEnum(),
+    bedrooms_in_unit: smallint().notNull(),
+    bathrooms_in_unit_x2: smallint().notNull(),
+    private_bathroom: boolean().notNull(),
+    status: statusEnum().notNull().default('active'),
+    created_at: timestamp().defaultNow(),
+    updated_at: timestamp().defaultNow(),
+    furnished: boolean().notNull(),
+    user_id: uuid().references(() => User.id)
+})
