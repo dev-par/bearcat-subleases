@@ -1,5 +1,5 @@
 import { varchar, pgTable, uuid, boolean, smallint, timestamp, integer, date, pgEnum } from 'drizzle-orm/pg-core';
-import {relations} from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 
 export const User = pgTable('user', {
   id: uuid().defaultRandom().primaryKey(),
@@ -36,3 +36,15 @@ export const Listing = pgTable('listing', {
     furnished: boolean().notNull(),
     user_id: uuid().references(() => User.id)
 })
+
+
+export const userRelations = relations(User, ({ many }) => ({
+  listings: many(Listing),
+}));
+
+export const listingRelations = relations(Listing, ({ one }) => ({
+  user: one(User, {
+    fields: [Listing.user_id],
+    references: [User.id],
+  })
+}));
