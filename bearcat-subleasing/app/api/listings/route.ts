@@ -7,6 +7,9 @@ export async function GET() {
         return NextResponse.json(listings);
     }
     catch (error) {
-        return NextResponse.json({error: 'failed to fetch listings'})
+        return NextResponse.json(
+            {error: 'failed to fetch listings'},
+            {status: 500}
+        )
     }
 }
