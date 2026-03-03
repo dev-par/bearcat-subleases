@@ -30,8 +30,10 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // named with date to mullisecond and filename
-        const filename = `listing_images/${Date.now()}-${file.name}`;
+        // named with date to millisecond and filename
+        const filename = `profile_images/${Date.now()}-${file.name}`;
+
+        console.log(`Profile photo updated successfully`);
 
         // convert file into buffer for upload
         const bytes = await file.arrayBuffer();
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     catch (error) {
-        console.error("Error uploading to s3:", error)
+        console.error("Error uploading profile photo to s3:", error)
         return NextResponse.json(
             {error: "Upload failed"},
             {status: 500}
