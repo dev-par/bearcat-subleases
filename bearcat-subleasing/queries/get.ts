@@ -6,7 +6,11 @@ export async function getUsers() {
 }
 
 export async function getListings() {
-    return await db.query.Listing.findMany();
+    return await db.query.Listing.findMany({
+        with: {
+            listingImages: true
+        }
+    })
 }
 
 export async function getUsersWithListings() {

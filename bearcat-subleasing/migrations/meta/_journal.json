@@ -15,6 +15,20 @@
       "when": 1772295103013,
       "tag": "0001_aromatic_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772730111768,
+      "tag": "0002_adorable_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772731707670,
+      "tag": "0003_gorgeous_loki",
+      "breakpoints": true
     }
   ]
 }

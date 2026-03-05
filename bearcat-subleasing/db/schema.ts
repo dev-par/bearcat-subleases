@@ -34,7 +34,14 @@ export const Listing = pgTable('listing', {
     created_at: timestamp().defaultNow(),
     updated_at: timestamp().defaultNow(),
     furnished: boolean().notNull(),
-    user_id: uuid().references(() => User.id)
+    user_id: uuid().references(() => User.id),
+})
+
+export const ListingImage = pgTable('listing_image', {
+    id: uuid().defaultRandom().primaryKey(),
+    listing_id: uuid().references(() => Listing.id).notNull(),
+    url: varchar({ length: 512 }).notNull(),
+    created_at: timestamp().defaultNow(),
 })
 
 
@@ -42,9 +49,17 @@ export const userRelations = relations(User, ({ many }) => ({
   listings: many(Listing),
 }));
 
-export const listingRelations = relations(Listing, ({ one }) => ({
+export const listingRelations = relations(Listing, ({ one, many }) => ({
   user: one(User, {
     fields: [Listing.user_id],
     references: [User.id],
-  })
+  }),
+  listingImages: many(ListingImage),
 }));
+
+export const listingImageRelations = relations(ListingImage, ({ one }) => ({
+  listing: one(Listing, {
+    fields: [ListingImage.listing_id],
+    references: [Listing.id],
+  }),
+}))
