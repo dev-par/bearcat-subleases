@@ -1,5 +1,6 @@
 import { getListings } from "@/queries/get"
 import ListingCard from "./components/ListingCard"
+import Link from "next/link";
 
 export default async function ListingsPage() {
   const listings = await getListings();
@@ -8,7 +9,9 @@ export default async function ListingsPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
          <h1 className="text-3xl font-bold md-8">Available Subleases</h1>
-         <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Create new listing</button>
+         <Link href="/listings/create">
+          <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Create new listing</button>
+         </Link>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
