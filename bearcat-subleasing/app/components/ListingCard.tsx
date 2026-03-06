@@ -7,7 +7,7 @@ interface ListingCardProps {
 
 export default function ListingCard({listing}: ListingCardProps) {
 
-    const imageUrl = listing.listingImages?.[0].url || "/placeholder.jpg";
+    const imageUrl = listing.listingImages?.[0]?.url || "/house.jpg";
 
     return (
         <div className="border rounded shadow">
