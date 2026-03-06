@@ -1,3 +1,6 @@
+import { LargeNumberLike } from "crypto";
+import { ApplyNotNullMapToJoins } from "drizzle-orm/query-builders/select.types";
+
 export interface ListingImage {
     id: string;
     listing_id: string;
@@ -23,4 +26,19 @@ export interface Listing {
     furnished: boolean;
     user_id: string | null;
     listingImages: ListingImage[];
+}
+
+export interface CreateListingInput {
+    title: string;
+    description: string | null;
+    address: string | null;
+    rent_cents: number;
+    start_date: string;
+    end_date: string;
+    room_type: "private" | "shared" | null;
+    bedrooms_in_unit: number;
+    bathrooms_in_unit_x2: number;
+    private_bathroom: boolean;
+    furnished: boolean;
+    user_id: string;
 }

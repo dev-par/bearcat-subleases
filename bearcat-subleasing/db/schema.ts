@@ -34,7 +34,7 @@ export const Listing = pgTable('listing', {
     created_at: timestamp().defaultNow(),
     updated_at: timestamp().defaultNow(),
     furnished: boolean().notNull(),
-    user_id: uuid().references(() => User.id),
+    user_id: uuid().references(() => User.id).notNull(),
 })
 
 export const ListingImage = pgTable('listing_image', {
