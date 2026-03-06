@@ -2,6 +2,7 @@ import { getListingById } from "@/queries/get";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import DeleteButton from "@/app/components/DeleteButton";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -129,6 +130,8 @@ export default async function Page({
 					<button className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold">
 						Contact Landlord
 					</button>
+
+					<DeleteButton listingId={listing.id} />
 				</div>
 			</div>
 		</div>

@@ -56,6 +56,7 @@ export default function CreatePage() {
                     user_id: "9ecb2d33-5a85-40dd-8791-073afdc87154",
                 }
 
+                
                 const res = await fetch('/api/listings', {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json' },
