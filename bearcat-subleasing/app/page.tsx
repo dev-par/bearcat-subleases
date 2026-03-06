@@ -2,6 +2,8 @@ import { getListings } from "@/queries/get"
 import ListingCard from "./components/ListingCard"
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic'
+
 export default async function ListingsPage() {
   const listings = await getListings();
 
