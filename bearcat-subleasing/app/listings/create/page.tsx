@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { CreateListingInput } from "@/types/listing";
+import Link from "next/link";
 
 export default function CreatePage() {
     const router = useRouter();
@@ -81,6 +82,9 @@ export default function CreatePage() {
 
     return (
         <div className="max-w-lg mx-auto py-8 px-4">
+            <Link href="/" className="text-blue-600 hover:underline mb-4 inline-block">
+                ← Back to listings
+            </Link>
             <h1>Create Listing</h1>
 
             <form onSubmit={handleSubmit} className="space-y-4">
