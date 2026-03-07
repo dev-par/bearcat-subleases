@@ -39,6 +39,9 @@ export default function CreatePage() {
                 if (uploadData.success) {
                     imageUrls.push(uploadData.url)
                 }
+                else {
+                    throw new Error(uploadData.error || "Failed to upload image")
+                }
             }
 
                 const listingData: CreateListingInput = {
