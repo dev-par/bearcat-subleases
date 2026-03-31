@@ -1,121 +1,112 @@
 # Bearcat Subleasing
 
-A verified student marketplace designed specifically for University of Cincinnati students to post and find short-term subleases.
+Bearcat Subleasing is a University of Cincinnati housing marketplace for short-term student subleases. The app is currently focused on local development and MVP iteration.
 
-## About
+## Current State
 
-Bearcat Subleasing provides a simple, secure, and university-focused alternative to Facebook groups and Craigslist by restricting posting and contact access to verified UC students. Users can freely browse available listings, filter by key housing attributes, and connect directly with listing owners after authenticating with a UC email address.
-
-**Key Features:**
-
-- Public listing browsing (no account required)
-- UC-only account creation and verification
-- Structured listing fields (rent, dates, room type, amenities, etc.)
-- User profiles with optional academic details
-- Photo uploads via AWS S3
+- Public listing browsing is implemented.
+- Listing creation and deletion flows exist.
+- Image uploads use AWS S3.
+- Auth is still a development stub backed by seeded user IDs rather than a production auth provider.
 
 ## Tech Stack
 
-- **Framework:** Next.js 16 (App Router)
-- **Authentication:** Better Auth
-- **Database:** PostgreSQL (Neon)
-- **ORM:** Drizzle ORM
-- **Storage:** AWS S3 (listing and profile photos)
-- **Styling:** Tailwind CSS
+- Framework: Next.js 16 App Router
+- UI: React 19, Tailwind CSS 4
+- Database: PostgreSQL on Neon
+- ORM: Drizzle ORM
+- Storage: AWS S3
+- Tooling: TypeScript, ESLint, pnpm
 
-## Getting Started
+## Project Layout
 
-### Prerequisites
+This repository has a repo-level [`AGENTS.md`](../AGENTS.md) and the application lives in:
+
+```text
+bearcat-subleasing/
+```
+
+Main directories:
+
+```text
+bearcat-subleasing/
+├── app/            # App Router pages, route handlers, and server actions
+├── db/             # Drizzle database client and schema
+├── docs/           # Product and MVP planning notes
+├── lib/            # Env, auth helpers, validation, S3 helpers
+├── migrations/     # Drizzle SQL migrations
+├── public/         # Static assets
+└── queries/        # Shared data access helpers
+```
+
+## Prerequisites
 
 - Node.js 20.9 or later
-- pnpm package manager
-- A Neon PostgreSQL database
+- pnpm
+- A PostgreSQL database
+- An S3 bucket and AWS credentials for uploads
 
-### 1. Set up environment variables
+## Environment Setup
 
-Create a `.env.local` file in the root directory with your database credentials:
+The current code loads environment variables from `.env`, not `.env.local`.
+
+Create `bearcat-subleasing/.env` with values matching [`bearcat-subleasing/.env.example`](./.env.example):
 
 ```bash
 DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
+AWS_REGION="us-east-1"
+AWS_ACCESS_KEY_ID="your-access-key-id"
+AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+AWS_S3_BUCKET="your-bucket-name"
+DEV_SEEDED_USER_ID="9ecb2d33-5a85-40dd-8791-073afdc87154"
+DEV_ADMIN_USER_IDS=""
 ```
 
-### 2. Install dependencies
+## Local Development
+
+Install dependencies:
 
 ```bash
 pnpm install
 ```
 
-### 3. Generate and apply database migrations
+Generate and apply migrations:
 
 ```bash
-pnpm drizzle-kit generate  # Generate migration files from schema
-pnpm drizzle-kit migrate   # Apply migrations to database
+pnpm drizzle-kit generate
+pnpm drizzle-kit migrate
 ```
 
-### 5. Run the development server
+Start the app:
 
 ```bash
-pnpm dev          # Start development server with Turbopack
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-### Production build
+## Verification Commands
+
+Lint the project:
 
 ```bash
-pnpm build        # Build for production
-pnpm start        # Start production server
+pnpm lint
 ```
 
-## Database Schema
+Create a production build:
 
-The platform uses two main tables:
-
-**Users:**
-
-- Email (UC domain required)
-- Name, graduation year, major, bio
-- Email verification status
-- Profile photo (S3 key)
-
-**Listings:**
-
-- Title, description, address
-- Rent (stored in cents), lease dates
-- Room type (private/shared)
-- Bedrooms, bathrooms (supports half baths)
-- Amenities (furnished, utilities, private bathroom)
-- Photo keys (S3), status (active/expired/removed)
-
-## Development Tools
-
-- **Drizzle Studio:** Browse database with GUI
-
-  ```bash
-  pnpm drizzle-kit studio
-  ```
-
-- **Linting:**
-  ```bash
-  pnpm lint
-  ```
-
-## Project Structure
-
-```
-bearcat-subleasing/
-├── app/              # Next.js app router pages and layouts
-├── db/               # Database configuration and schema
-│   ├── db.ts         # Drizzle database instance
-│   └── schema.ts     # Database schema definitions
-├── migrations/       # Drizzle migration files
-├── public/           # Static assets
-└── .env.local        # Environment variables (not committed)
+```bash
+pnpm build
 ```
 
-## Learn More
+Open Drizzle Studio:
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Drizzle ORM Documentation](https://orm.drizzle.team/docs/overview)
-- [Neon PostgreSQL](https://neon.tech/docs/introduction)
-- [Better Auth](https://www.better-auth.com/docs/introduction)
+```bash
+pnpm drizzle-kit studio
+```
+
+## Notes
+
+- Vercel is part of the intended workflow for preview and deploy debugging.
+- Linear team `BEA` is the default planning context for this repo.
+- Product and MVP direction live in [`docs/mvp-plan.md`](./docs/mvp-plan.md).
