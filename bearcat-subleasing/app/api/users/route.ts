@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUsers, getUsersWithListings } from "@/queries/get";
+import { getUsersWithListings } from "@/queries/get";
 
 export async function GET() {
     try {

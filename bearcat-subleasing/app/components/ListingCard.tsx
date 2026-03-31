@@ -1,4 +1,4 @@
-import { Listing, ListingImage } from "@/types/listing";
+import { Listing } from "@/types/listing";
 import Image from "next/image";
 import Link from "next/link";
 

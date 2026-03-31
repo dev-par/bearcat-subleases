@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { CreateListingInput } from "@/types/listing";
+import { ListingMutationInput } from "@/types/listing";
 import Link from "next/link";
 
 export default function CreatePage() {
@@ -44,7 +44,7 @@ export default function CreatePage() {
                 }
             }
 
-                const listingData: CreateListingInput = {
+                const listingData: ListingMutationInput = {
                     title,
                     description: description || null,
                     address: address || null,
@@ -56,7 +56,6 @@ export default function CreatePage() {
                     bathrooms_in_unit_x2: bathroomsInUnit * 2,
                     private_bathroom: privateBathroom,
                     furnished: furnished,
-                    user_id: "9ecb2d33-5a85-40dd-8791-073afdc87154",
                 }
 
                 
