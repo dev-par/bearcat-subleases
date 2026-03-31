@@ -64,6 +64,8 @@
 - Aim for a polished, trustworthy, student-facing product rather than a generic dashboard look.
 - Keep layouts clean and mobile-friendly.
 - Avoid stock styling when making visible UI changes; define or extend a clear visual direction instead.
+- The BEA-11 visual identity source of truth lives at `bearcat-subleasing/docs/visual-identity.md`.
+- Use `bearcat-subleasing/docs/mvp-plan.md` for broader product and architecture planning, and `bearcat-subleasing/docs/visual-identity.md` for brand, theme, and visual-system decisions.
 - If the user later provides a stronger visual direction, follow that over these defaults.
 
 ## Useful Session Capabilities
