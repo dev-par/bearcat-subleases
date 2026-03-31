@@ -132,10 +132,50 @@ This document is the working source of truth for product architecture, delivery 
 
 ## Design Notes
 
-- Favor clean, utilitarian UI over marketplace clutter.
+- The product should feel like a hybrid of trusted housing marketplace and student product.
+- The visual tone should skew polished and premium rather than purely utilitarian.
+- The brand should lean into UC colors without reading like an official university property.
+- Support both light and dark mode, with the default theme following system preference.
+- Use `shadcn/ui` as the component base, but customize it into a product-specific design system rather than shipping stock defaults.
 - Listing cards should optimize for price, availability, and visual confidence.
 - Listing detail pages should separate housing facts, contact information, and owner actions clearly.
 - Management controls should be visible only when the current user is the owner or an admin.
+
+## Design System Requirements
+
+### Theme and branding
+
+- Define a UC-inspired token system for brand, surface, text, border, success, warning, and destructive colors.
+- Ensure the token system works cleanly in both light and dark mode.
+- Establish visual treatment for verified, expired, removed, owner, and admin states.
+
+### Typography and visual language
+
+- Choose a typography system for headings, body text, labels, and numeric data such as rent and dates.
+- Define iconography, imagery treatment, and empty-state tone.
+- Make price, date range, and room facts visually prominent without making the interface feel noisy.
+
+### Component strategy
+
+- Use `shadcn/ui` primitives as source-owned components.
+- Standardize core primitives early:
+  - button
+  - input
+  - textarea
+  - select
+  - checkbox
+  - card
+  - dialog
+  - badge
+  - toast or alert
+  - dropdown menu
+- Create product-specific components for listing cards, image galleries, status pills, contact panels, and management controls.
+
+### Page-level UX
+
+- Define layout and hierarchy for the homepage, listing cards, listing detail pages, create and edit forms, and admin moderation views.
+- Ensure mobile behavior is first-class for browsing, galleries, and forms.
+- Define consistent loading, empty, and error states across the product.
 
 ## Open Questions
 
