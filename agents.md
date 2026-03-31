@@ -1,7 +1,74 @@
-<!-- BEGIN:nextjs-agent-rules -->
- 
-# Next.js: ALWAYS read docs before coding
- 
-Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
- 
-<!-- END:nextjs-agent-rules -->
+# Bearcat Subleases Agent Guide
+
+## Scope
+
+- The main application lives in `bearcat-subleasing/`.
+- Prefer working from `bearcat-subleasing/` unless the task is explicitly about repo-level files.
+- Treat this repo as local-development-first today, but keep workflows compatible with future GitHub PR and CI usage.
+
+## Docs First
+
+- Use Context7 MCP whenever the task involves a library, framework, SDK, API, CLI, or cloud service.
+- Start with `resolve-library-id`, then `query-docs`, and answer from the fetched docs.
+- Prefer Context7 over web search for technical documentation.
+
+## Next.js Rule
+
+- Before any Next.js work, read the relevant local doc in `node_modules/next/dist/docs/` when it exists.
+- If local Next.js docs are unavailable or insufficient, use Context7 for current Next.js documentation.
+
+## Repo Workflow
+
+- Package manager: `pnpm`
+- Key commands:
+  - `pnpm dev`
+  - `pnpm lint`
+  - `pnpm build`
+  - `pnpm drizzle-kit generate`
+  - `pnpm drizzle-kit migrate`
+  - `pnpm drizzle-kit studio`
+- After meaningful changes, prefer verifying with `pnpm lint` and `pnpm build` unless the task is narrowly scoped or blocked by missing env/config.
+
+## Environment
+
+- Required envs are defined by code and `.env.example`.
+- Current expected variables:
+  - `DATABASE_URL`
+  - `AWS_REGION`
+  - `AWS_ACCESS_KEY_ID`
+  - `AWS_SECRET_ACCESS_KEY`
+  - `AWS_S3_BUCKET`
+  - `DEV_SEEDED_USER_ID`
+  - `DEV_ADMIN_USER_IDS`
+- Do not invent secrets or silently change env variable names.
+
+## Vercel
+
+- Assume this repo is linked to a Vercel project even if `.vercel/project.json` is not checked in.
+- When a local dev server is running, verify the UI in the browser instead of relying only on static code inspection.
+- Use Vercel tools for preview/deploy debugging, deployment inspection, and runtime/build log investigation.
+
+## Linear
+
+- Assume Linear is the planning system for this repo.
+- Default team context: `BEA`.
+- Use team-wide Linear context only when the user is asking about planning, prioritization, backlog, roadmap, or general team status and no narrower issue or project is provided.
+- If the user provides a specific Linear issue, project, or initiative, treat that as the primary context instead of searching the whole team.
+- Fetch current issue or project details from Linear tools when needed.
+- Prefer reading existing Linear context before creating or updating issues unless the user explicitly asks for a write action.
+
+
+## UI Guidance
+
+- Include design judgment in frontend work; do not ship bare framework defaults.
+- Aim for a polished, trustworthy, student-facing product rather than a generic dashboard look.
+- Keep layouts clean and mobile-friendly.
+- Avoid stock styling when making visible UI changes; define or extend a clear visual direction instead.
+- If the user later provides a stronger visual direction, follow that over these defaults.
+
+## Useful Session Capabilities
+
+- Context7 MCP: current technical docs
+- Vercel MCP: deployments, logs, preview debugging, browser verification
+- Linear MCP: team and issue workflow
+- GitHub tools: available for future PR, CI, and review workflows when the repo starts using them more actively
