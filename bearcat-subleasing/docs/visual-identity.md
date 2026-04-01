@@ -82,8 +82,6 @@ The product must support both light and dark mode.
 - dark mode should feel intentionally designed, not inverted
 - both themes should preserve the same hierarchy, trust level, and polish
 
-Per current shadcn/ui guidance, theme behavior should be implemented with theme variables and class-based dark mode, typically through `next-themes` with `defaultTheme=\"system\"` and `enableSystem`. Source: https://github.com/shadcn-ui/ui/blob/main/apps/v4/content/docs/dark-mode/next.mdx
-
 ### Theme implementation defaults
 
 - use class-based dark mode
