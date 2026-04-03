@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  BedDouble,
   CalendarRange,
   CircleCheckBig,
   MapPin,
@@ -19,8 +18,7 @@ export const metadata: Metadata = {
 const heroSignals = [
   "Verified UC student",
   "Near campus",
-  "Private bath options",
-  "Multiple listing photos",
+  "Photo-first listings",
 ];
 
 const trustCallouts = [
@@ -28,25 +26,19 @@ const trustCallouts = [
     icon: ShieldCheck,
     label: "Verified UC student",
     position:
-      "left-2 top-12 sm:-left-10 sm:top-16 lg:-left-16",
+      "left-2 top-12 sm:-left-8 sm:top-16 lg:-left-10",
   },
   {
     icon: CalendarRange,
     label: "Available Aug-Dec",
     position:
-      "right-3 top-7 sm:-right-8 sm:top-10 lg:-right-12",
-  },
-  {
-    icon: BedDouble,
-    label: "Furnished",
-    position:
-      "left-6 bottom-24 sm:-left-4 sm:bottom-20 lg:-left-12",
+      "right-3 top-7 sm:-right-6 sm:top-10 lg:-right-8",
   },
   {
     icon: MapPin,
     label: "Walkable to UC",
     position:
-      "right-4 bottom-8 sm:-right-10 sm:bottom-6 lg:-right-14",
+      "right-4 bottom-8 sm:-right-6 sm:bottom-6 lg:-right-8",
   },
 ];
 
@@ -87,7 +79,7 @@ export default function HomePage() {
             </nav>
           </header>
 
-          <section className="grid flex-1 items-center gap-14 pb-6 pt-12 lg:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] lg:gap-10 lg:pt-16">
+          <section className="grid flex-1 items-center gap-12 py-12 lg:grid-cols-[minmax(0,1fr)_minmax(380px,500px)] lg:gap-12 lg:py-16">
             <div className="max-w-2xl">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/12 bg-primary/6 px-4 py-2 text-sm font-medium text-primary">
                 <Sparkles className="h-4 w-4" />
@@ -123,7 +115,7 @@ export default function HomePage() {
                 {heroSignals.map((signal) => (
                   <span
                     key={signal}
-                    className="rounded-full border border-border bg-white px-4 py-2 text-sm text-muted-foreground shadow-card"
+                    className="rounded-full border border-border/80 bg-white px-4 py-2 text-sm text-muted-foreground"
                   >
                     {signal}
                   </span>
@@ -131,11 +123,11 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[34rem]">
+            <div className="relative mx-auto w-full max-w-[31rem]">
               {trustCallouts.map(({ icon: Icon, label, position }) => (
                 <div
                   key={label}
-                  className={`absolute z-20 hidden items-center gap-2 rounded-2xl border border-white/70 bg-white/92 px-3 py-2 text-xs font-semibold text-foreground shadow-card backdrop-blur sm:flex ${position}`}
+                  className={`absolute z-20 hidden items-center gap-2 rounded-2xl border border-white/80 bg-white/92 px-3 py-2 text-xs font-semibold text-foreground shadow-card backdrop-blur sm:flex ${position}`}
                 >
                   <Icon className="h-4 w-4 text-primary" />
                   {label}
@@ -143,7 +135,7 @@ export default function HomePage() {
               ))}
 
               <div className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.98)_0%,rgba(255,250,246,0.94)_52%,rgba(234,219,193,0.66)_100%)] p-5 shadow-soft sm:p-6">
-                <div className="absolute inset-x-8 top-4 h-24 rounded-full bg-primary/7 blur-3xl" />
+                <div className="absolute inset-x-12 top-4 h-20 rounded-full bg-primary/6 blur-3xl" />
 
                 <div className="relative grid gap-4">
                   <div className="flex items-center justify-between rounded-[1.5rem] border border-border/70 bg-white/85 px-4 py-3 shadow-card">
@@ -158,98 +150,44 @@ export default function HomePage() {
                     <CircleCheckBig className="h-8 w-8 text-[color:var(--verified)]" />
                   </div>
 
-                  <div className="grid gap-4 lg:grid-cols-[1.25fr_0.85fr]">
-                    <article className="overflow-hidden rounded-[1.8rem] border border-border/75 bg-white shadow-card">
-                      <div className="relative h-56 bg-[radial-gradient(circle_at_top_left,rgba(224,1,34,0.18),transparent_46%),linear-gradient(135deg,#f5ede5_0%,#ffffff_40%,#f2f2f2_100%)] p-4">
-                        <div className="absolute inset-x-5 top-5 flex items-center justify-between">
-                          <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1 text-[11px] font-semibold text-primary shadow-sm">
-                            VERIFIED
-                          </span>
-                          <span className="rounded-full border border-black/5 bg-black/85 px-3 py-1 text-[11px] font-semibold text-white">
-                            Clifton
-                          </span>
-                        </div>
-                        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/12 to-transparent" />
-                        <div className="absolute left-8 top-[4.5rem] h-28 w-36 rounded-[2rem] border border-white/80 bg-white/85 shadow-xl" />
-                        <div className="absolute right-7 top-12 h-36 w-44 rounded-[2.2rem] border border-white/80 bg-[linear-gradient(145deg,#f7efe6_0%,#ffffff_100%)] shadow-xl" />
-                        <div className="absolute bottom-5 left-5 right-5 rounded-[1.4rem] border border-white/80 bg-white/88 p-4 backdrop-blur">
-                          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                            2 bed · furnished · private bath
-                          </p>
-                          <div className="mt-2 flex items-end justify-between gap-3">
-                            <div>
-                              <h2 className="font-heading text-3xl font-semibold text-foreground">
-                                Jefferson House
-                              </h2>
-                              <p className="mt-1 text-sm text-muted-foreground">
-                                Walkable to campus with bright shared living spaces.
-                              </p>
-                            </div>
-                            <div className="rounded-2xl bg-primary px-3 py-2 text-right text-white shadow-lg shadow-primary/20">
-                              <p className="text-[10px] uppercase tracking-[0.16em] text-white/80">
-                                from
-                              </p>
-                              <p className="text-lg font-semibold">$825</p>
-                            </div>
+                  <article className="overflow-hidden rounded-[1.8rem] border border-border/75 bg-white shadow-card">
+                    <div className="relative h-[24rem] bg-[radial-gradient(circle_at_top_left,rgba(224,1,34,0.18),transparent_46%),linear-gradient(135deg,#f5ede5_0%,#ffffff_40%,#f2f2f2_100%)] p-4 sm:h-[26rem] sm:p-5">
+                      <div className="absolute inset-x-5 top-5 flex items-center justify-between">
+                        <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1 text-[11px] font-semibold text-primary shadow-sm">
+                          VERIFIED
+                        </span>
+                        <span className="rounded-full border border-black/5 bg-black/85 px-3 py-1 text-[11px] font-semibold text-white">
+                          Clifton
+                        </span>
+                      </div>
+                      <div className="absolute left-8 top-18 h-36 w-40 rounded-[2.1rem] border border-white/80 bg-white/80 shadow-xl" />
+                      <div className="absolute right-7 top-14 h-44 w-48 rounded-[2.4rem] border border-white/80 bg-[linear-gradient(145deg,#f7efe6_0%,#ffffff_100%)] shadow-xl" />
+                      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/10 to-transparent" />
+                      <div className="absolute bottom-5 left-5 right-5 rounded-[1.5rem] border border-white/80 bg-white/90 p-5 backdrop-blur">
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          2 bed · furnished · private bath
+                        </p>
+                        <div className="mt-3 flex items-end justify-between gap-3">
+                          <div>
+                            <h2 className="font-heading text-3xl font-semibold text-foreground">
+                              Jefferson House
+                            </h2>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                              Walkable to campus with bright shared living spaces.
+                            </p>
+                          </div>
+                          <div className="rounded-2xl bg-primary px-3 py-2 text-right text-white shadow-lg shadow-primary/20">
+                            <p className="text-[10px] uppercase tracking-[0.16em] text-white/80">
+                              from
+                            </p>
+                            <p className="text-lg font-semibold">$825</p>
                           </div>
                         </div>
                       </div>
-                    </article>
-
-                    <div className="grid gap-4">
-                      <div className="rounded-[1.7rem] border border-border/70 bg-[#fff7f0] p-5 shadow-card">
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                          What matters fast
-                        </p>
-                        <ul className="mt-4 space-y-3 text-sm leading-6 text-foreground">
-                          <li>High-contrast rent and date visibility</li>
-                          <li>Photo-first trust without marketplace clutter</li>
-                          <li>Clear signals for furnished and room type</li>
-                        </ul>
-                      </div>
-
-                      <div className="rounded-[1.7rem] border border-border/70 bg-[linear-gradient(160deg,rgba(51,51,51,0.98)_0%,rgba(24,24,24,0.95)_100%)] p-5 text-white shadow-card">
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
-                          Bearcat standard
-                        </p>
-                        <p className="mt-3 font-heading text-3xl font-semibold leading-tight">
-                          Soft surfaces. Hard clarity.
-                        </p>
-                        <p className="mt-3 text-sm leading-6 text-white/75">
-                          A warmer editorial shell with disciplined red accents keeps the product local and trustworthy.
-                        </p>
-                      </div>
                     </div>
-                  </div>
+                  </article>
                 </div>
               </div>
-            </div>
-          </section>
-
-          <section
-            id="how-it-works"
-            className="grid gap-4 border-t border-border/80 pt-8 text-sm text-muted-foreground sm:grid-cols-3"
-          >
-            <div className="rounded-[1.5rem] border border-border/70 bg-muted/50 p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Browse</p>
-              <p className="mt-3 text-base font-semibold text-foreground">
-                Start with the listing dashboard, not a wall of noise.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-border/70 bg-muted/50 p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Verify</p>
-              <p className="mt-3 text-base font-semibold text-foreground">
-                Use photos, availability, and room facts as trust signals.
-              </p>
-            </div>
-            <div
-              id="why-bearcat"
-              className="rounded-[1.5rem] border border-border/70 bg-muted/50 p-5"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Act</p>
-              <p className="mt-3 text-base font-semibold text-foreground">
-                Reach the right listing faster with a cleaner Cincinnati-native interface.
-              </p>
             </div>
           </section>
         </div>
