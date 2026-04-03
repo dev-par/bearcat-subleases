@@ -1,4 +1,5 @@
 import { Listing } from "@/types/listing";
+import { Bath, BedDouble, CalendarRange, MapPin, Sofa } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,20 +9,100 @@ interface ListingCardProps {
 
 export default function ListingCard({ listing }: ListingCardProps) {
 	const imageUrl = listing.listingImages?.[0]?.url || "/house.jpg";
+	const dateFormatter = new Intl.DateTimeFormat("en-US", {
+		month: "short",
+		day: "numeric",
+	});
+	const price = new Intl.NumberFormat("en-US", {
+		style: "currency",
+		currency: "USD",
+		maximumFractionDigits: 0,
+	}).format(listing.rent_cents / 100);
+	const badges = [
+		listing.room_type ? `${listing.room_type} room` : null,
+		listing.furnished ? "Furnished" : null,
+		listing.private_bathroom ? "Private bath" : null,
+	].filter(Boolean) as string[];
 
 	return (
-		<Link href={`/listings/${listing.id}`}>
-			<div className="border rounded shadow hover:shadow-lg cursor-pointer transition p-3">
+		<Link href={`/listings/${listing.id}`} className="group block h-full">
+			<div className="flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-border/80 bg-card shadow-card transition duration-200 hover:-translate-y-1 hover:border-primary/20 hover:shadow-soft">
 				<Image
 					src={imageUrl}
-					alt="Listing Image"
+					alt={listing.title}
 					width={400}
 					height={400}
-					className="w-full aspect-square object-cover rounded"
+					className="aspect-[1.08] w-full object-cover transition duration-300 group-hover:scale-[1.03]"
 				/>
-				<h1 className="text-xl font-bold mt-2 mb-1">{listing.title}</h1>
-				<h2 className="text-gray-600 mb-2">{listing.description}</h2>
-				<p className="text-green-600 mb-2">${listing.rent_cents / 100}</p>
+
+				<div className="flex flex-1 flex-col p-5">
+					<div className="flex items-start justify-between gap-3">
+						<div>
+							<p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+								{dateFormatter.format(new Date(listing.start_date))} - {dateFormatter.format(new Date(listing.end_date))}
+							</p>
+							<h2 className="font-heading mt-2 text-2xl font-semibold leading-tight text-card-foreground">
+								{listing.title}
+							</h2>
+						</div>
+						<div className="rounded-2xl bg-primary px-3 py-2 text-right text-primary-foreground shadow-lg shadow-primary/15">
+							<p className="text-[10px] uppercase tracking-[0.16em] text-primary-foreground/80">
+								monthly
+							</p>
+							<p className="text-lg font-semibold">{price}</p>
+						</div>
+					</div>
+
+					<p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+						{listing.description || "A quieter Cincinnati sublease with the essential facts ready to scan."}
+					</p>
+
+					<div className="mt-4 flex flex-wrap gap-2">
+						{badges.map((badge) => (
+							<span
+								key={badge}
+								className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"
+							>
+								{badge}
+							</span>
+						))}
+					</div>
+
+					<div className="mt-5 grid grid-cols-2 gap-3 text-sm text-card-foreground">
+						<div className="rounded-2xl border border-border/70 bg-muted/40 p-3">
+							<div className="flex items-center gap-2 text-muted-foreground">
+								<BedDouble className="h-4 w-4" />
+								Bedrooms
+							</div>
+							<p className="mt-2 font-semibold">{listing.bedrooms_in_unit}</p>
+						</div>
+						<div className="rounded-2xl border border-border/70 bg-muted/40 p-3">
+							<div className="flex items-center gap-2 text-muted-foreground">
+								<Bath className="h-4 w-4" />
+								Bathrooms
+							</div>
+							<p className="mt-2 font-semibold">{listing.bathrooms_in_unit_x2 / 2}</p>
+						</div>
+					</div>
+
+					<div className="mt-5 flex flex-wrap items-center gap-4 border-t border-border/80 pt-4 text-sm text-muted-foreground">
+						<div className="flex items-center gap-2">
+							<CalendarRange className="h-4 w-4 text-primary" />
+							{dateFormatter.format(new Date(listing.start_date))}
+						</div>
+						{listing.address ? (
+							<div className="flex items-center gap-2">
+								<MapPin className="h-4 w-4 text-primary" />
+								<span className="line-clamp-1 max-w-[12rem]">{listing.address}</span>
+							</div>
+						) : (
+							<div className="flex items-center gap-2">
+								<Sofa className="h-4 w-4 text-primary" />
+								Near-campus details inside
+							</div>
+						)}
+					</div>
+				</div>
 			</div>
 		</Link>
 	);

@@ -26,5 +26,5 @@ export async function deleteListing(listingId: string) {
 		return { success: false, error: message };
 	}
 
-	redirect("/");
+	redirect("/listings");
 }
