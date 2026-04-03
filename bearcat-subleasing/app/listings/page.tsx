@@ -29,7 +29,7 @@ export default async function ListingsPage() {
   return (
     <main className="min-h-screen px-5 py-6 sm:px-8 sm:py-8">
       <div className="mx-auto max-w-7xl">
-        <div className="overflow-hidden rounded-[2rem] border border-border/80 bg-white/90 shadow-soft backdrop-blur-xl">
+        <div>
           <section className="border-b border-border/80 bg-[linear-gradient(180deg,rgba(255,250,246,0.96)_0%,rgba(255,255,255,0.92)_100%)] px-6 py-8 sm:px-8 sm:py-10">
             <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">

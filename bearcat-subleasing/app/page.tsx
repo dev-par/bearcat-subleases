@@ -54,7 +54,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-5 sm:px-8 sm:py-7">
-        <div className="flex min-h-[calc(100vh-2.5rem)] flex-col rounded-[2rem] border border-border/80 bg-white/88 p-5 shadow-soft backdrop-blur-xl sm:p-8 lg:p-10">
+        <div className="flex min-h-[calc(100vh-2.5rem)] flex-col p-5 sm:p-8 lg:p-10">
           <header className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <Link href="/" className="flex items-center gap-3 text-sm font-semibold tracking-tight text-foreground">
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/15">
