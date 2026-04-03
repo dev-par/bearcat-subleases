@@ -45,11 +45,11 @@ export default function ListingCard({ listing }: ListingCardProps) {
 								{listing.title}
 							</h2>
 						</div>
-						<div className="rounded-2xl bg-primary px-3 py-2 text-right text-primary-foreground shadow-lg shadow-primary/15">
-							<p className="text-[10px] uppercase tracking-[0.16em] text-primary-foreground/80">
-								monthly
+						<div className="flex min-w-[5.5rem] flex-col items-center justify-center rounded-full bg-primary px-3 py-3 text-center text-primary-foreground shadow-lg shadow-primary/15">
+							<p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-primary-foreground/80">
+								Monthly
 							</p>
-							<p className="text-lg font-semibold">{price}</p>
+							<p className="mt-1 text-xl font-semibold leading-none">{price}</p>
 						</div>
 					</div>
 
@@ -69,19 +69,19 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					</div>
 
 					<div className="mt-5 grid grid-cols-2 gap-3 text-sm text-card-foreground">
-						<div className="rounded-2xl border border-border/70 bg-muted/40 p-3">
-							<div className="flex items-center gap-2 text-muted-foreground">
+						<div className="rounded-full border border-border/70 bg-muted/30 px-4 py-3">
+							<div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
 								<BedDouble className="h-4 w-4" />
 								Bedrooms
 							</div>
-							<p className="mt-2 font-semibold">{listing.bedrooms_in_unit}</p>
+							<p className="mt-1 text-lg font-semibold leading-none">{listing.bedrooms_in_unit}</p>
 						</div>
-						<div className="rounded-2xl border border-border/70 bg-muted/40 p-3">
-							<div className="flex items-center gap-2 text-muted-foreground">
+						<div className="rounded-full border border-border/70 bg-muted/30 px-4 py-3">
+							<div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
 								<Bath className="h-4 w-4" />
 								Bathrooms
 							</div>
-							<p className="mt-2 font-semibold">{listing.bathrooms_in_unit_x2 / 2}</p>
+							<p className="mt-1 text-lg font-semibold leading-none">{listing.bathrooms_in_unit_x2 / 2}</p>
 						</div>
 					</div>
 
