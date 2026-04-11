@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  CalendarRange,
   CircleCheckBig,
-  MapPin,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 
@@ -15,38 +12,11 @@ export const metadata: Metadata = {
     "Browse verified Cincinnati student subleases with a trust-first marketplace built for near-campus housing.",
 };
 
-const heroSignals = [
-  "Verified UC student",
-  "Near campus",
-  "Photo-first listings",
-];
-
-const trustCallouts = [
-  {
-    icon: ShieldCheck,
-    label: "Verified UC student",
-    position:
-      "left-2 top-12 sm:-left-8 sm:top-16 lg:-left-10",
-  },
-  {
-    icon: CalendarRange,
-    label: "Available Aug-Dec",
-    position:
-      "right-3 top-7 sm:-right-6 sm:top-10 lg:-right-8",
-  },
-  {
-    icon: MapPin,
-    label: "Walkable to UC",
-    position:
-      "right-4 bottom-8 sm:-right-6 sm:bottom-6 lg:-right-8",
-  },
-];
-
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 py-5 sm:px-8 sm:py-7">
-        <div className="flex min-h-[calc(100vh-2.5rem)] flex-col p-5 sm:p-8 lg:p-10">
+    <main className="min-h-dvh">
+      <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-5 py-5 sm:px-8 sm:py-7">
+        <div className="flex flex-1 flex-col p-5 sm:p-8 lg:p-10">
           <header className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <Link href="/" className="flex items-center gap-3 text-sm font-semibold tracking-tight text-foreground">
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/15">
@@ -60,12 +30,6 @@ export default function HomePage() {
 
             <nav className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap items-center gap-5">
-                <a href="#how-it-works" className="transition hover:text-foreground">
-                  How it works
-                </a>
-                <a href="#why-bearcat" className="transition hover:text-foreground">
-                  Why Bearcat
-                </a>
                 <Link href="/listings/create" className="transition hover:text-foreground">
                   Post a listing
                 </Link>
@@ -98,42 +62,22 @@ export default function HomePage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/listings"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-[#b8011c]"
+                  className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-[#b8011c] sm:px-9"
                 >
                   Go to listing dashboard
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/listings/create"
-                  className="inline-flex items-center justify-center rounded-full border border-border bg-white px-6 py-3.5 text-sm font-semibold text-foreground transition hover:border-primary/25 hover:text-primary"
+                  className="inline-flex min-h-14 items-center justify-center rounded-full border border-border bg-white px-8 py-4 text-base font-semibold text-foreground transition hover:border-primary/25 hover:text-primary sm:px-9"
                 >
                   Post your sublease
                 </Link>
               </div>
 
-              <div className="mt-10 flex flex-wrap gap-3">
-                {heroSignals.map((signal) => (
-                  <span
-                    key={signal}
-                    className="rounded-full border border-border/80 bg-white px-4 py-2 text-sm text-muted-foreground"
-                  >
-                    {signal}
-                  </span>
-                ))}
-              </div>
             </div>
 
             <div className="relative mx-auto w-full max-w-[31rem]">
-              {trustCallouts.map(({ icon: Icon, label, position }) => (
-                <div
-                  key={label}
-                  className={`absolute z-20 hidden items-center gap-2 rounded-2xl border border-white/80 bg-white/92 px-3 py-2 text-xs font-semibold text-foreground shadow-card backdrop-blur sm:flex ${position}`}
-                >
-                  <Icon className="h-4 w-4 text-primary" />
-                  {label}
-                </div>
-              ))}
-
               <div className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.98)_0%,rgba(255,250,246,0.94)_52%,rgba(234,219,193,0.66)_100%)] p-5 shadow-soft sm:p-6">
                 <div className="absolute inset-x-12 top-4 h-20 rounded-full bg-primary/6 blur-3xl" />
 

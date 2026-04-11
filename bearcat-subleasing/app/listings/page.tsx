@@ -28,8 +28,8 @@ export default async function ListingsPage() {
     <main className="min-h-screen px-5 py-6 sm:px-8 sm:py-8">
       <div className="mx-auto max-w-7xl">
         <div>
-          <section className="px-6 py-8 sm:px-8 sm:py-10">
-            <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <section className="px-6 pb-8 pt-4 sm:px-8 sm:pb-10 sm:pt-5">
+            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Link
                 href="/"
                 className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
