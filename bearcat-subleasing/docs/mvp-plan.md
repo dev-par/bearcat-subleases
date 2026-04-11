@@ -137,9 +137,13 @@ This document is the working source of truth for product architecture, delivery 
 - The brand should lean into UC colors without reading like an official university property.
 - Support both light and dark mode, with the default theme following system preference.
 - Use `shadcn/ui` as the component base, but customize it into a product-specific design system rather than shipping stock defaults.
+- Use an editorial serif plus sans pairing:
+  - `Newsreader` for major headings
+  - `Geist Sans` for UI/body copy
 - Listing cards should optimize for price, availability, and visual confidence.
 - Listing detail pages should separate housing facts, contact information, and owner actions clearly.
 - Management controls should be visible only when the current user is the owner or an admin.
+- The detailed BEA-11 visual identity brief lives in `docs/visual-identity.md`.
 
 ## Design System Requirements
 
@@ -181,8 +185,9 @@ This document is the working source of truth for product architecture, delivery 
 
 - What exact phone UX is preferred: raw phone number display, explicit text-only preference, or both?
 - Should admin deletion be hard delete or soft delete via `removed` status in the MVP?
-- Do we want a dedicated admin dashboard page or admin actions embedded directly into listing pages first?
 
 ## Change Log
 
 - 2026-03-30: Created initial MVP planning document covering architecture, authorization model, lifecycle rules, and feature sequencing.
+- 2026-03-31: Added explicit design-system requirements and linked the dedicated visual identity brief.
+- 2026-03-31: Locked editorial serif plus sans typography and embedded-first admin controls for the BEA-11 design direction.

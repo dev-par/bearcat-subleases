@@ -68,7 +68,7 @@ export default function CreatePage() {
                 const data = await res.json();
 
                 if (data.success) {
-                    router.push('/')
+                    router.push('/listings')
                 }
                 else {
                     alert("Failed to create listing")
@@ -84,18 +84,21 @@ export default function CreatePage() {
     }
 
     return (
-        <div className="max-w-lg mx-auto py-8 px-4">
-            <Link href="/" className="text-blue-600 hover:underline mb-4 inline-block">
+        <div className="mx-auto max-w-xl px-4 py-8">
+            <Link href="/listings" className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground">
                 ← Back to listings
             </Link>
-            <h1>Create Listing</h1>
+            <h1 className="font-heading text-4xl font-semibold text-foreground">Create Listing</h1>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Add the core housing facts first. The listing dashboard is designed to surface these details clearly.
+            </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="mt-8 space-y-4 rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-card">
                 <label className="block">
                     <span className="text-sm font-semibold">Title</span>
                     <input
                         type="text"
-                        className="border rounded w-full p-2 mt-1"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
@@ -106,7 +109,7 @@ export default function CreatePage() {
                     <span className="text-sm font-semibold">Description</span>
                     <input
                         type="text"
-                        className="border rounded w-full p-2 mt-1"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required
@@ -118,7 +121,7 @@ export default function CreatePage() {
                     <span className="text-sm font-semibold">Address</span>
                     <input
                         type="text"
-                        className="border rounded w-full p-2 mt-1"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                     />
@@ -129,7 +132,7 @@ export default function CreatePage() {
                     <span className="text-sm font-semibold">Rent ($/month)</span>
                     <input
                         type="number"
-                        className="border rounded w-full p-2 mt-1"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                         value={rent}
                         onChange={(e) => setRent(e.target.value)}
                         min="0"
@@ -143,7 +146,7 @@ export default function CreatePage() {
                         <span className="text-sm font-semibold">Start Date</span>
                         <input
                             type="date"
-                            className="border rounded w-full p-2 mt-1"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                             required
@@ -154,7 +157,7 @@ export default function CreatePage() {
                         <span className="text-sm font-semibold">End Date</span>
                         <input
                             type="date"
-                            className="border rounded w-full p-2 mt-1"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
                             required
@@ -166,7 +169,7 @@ export default function CreatePage() {
                 <label className="block">
                     <span className="text-sm font-semibold">Room Type</span>
                     <select
-                        className="border rounded w-full p-2 mt-1"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                         value={roomType}
                         onChange={(e) => setRoomType(e.target.value as "private" | "shared")}
                     >
@@ -181,7 +184,7 @@ export default function CreatePage() {
                         <span className="text-sm font-semibold">Bedrooms</span>
                         <input
                             type="number"
-                            className="border rounded w-full p-2 mt-1"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                             value={bedroomsInUnit}
                             onChange={(e) => setBedroomsInUnit(Number(e.target.value))}
                             min="1"
@@ -192,7 +195,7 @@ export default function CreatePage() {
                         <span className="text-sm font-semibold">Bathrooms</span>
                         <input
                             type="number"
-                            className="border rounded w-full p-2 mt-1"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                             value={bathroomsInUnit}
                             onChange={(e) => setBathroomsInUnit(Number(e.target.value))}
                             min="0"
@@ -230,7 +233,7 @@ export default function CreatePage() {
                         type="file"
                         accept="image/*"
                         multiple
-                        className="border rounded w-full p-2 mt-1"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
                         onChange={(e) => {
                             const files = e.target.files;
                             if (files) {
@@ -239,7 +242,7 @@ export default function CreatePage() {
                         }}
                     />
                     {selectedFiles.length > 0 && (
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="mt-1 text-sm text-muted-foreground">
                             {selectedFiles.length} file(s) selected
                         </p>
                     )}
@@ -248,7 +251,7 @@ export default function CreatePage() {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition w-full disabled:bg-gray-400"
+                    className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-[#b8011c] disabled:opacity-50"
                 >
                     {isSubmitting ? 'Creating...' : 'Create Listing'}
                 </button>

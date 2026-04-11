@@ -28,7 +28,7 @@ export default function DeleteButton({ listingId }: DeleteButtonProps) {
 		return (
 			<button
 				type="button"
-				className="w-full mt-4 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-semibold disabled:opacity-50"
+				className="mt-4 w-full rounded-full bg-destructive px-5 py-3 text-sm font-semibold text-destructive-foreground transition hover:opacity-90 disabled:opacity-50"
 				onClick={() => setShowConfirm(true)}
 				disabled={isDeleting}
 			>
@@ -42,14 +42,14 @@ export default function DeleteButton({ listingId }: DeleteButtonProps) {
 			<button
 				onClick={handleClick}
 				disabled={isDeleting}
-				className="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-semibold disabled:opacity-50"
+				className="flex-1 rounded-full bg-destructive px-5 py-3 text-sm font-semibold text-destructive-foreground transition hover:opacity-90 disabled:opacity-50"
 			>
 				{isDeleting ? "Deleting..." : "Confirm Delete"}
 			</button>
 			<button
 				onClick={() => setShowConfirm(false)}
 				disabled={isDeleting}
-				className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition font-semibold disabled:opacity-50"
+				className="flex-1 rounded-full border border-border bg-muted px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/15 hover:text-primary disabled:opacity-50"
 			>
 				Cancel
 			</button>
