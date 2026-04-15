@@ -7,22 +7,23 @@ import { useState } from "react";
 import NavLinks from "./NavLinks";
 import ThemeToggle from "./ThemeToggle";
 import { PRIMARY_CTA } from "./nav-config";
+import { Button } from "@/components/ui/button";
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="md:hidden">
-      <button
-        type="button"
+      <Button
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         aria-label={open ? "Close navigation menu" : "Open navigation menu"}
         onClick={() => setOpen((current) => !current)}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-card/90 text-foreground shadow-card transition hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        variant="outline"
+        size="icon"
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+      </Button>
 
       {open ? (
         <div
@@ -31,13 +32,11 @@ export default function MobileNav() {
         >
           <div className="flex flex-col gap-3">
             <NavLinks orientation="mobile" onNavigate={() => setOpen(false)} />
-            <Link
-              href={PRIMARY_CTA.href}
-              onClick={() => setOpen(false)}
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-[color:var(--brand-primary-hover)]"
-            >
-              {PRIMARY_CTA.label}
-            </Link>
+            <Button asChild size="lg">
+              <Link href={PRIMARY_CTA.href} onClick={() => setOpen(false)}>
+                {PRIMARY_CTA.label}
+              </Link>
+            </Button>
             <ThemeToggle />
           </div>
         </div>

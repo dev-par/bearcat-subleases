@@ -4,6 +4,14 @@ import { useRouter } from "next/navigation"
 import { ListingMutationInput } from "@/types/listing";
 import Link from "next/link";
 import ThemeToggle from "@/app/components/ThemeToggle";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CreatePage() {
     const router = useRouter();
@@ -20,10 +28,12 @@ export default function CreatePage() {
     const [furnished, setFurnished] = useState(false)
     const [selectedFiles, setSelectedFiles] = useState<File[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true)
+        setErrorMessage(null)
 
         try {
             const imageUrls: string[] = []
@@ -72,12 +82,12 @@ export default function CreatePage() {
                     router.push('/listings')
                 }
                 else {
-                    alert("Failed to create listing")
+                    setErrorMessage(data.error || "Failed to create listing")
                 }
         }
         catch (error) {
             console.error("Error:", error)
-            alert("An error occured")
+            setErrorMessage(error instanceof Error ? error.message : "An error occurred")
         }
         finally {
             setIsSubmitting(false)
@@ -97,171 +107,172 @@ export default function CreatePage() {
                 Add the core housing facts first. The listing dashboard is designed to surface these details clearly.
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-4 rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-card dark:border-white/8 sm:p-7">
-                <label className="block">
-                    <span className="text-sm font-semibold text-foreground">Title</span>
-                    <input
-                        type="text"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
-                </label>
+            <Card className="mt-8 border-border/70">
+                <CardContent className="p-6 sm:p-7">
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {errorMessage ? (
+                            <Alert variant="destructive">
+                                <AlertTitle>Could not create listing</AlertTitle>
+                                <AlertDescription>{errorMessage}</AlertDescription>
+                            </Alert>
+                        ) : null}
 
-                <label className="block">
-                    <span className="text-sm font-semibold text-foreground">Description</span>
-                    <input
-                        type="text"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                    />
-                </label>
+                        <Field label="Title" htmlFor="title" required>
+                            <Input
+                                id="title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                required
+                            />
+                        </Field>
 
-               {/* Address */}
-                <label className="block">
-                    <span className="text-sm font-semibold text-foreground">Address</span>
-                    <input
-                        type="text"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                    />
-                </label>
-
-                {/* Rent */}
-                <label className="block">
-                    <span className="text-sm font-semibold text-foreground">Rent ($/month)</span>
-                    <input
-                        type="number"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                        value={rent}
-                        onChange={(e) => setRent(e.target.value)}
-                        min="0"
-                        required
-                    />
-                </label>
-
-                {/* Dates */}
-                <div className="flex gap-4">
-                    <label className="block flex-1">
-                        <span className="text-sm font-semibold text-foreground">Start Date</span>
-                        <input
-                            type="date"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
+                        <Field
+                            label="Description"
+                            htmlFor="description"
+                            description="Describe the setup, roommate situation, and any useful context a student would want to know early."
                             required
-                        />
-                    </label>
+                        >
+                            <Textarea
+                                id="description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            />
+                        </Field>
 
-                    <label className="block flex-1">
-                        <span className="text-sm font-semibold text-foreground">End Date</span>
-                        <input
-                            type="date"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            required
-                        />
-                    </label>
-                </div>
+                        <Field label="Address" htmlFor="address">
+                            <Input
+                                id="address"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                            />
+                        </Field>
 
-                {/* Room Type */}
-                <label className="block">
-                    <span className="text-sm font-semibold text-foreground">Room Type</span>
-                    <select
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                        value={roomType}
-                        onChange={(e) => setRoomType(e.target.value as "private" | "shared")}
-                    >
-                        <option value="private">Private</option>
-                        <option value="shared">Shared</option>
-                    </select>
-                </label>
+                        <Field label="Rent ($/month)" htmlFor="rent" required>
+                            <Input
+                                id="rent"
+                                type="number"
+                                value={rent}
+                                onChange={(e) => setRent(e.target.value)}
+                                min="0"
+                                required
+                            />
+                        </Field>
 
-                {/* Bedrooms & Bathrooms */}
-                <div className="flex gap-4">
-                    <label className="block flex-1">
-                        <span className="text-sm font-semibold text-foreground">Bedrooms</span>
-                        <input
-                            type="number"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                            value={bedroomsInUnit}
-                            onChange={(e) => setBedroomsInUnit(Number(e.target.value))}
-                            min="1"
-                            required
-                        />
-                    </label>
-                     <label className="block flex-1">
-                        <span className="text-sm font-semibold text-foreground">Bathrooms</span>
-                        <input
-                            type="number"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
-                            value={bathroomsInUnit}
-                            onChange={(e) => setBathroomsInUnit(Number(e.target.value))}
-                            min="0"
-                            step="0.5"
-                            required
-                        />
-                    </label>
-                </div>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <Field label="Start Date" htmlFor="start-date" required>
+                                <Input
+                                    id="start-date"
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    required
+                                />
+                            </Field>
 
-                {/* Checkboxes */}
-                <div className="flex gap-6">
-                    <label className="flex items-center gap-2 text-foreground">
-                        <input
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary/20 dark:border-white/15 dark:bg-white/5"
-                            checked={privateBathroom}
-                            onChange={(e) => setPrivateBathroom(e.target.checked)}
-                        />
-                        <span className="text-sm font-semibold">Private Bathroom</span>
-                    </label>
+                            <Field label="End Date" htmlFor="end-date" required>
+                                <Input
+                                    id="end-date"
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    required
+                                />
+                            </Field>
+                        </div>
 
-                    <label className="flex items-center gap-2 text-foreground">
-                        <input
-                            type="checkbox"
-                            className="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary/20 dark:border-white/15 dark:bg-white/5"
-                            checked={furnished}
-                            onChange={(e) => setFurnished(e.target.checked)}
-                        />
-                        <span className="text-sm font-semibold">Furnished</span>
-                    </label>
-                </div>    
+                        <Field label="Room Type" required>
+                            <Select
+                                value={roomType}
+                                onValueChange={(value) => setRoomType(value as "private" | "shared")}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choose room type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="private">Private</SelectItem>
+                                    <SelectItem value="shared">Shared</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </Field>
 
-                {/* File Upload */}
-                <label className="block">
-                    <span className="text-sm font-semibold text-foreground">Images</span>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition file:mr-4 file:rounded-full file:border-0 file:bg-primary/10 file:px-4 file:py-2 file:font-semibold file:text-primary hover:file:bg-primary/14 dark:bg-white/4 dark:border-white/10 dark:file:bg-primary/14"
-                        onChange={(e) => {
-                            const files = e.target.files;
-                            if (files) {
-                                setSelectedFiles(Array.from(files))
-                            }
-                        }}
-                    />
-                    {selectedFiles.length > 0 && (
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            {selectedFiles.length} file(s) selected
-                        </p>
-                    )}
-                </label>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <Field label="Bedrooms" htmlFor="bedrooms" required>
+                                <Input
+                                    id="bedrooms"
+                                    type="number"
+                                    value={bedroomsInUnit}
+                                    onChange={(e) => setBedroomsInUnit(Number(e.target.value))}
+                                    min="1"
+                                    required
+                                />
+                            </Field>
+                            <Field label="Bathrooms" htmlFor="bathrooms" required>
+                                <Input
+                                    id="bathrooms"
+                                    type="number"
+                                    value={bathroomsInUnit}
+                                    onChange={(e) => setBathroomsInUnit(Number(e.target.value))}
+                                    min="0"
+                                    step="0.5"
+                                    required
+                                />
+                            </Field>
+                        </div>
 
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-[color:var(--brand-primary-hover)] disabled:opacity-50 dark:shadow-lg dark:shadow-primary/12"
-                >
-                    {isSubmitting ? 'Creating...' : 'Create Listing'}
-                </button>
-            </form>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                            <label className="flex items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground dark:border-white/8 dark:bg-white/3">
+                                <Checkbox
+                                    checked={privateBathroom}
+                                    onCheckedChange={(checked) => setPrivateBathroom(checked === true)}
+                                />
+                                <div>
+                                    <p className="text-sm font-semibold">Private Bathroom</p>
+                                    <p className="text-xs text-muted-foreground">Highlight stronger privacy for renters.</p>
+                                </div>
+                            </label>
+                            <label className="flex items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground dark:border-white/8 dark:bg-white/3">
+                                <Checkbox
+                                    checked={furnished}
+                                    onCheckedChange={(checked) => setFurnished(checked === true)}
+                                />
+                                <div>
+                                    <p className="text-sm font-semibold">Furnished</p>
+                                    <p className="text-xs text-muted-foreground">Let students know if move-in is easier.</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <Field
+                            label="Images"
+                            htmlFor="images"
+                            description="Upload one or more photos to help the listing feel credible at a glance."
+                        >
+                            <Input
+                                id="images"
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files) {
+                                        setSelectedFiles(Array.from(files))
+                                    }
+                                }}
+                            />
+                            {selectedFiles.length > 0 ? (
+                                <p className="text-sm text-muted-foreground">
+                                    {selectedFiles.length} file(s) selected
+                                </p>
+                            ) : null}
+                        </Field>
+
+                        <Button type="submit" disabled={isSubmitting} className="w-full">
+                            {isSubmitting ? 'Creating...' : 'Create Listing'}
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
         </div>
     )
 }

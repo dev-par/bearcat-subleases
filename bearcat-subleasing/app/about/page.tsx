@@ -6,6 +6,8 @@ import {
   MapPinned,
   ShieldCheck,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "About",
@@ -53,19 +55,15 @@ export default function AboutPage() {
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/listings"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-[color:var(--brand-primary-hover)]"
-            >
-              Browse listings
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/listings/create"
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:border-primary/30 hover:text-primary dark:bg-white/4"
-            >
-              Post your sublease
-            </Link>
+            <Button asChild size="lg">
+              <Link href="/listings">
+                Browse listings
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/listings/create">Post your sublease</Link>
+            </Button>
           </div>
         </section>
 
@@ -74,10 +72,8 @@ export default function AboutPage() {
             const Icon = principle.icon;
 
             return (
-              <article
-                key={principle.title}
-                className="rounded-[1.75rem] border border-border/80 bg-card/88 p-6 shadow-card dark:border-white/8 dark:bg-card/92"
-              >
+              <Card key={principle.title}>
+                <CardContent className="p-6">
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
                 </span>
@@ -87,7 +83,8 @@ export default function AboutPage() {
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
                   {principle.description}
                 </p>
-              </article>
+                </CardContent>
+              </Card>
             );
           })}
         </section>

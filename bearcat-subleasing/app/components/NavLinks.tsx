@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 import { NAV_ITEMS } from "./nav-config";
 
@@ -41,19 +43,13 @@ export default function NavLinks({
             href={item.href}
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
-            className={
-              orientation === "desktop"
-                ? `rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    active
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/15"
-                      : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
-                  }`
-                : `rounded-2xl px-4 py-3 text-sm font-semibold transition ${
-                    active
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/15"
-                      : "bg-muted/45 text-foreground hover:bg-muted/70"
-                  }`
-            }
+            className={cn(
+              buttonVariants({
+                variant: active ? "default" : orientation === "desktop" ? "ghost" : "secondary",
+                size: orientation === "desktop" ? "sm" : "default",
+              }),
+              orientation === "mobile" && !active ? "justify-start rounded-2xl bg-muted/45 text-foreground" : "",
+            )}
           >
             {item.label}
           </Link>

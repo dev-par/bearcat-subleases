@@ -4,6 +4,7 @@ import MobileNav from "./MobileNav";
 import NavLinks from "./NavLinks";
 import ThemeToggle from "./ThemeToggle";
 import { PRIMARY_CTA } from "./nav-config";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   return (
@@ -31,12 +32,9 @@ export default function Navbar() {
 
           <div className="hidden items-center gap-3 md:flex">
             <ThemeToggle />
-            <Link
-              href={PRIMARY_CTA.href}
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-[color:var(--brand-primary-hover)] dark:shadow-primary/15"
-            >
-              {PRIMARY_CTA.label}
-            </Link>
+            <Button asChild>
+              <Link href={PRIMARY_CTA.href}>{PRIMARY_CTA.label}</Link>
+            </Button>
           </div>
 
           <MobileNav />

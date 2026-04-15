@@ -5,6 +5,8 @@ import Image from "next/image";
 import DeleteButton from "@/app/components/DeleteButton";
 import { Bath, BedDouble, CalendarRange, Home, MapPin, Sofa } from "lucide-react";
 import ThemeToggle from "@/app/components/ThemeToggle";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -82,12 +84,9 @@ export default async function Page({
 
 					<div className="mt-5 flex flex-wrap gap-2">
 						{amenityBadges.map((badge) => (
-							<span
-								key={badge}
-								className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground dark:border-white/8 dark:bg-white/4"
-							>
+							<Badge key={badge}>
 								{badge}
-							</span>
+							</Badge>
 						))}
 					</div>
 
@@ -150,9 +149,7 @@ export default async function Page({
 							<Sofa className="mt-1 h-4 w-4 shrink-0 text-primary" />
 							<span>Contact visibility will live here once verified-user flows are added.</span>
 						</p>
-						<button className="mt-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-[color:var(--brand-primary-hover)] dark:shadow-lg dark:shadow-primary/10">
-							Contact landlord
-						</button>
+						<Button className="mt-5 w-full">Contact landlord</Button>
 					</div>
 
 					<DeleteButton listingId={listing.id} />
