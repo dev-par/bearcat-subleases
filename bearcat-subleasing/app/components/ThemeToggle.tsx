@@ -11,7 +11,6 @@ export default function ThemeToggle() {
 		() => false,
 	);
 	const { resolvedTheme, setTheme } = useTheme();
-
 	const isDark = resolvedTheme === "dark";
 	const nextTheme = isDark ? "light" : "dark";
 	const label = `Switch to ${nextTheme} mode`;

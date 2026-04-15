@@ -22,25 +22,55 @@ export default function ExampleListingsCarousel({
   listings,
 }: ExampleListingsCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const listingCount = listings.length;
 
   useEffect(() => {
+    if (listingCount < 2) {
+      return;
+    }
+
     const intervalId = window.setInterval(() => {
-      setActiveIndex((currentIndex) => (currentIndex + 1) % listings.length);
+      setActiveIndex((currentIndex) => (currentIndex + 1) % listingCount);
     }, AUTO_ROTATE_MS);
 
     return () => window.clearInterval(intervalId);
-  }, [listings.length]);
+  }, [listingCount]);
 
-  const activeListing = listings[activeIndex];
+  if (listingCount === 0) {
+    return (
+      <div className="relative overflow-hidden rounded-[2.2rem] border border-border/80 bg-card/96 p-5 shadow-soft dark:border-white/8 dark:bg-card/92 sm:p-6">
+        <div className="absolute inset-x-10 top-3 h-16 rounded-full bg-primary/7 blur-3xl dark:bg-primary/8" />
+        <div className="relative rounded-[1.7rem] border border-dashed border-border/70 bg-background/70 p-8 text-center dark:border-white/8 dark:bg-white/3">
+          <p className="font-heading text-2xl font-semibold text-foreground">
+            Example listings coming soon
+          </p>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Add a few sample listings to preview how the carousel rotates through featured subleases.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const safeActiveIndex = activeIndex >= listingCount ? 0 : activeIndex;
+  const activeListing = listings[safeActiveIndex];
 
   function showPrevious() {
+    if (listingCount < 2) {
+      return;
+    }
+
     setActiveIndex((currentIndex) =>
-      currentIndex === 0 ? listings.length - 1 : currentIndex - 1,
+      currentIndex === 0 ? listingCount - 1 : currentIndex - 1,
     );
   }
 
   function showNext() {
-    setActiveIndex((currentIndex) => (currentIndex + 1) % listings.length);
+    if (listingCount < 2) {
+      return;
+    }
+
+    setActiveIndex((currentIndex) => (currentIndex + 1) % listingCount);
   }
 
   function getPlaceholderLabel(title: string) {
@@ -128,10 +158,10 @@ export default function ExampleListingsCarousel({
                 key={listing.title}
                 type="button"
                 aria-label={`Show example listing ${index + 1}`}
-                aria-pressed={index === activeIndex}
+                aria-pressed={index === safeActiveIndex}
                 onClick={() => setActiveIndex(index)}
                 className={`h-2.5 rounded-full transition ${
-                  index === activeIndex
+                  index === safeActiveIndex
                     ? "w-8 bg-primary"
                     : "w-2.5 bg-border hover:bg-primary/45 dark:bg-white/12 dark:hover:bg-white/25"
                 }`}
