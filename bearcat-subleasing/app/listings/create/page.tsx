@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ListingMutationInput } from "@/types/listing";
 import Link from "next/link";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 export default function CreatePage() {
     const router = useRouter();
@@ -84,21 +85,24 @@ export default function CreatePage() {
     }
 
     return (
-        <div className="mx-auto max-w-xl px-4 py-8">
-            <Link href="/listings" className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground">
-                ← Back to listings
-            </Link>
+        <div className="mx-auto max-w-xl px-4 py-8 sm:py-10">
+            <div className="mb-4 flex items-center justify-between gap-3">
+                <Link href="/listings" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground">
+                    ← Back to listings
+                </Link>
+                <ThemeToggle />
+            </div>
             <h1 className="font-heading text-4xl font-semibold text-foreground">Create Listing</h1>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 Add the core housing facts first. The listing dashboard is designed to surface these details clearly.
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-4 rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-card">
+            <form onSubmit={handleSubmit} className="mt-8 space-y-4 rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-card dark:border-white/8 sm:p-7">
                 <label className="block">
-                    <span className="text-sm font-semibold">Title</span>
+                    <span className="text-sm font-semibold text-foreground">Title</span>
                     <input
                         type="text"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
@@ -106,10 +110,10 @@ export default function CreatePage() {
                 </label>
 
                 <label className="block">
-                    <span className="text-sm font-semibold">Description</span>
+                    <span className="text-sm font-semibold text-foreground">Description</span>
                     <input
                         type="text"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required
@@ -118,10 +122,10 @@ export default function CreatePage() {
 
                {/* Address */}
                 <label className="block">
-                    <span className="text-sm font-semibold">Address</span>
+                    <span className="text-sm font-semibold text-foreground">Address</span>
                     <input
                         type="text"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                     />
@@ -129,10 +133,10 @@ export default function CreatePage() {
 
                 {/* Rent */}
                 <label className="block">
-                    <span className="text-sm font-semibold">Rent ($/month)</span>
+                    <span className="text-sm font-semibold text-foreground">Rent ($/month)</span>
                     <input
                         type="number"
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                         value={rent}
                         onChange={(e) => setRent(e.target.value)}
                         min="0"
@@ -143,10 +147,10 @@ export default function CreatePage() {
                 {/* Dates */}
                 <div className="flex gap-4">
                     <label className="block flex-1">
-                        <span className="text-sm font-semibold">Start Date</span>
+                        <span className="text-sm font-semibold text-foreground">Start Date</span>
                         <input
                             type="date"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                             required
@@ -154,10 +158,10 @@ export default function CreatePage() {
                     </label>
 
                     <label className="block flex-1">
-                        <span className="text-sm font-semibold">End Date</span>
+                        <span className="text-sm font-semibold text-foreground">End Date</span>
                         <input
                             type="date"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
                             required
@@ -167,9 +171,9 @@ export default function CreatePage() {
 
                 {/* Room Type */}
                 <label className="block">
-                    <span className="text-sm font-semibold">Room Type</span>
+                    <span className="text-sm font-semibold text-foreground">Room Type</span>
                     <select
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                         value={roomType}
                         onChange={(e) => setRoomType(e.target.value as "private" | "shared")}
                     >
@@ -181,10 +185,10 @@ export default function CreatePage() {
                 {/* Bedrooms & Bathrooms */}
                 <div className="flex gap-4">
                     <label className="block flex-1">
-                        <span className="text-sm font-semibold">Bedrooms</span>
+                        <span className="text-sm font-semibold text-foreground">Bedrooms</span>
                         <input
                             type="number"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                             value={bedroomsInUnit}
                             onChange={(e) => setBedroomsInUnit(Number(e.target.value))}
                             min="1"
@@ -192,10 +196,10 @@ export default function CreatePage() {
                         />
                     </label>
                      <label className="block flex-1">
-                        <span className="text-sm font-semibold">Bathrooms</span>
+                        <span className="text-sm font-semibold text-foreground">Bathrooms</span>
                         <input
                             type="number"
-                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                            className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/15 dark:bg-white/4 dark:border-white/10"
                             value={bathroomsInUnit}
                             onChange={(e) => setBathroomsInUnit(Number(e.target.value))}
                             min="0"
@@ -207,18 +211,20 @@ export default function CreatePage() {
 
                 {/* Checkboxes */}
                 <div className="flex gap-6">
-                    <label className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 text-foreground">
                         <input
                             type="checkbox"
+                            className="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary/20 dark:border-white/15 dark:bg-white/5"
                             checked={privateBathroom}
                             onChange={(e) => setPrivateBathroom(e.target.checked)}
                         />
                         <span className="text-sm font-semibold">Private Bathroom</span>
                     </label>
 
-                    <label className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 text-foreground">
                         <input
                             type="checkbox"
+                            className="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary/20 dark:border-white/15 dark:bg-white/5"
                             checked={furnished}
                             onChange={(e) => setFurnished(e.target.checked)}
                         />
@@ -228,12 +234,12 @@ export default function CreatePage() {
 
                 {/* File Upload */}
                 <label className="block">
-                    <span className="text-sm font-semibold">Images</span>
+                    <span className="text-sm font-semibold text-foreground">Images</span>
                     <input
                         type="file"
                         accept="image/*"
                         multiple
-                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3"
+                        className="mt-1 w-full rounded-2xl border border-input bg-background p-3 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] outline-none transition file:mr-4 file:rounded-full file:border-0 file:bg-primary/10 file:px-4 file:py-2 file:font-semibold file:text-primary hover:file:bg-primary/14 dark:bg-white/4 dark:border-white/10 dark:file:bg-primary/14"
                         onChange={(e) => {
                             const files = e.target.files;
                             if (files) {
@@ -251,7 +257,7 @@ export default function CreatePage() {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-[#b8011c] disabled:opacity-50"
+                    className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-[color:var(--brand-primary-hover)] disabled:opacity-50 dark:shadow-lg dark:shadow-primary/12"
                 >
                     {isSubmitting ? 'Creating...' : 'Create Listing'}
                 </button>
