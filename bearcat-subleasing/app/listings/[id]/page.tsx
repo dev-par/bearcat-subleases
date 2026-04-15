@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import DeleteButton from "@/app/components/DeleteButton";
 import { Bath, BedDouble, CalendarRange, Home, MapPin, Sofa } from "lucide-react";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -45,16 +46,19 @@ export default async function Page({
 	].filter(Boolean) as string[];
 
 	return (
-		<div className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-8">
-			<Link
-				href="/listings"
-				className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-			>
-				← Back to listings
-			</Link>
+		<div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
+			<div className="mb-6 flex items-center justify-between gap-3">
+				<Link
+					href="/listings"
+					className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+				>
+					← Back to listings
+				</Link>
+				<ThemeToggle />
+			</div>
 
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-				<div className="overflow-hidden rounded-[2rem] border border-border/80 bg-card shadow-soft">
+				<div className="overflow-hidden rounded-[2rem] border border-border/80 bg-card shadow-soft dark:border-white/8">
 					<Image
 						src={imageUrl}
 						alt={listing.title}
@@ -64,7 +68,7 @@ export default async function Page({
 					/>
 				</div>
 
-				<div className="rounded-[2rem] border border-border/80 bg-card p-6 shadow-soft sm:p-8">
+				<div className="rounded-[2rem] border border-border/80 bg-card p-6 shadow-soft dark:border-white/8 sm:p-8">
 					<p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
 						Listing detail
 					</p>
@@ -80,7 +84,7 @@ export default async function Page({
 						{amenityBadges.map((badge) => (
 							<span
 								key={badge}
-								className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"
+								className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground dark:border-white/8 dark:bg-white/4"
 							>
 								{badge}
 							</span>
@@ -88,14 +92,14 @@ export default async function Page({
 					</div>
 
 					<div className="mt-8 grid gap-4 sm:grid-cols-2">
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4">
+						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
 							<div className="flex items-center gap-2 text-sm text-muted-foreground">
 								<BedDouble className="h-4 w-4 text-primary" />
 								Bedrooms
 							</div>
 							<p className="mt-2 text-lg font-semibold text-foreground">{listing.bedrooms_in_unit}</p>
 						</div>
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4">
+						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
 							<div className="flex items-center gap-2 text-sm text-muted-foreground">
 								<Bath className="h-4 w-4 text-primary" />
 								Bathrooms
@@ -104,7 +108,7 @@ export default async function Page({
 								{listing.bathrooms_in_unit_x2 / 2}
 							</p>
 						</div>
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4">
+						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
 							<div className="flex items-center gap-2 text-sm text-muted-foreground">
 								<Home className="h-4 w-4 text-primary" />
 								Room type
@@ -113,7 +117,7 @@ export default async function Page({
 								{listing.room_type || "Not specified"}
 							</p>
 						</div>
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4">
+						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
 							<div className="flex items-center gap-2 text-sm text-muted-foreground">
 								<CalendarRange className="h-4 w-4 text-primary" />
 								Availability
@@ -125,14 +129,14 @@ export default async function Page({
 						</div>
 					</div>
 
-					<div className="mt-8 rounded-[1.5rem] border border-border/70 bg-white p-5">
+					<div className="mt-8 rounded-[1.5rem] border border-border/70 bg-white p-5 dark:border-white/8 dark:bg-white/4">
 						<h2 className="font-heading text-2xl font-semibold text-foreground">Description</h2>
 						<p className="mt-3 text-base leading-7 text-muted-foreground">
 							{listing.description || "No description provided."}
 						</p>
 					</div>
 
-					<div className="mt-6 rounded-[1.5rem] border border-border/70 bg-white p-5">
+					<div className="mt-6 rounded-[1.5rem] border border-border/70 bg-white p-5 dark:border-white/8 dark:bg-white/4">
 						<h2 className="font-heading text-2xl font-semibold text-foreground">Location</h2>
 						<p className="mt-3 flex items-start gap-2 text-base leading-7 text-muted-foreground">
 							<MapPin className="mt-1 h-4 w-4 shrink-0 text-primary" />
@@ -140,13 +144,13 @@ export default async function Page({
 						</p>
 					</div>
 
-					<div className="mt-6 rounded-[1.5rem] border border-border/70 bg-[linear-gradient(180deg,rgba(255,247,240,0.9)_0%,rgba(255,255,255,1)_100%)] p-5">
+					<div className="mt-6 rounded-[1.5rem] border border-border/70 bg-[linear-gradient(180deg,rgba(255,247,240,0.9)_0%,rgba(255,255,255,1)_100%)] p-5 dark:border-primary/18 dark:bg-[linear-gradient(180deg,rgba(255,90,114,0.08)_0%,rgba(20,24,29,0.96)_72%)]">
 						<h2 className="font-heading text-2xl font-semibold text-foreground">Contact</h2>
 						<p className="mt-3 flex items-start gap-2 text-base leading-7 text-muted-foreground">
 							<Sofa className="mt-1 h-4 w-4 shrink-0 text-primary" />
 							<span>Contact visibility will live here once verified-user flows are added.</span>
 						</p>
-						<button className="mt-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-[#b8011c]">
+						<button className="mt-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-[color:var(--brand-primary-hover)] dark:shadow-lg dark:shadow-primary/10">
 							Contact landlord
 						</button>
 					</div>
