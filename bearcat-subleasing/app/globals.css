@@ -247,3 +247,12 @@
 @utility shadow-card {
   box-shadow: var(--shadow-card);
 }
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}

@@ -93,7 +93,7 @@ export default function ExampleListingsCarousel({
           className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-right-3 rounded-[1.7rem] border border-border/70 bg-[linear-gradient(160deg,rgba(255,255,255,0.98)_0%,rgba(247,241,234,0.86)_100%)] p-4 duration-500 dark:border-white/8 dark:bg-[linear-gradient(145deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] sm:p-5"
         >
           <div className="relative overflow-hidden rounded-[1.35rem] border border-border/70 bg-[linear-gradient(145deg,#f2ece5_0%,#ffffff_38%,#ece6df_100%)] dark:border-white/8 dark:bg-[linear-gradient(145deg,#20262d_0%,#171c22_48%,#101419_100%)]">
-            <div className="aspect-[4/3] p-5">
+            <div className="aspect-[4/3] p-5 md:aspect-video lg:aspect-[21/9]">
               <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(224,1,34,0.16),transparent_58%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,90,114,0.16),transparent_58%)]" />
               <div className="absolute inset-x-5 top-5 flex items-center justify-between">
                 <div className="rounded-full border border-white/70 bg-white/86 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-sm dark:border-white/10 dark:bg-white/7 dark:text-[#ff9dab]">
