@@ -17,6 +17,17 @@
 - Before any Next.js work, read the relevant local doc in `node_modules/next/dist/docs/` when it exists.
 - If local Next.js docs are unavailable or insufficient, use Context7 for current Next.js documentation.
 
+## Auth Guidance
+
+- For Better Auth or auth-related work, consult the local Better Auth skills before changing code.
+- Start with `.agents/skills/better-auth-best-practices/SKILL.md` for general Better Auth setup, server/client config, sessions, adapters, plugins, and environment variables.
+- Use `.agents/skills/create-auth-skill/SKILL.md` when implementing or scaffolding authentication flows in the app.
+- Use `.agents/skills/email-and-password-best-practices/SKILL.md` for email/password sign-up, sign-in, verification, password reset, and password policy work.
+- Use `.agents/skills/two-factor-authentication-best-practices/SKILL.md` for MFA, TOTP, OTP, backup codes, and trusted-device flows.
+- Use `.agents/skills/organization-best-practices/SKILL.md` for organizations, teams, invitations, roles, permissions, and RBAC.
+- Use `.agents/skills/better-auth-security-best-practices/SKILL.MD` for security hardening, including secrets, CSRF, trusted origins, rate limiting, cookies, sessions, OAuth token encryption, IP tracking, and audit logging.
+- Still use Context7 for current Better Auth documentation and API details; the local skills are project workflow guidance, not a replacement for up-to-date docs.
+
 ## Repo Workflow
 
 - Package manager: `pnpm`
