@@ -71,6 +71,7 @@ pnpm install
 ```
 
 Generate and apply migrations:
+These are needed whenever the data model is updated
 
 ```bash
 pnpm drizzle-kit generate
