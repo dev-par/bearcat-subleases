@@ -29,14 +29,13 @@ export default function ThemeToggle() {
 		<Button
 			aria-label={label}
 			title={label}
-			variant="outline"
+			variant="ghost"
+			size="icon"
 			onClick={() => setTheme(nextTheme)}
-			className="h-11 px-3"
 		>
 			<span className="grid h-8 w-8 place-items-center rounded-full bg-primary/10 text-primary">
 				{isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
 			</span>
-			<span className="hidden sm:inline">{isDark ? "Light mode" : "Dark mode"}</span>
 		</Button>
 	);
 }
