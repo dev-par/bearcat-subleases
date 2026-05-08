@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import ComponentReviewShowcase from "@/app/components/ComponentReviewShowcase";
-import ThemeToggle from "@/app/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "Component Review",
@@ -17,7 +16,7 @@ export default function ComponentReviewPage() {
   return (
     <main className="px-5 py-8 sm:px-8 sm:py-10">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-6 flex items-start justify-between gap-4">
+        <div className="mb-6">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               Temporary review route
@@ -29,7 +28,6 @@ export default function ComponentReviewPage() {
               Use this page to review the BEA-12 primitives in one place before deciding whether they are strong enough for the live product surfaces.
             </p>
           </div>
-          <ThemeToggle />
         </div>
 
         <ComponentReviewShowcase />

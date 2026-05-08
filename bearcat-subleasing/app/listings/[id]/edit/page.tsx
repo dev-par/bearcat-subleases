@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import ThemeToggle from "@/app/components/ThemeToggle";
 import ListingForm from "@/app/listings/components/ListingForm";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth-guards";
 import { assertValidListingId } from "@/lib/validation/listing";
 import { getListingById } from "@/queries/get";
 
@@ -38,14 +37,13 @@ export default async function EditListingPage({
 
 	return (
 		<div className="mx-auto max-w-xl px-4 py-8 sm:py-10">
-			<div className="mb-4 flex items-center justify-between gap-3">
+			<div className="mb-4">
 				<Link
 					href={`/listings/${listing.id}`}
 					className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
 				>
 					← Back to listing
 				</Link>
-				<ThemeToggle />
 			</div>
 			<p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
 				{user.isAdmin && listing.user_id !== user.id

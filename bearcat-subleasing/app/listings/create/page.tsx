@@ -1,19 +1,17 @@
 import Link from "next/link";
 
-import ThemeToggle from "@/app/components/ThemeToggle";
 import ListingForm from "@/app/listings/components/ListingForm";
 
 export default function CreatePage() {
 	return (
 		<div className="mx-auto max-w-xl px-4 py-8 sm:py-10">
-			<div className="mb-4 flex items-center justify-between gap-3">
+			<div className="mb-4">
 				<Link
 					href="/listings"
 					className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
 				>
 					← Back to listings
 				</Link>
-				<ThemeToggle />
 			</div>
 			<h1 className="font-heading text-4xl font-semibold text-foreground">
 				Create Listing

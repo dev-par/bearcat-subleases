@@ -4,10 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import DeleteButton from "@/app/components/DeleteButton";
 import { Bath, BedDouble, CalendarRange, Home, MapPin, Sofa } from "lucide-react";
-import ThemeToggle from "@/app/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth-guards";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -51,14 +50,13 @@ export default async function Page({
 
 	return (
 		<div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
-			<div className="mb-6 flex items-center justify-between gap-3">
+			<div className="mb-6">
 				<Link
 					href="/listings"
 					className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
 				>
 					← Back to listings
 				</Link>
-				<ThemeToggle />
 			</div>
 
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">

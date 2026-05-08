@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import type { ListingMutationInput } from "@/types/listing";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,6 +18,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/toast";
 
 export interface ListingFormInitialValues extends ListingMutationInput {
 	imageUrls: string[];
@@ -81,14 +81,40 @@ export default function ListingForm({
 	);
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+	const hasShownValidationToast = useRef(false);
 
 	const isEditMode = mode === "edit";
+	const failureTitle = `Could not ${isEditMode ? "update" : "create"} listing`;
+
+	const getFieldLabel = (
+		field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
+	) => {
+		if (!field.id) {
+			return "this field";
+		}
+
+		const label = document.querySelector(`label[for="${field.id}"]`);
+		return label?.textContent?.replace("*", "").trim() || "this field";
+	};
+
+	const getValidationMessage = (
+		field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
+	) => {
+		const label = getFieldLabel(field);
+
+		if (field.validity.valueMissing) {
+			return `Please fill out ${label}.`;
+		}
+
+		return `${label}: ${field.validationMessage}`;
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsSubmitting(true);
-		setErrorMessage(null);
+		hasShownValidationToast.current = false;
+		setFieldErrors({});
 
 		try {
 			const uploadedImageUrls: string[] = [];
@@ -137,13 +163,15 @@ export default function ListingForm({
 				router.push(successRedirectUrl);
 				router.refresh();
 			} else {
-				setErrorMessage(
+				toast.error(
+					failureTitle,
 					data.error || `Failed to ${isEditMode ? "update" : "create"} listing`,
 				);
 			}
 		} catch (error) {
 			console.error("Error:", error);
-			setErrorMessage(
+			toast.error(
+				failureTitle,
 				error instanceof Error ? error.message : "An error occurred",
 			);
 		} finally {
@@ -151,20 +179,67 @@ export default function ListingForm({
 		}
 	};
 
+	const handleInvalid = (e: React.InvalidEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const field = e.target as HTMLInputElement | HTMLTextAreaElement;
+		const fieldKey = field.id || field.name;
+		const message = getValidationMessage(field);
+
+		if (fieldKey) {
+			setFieldErrors((current) => ({
+				...current,
+				[fieldKey]: message,
+			}));
+		}
+
+		if (hasShownValidationToast.current) {
+			return;
+		}
+
+		hasShownValidationToast.current = true;
+		field.closest("[data-slot='field']")?.scrollIntoView({
+			behavior: "smooth",
+			block: "center",
+		});
+		field.focus({ preventScroll: true });
+		toast.error(failureTitle, message);
+
+		window.setTimeout(() => {
+			hasShownValidationToast.current = false;
+		}, 250);
+	};
+
+	const handleInput = (e: React.FormEvent<HTMLFormElement>) => {
+		const field = e.target as HTMLInputElement | HTMLTextAreaElement;
+		const fieldKey = field.id || field.name;
+
+		if (!fieldKey || !fieldErrors[fieldKey]) {
+			return;
+		}
+
+		setFieldErrors((current) => {
+			const nextErrors = { ...current };
+			delete nextErrors[fieldKey];
+			return nextErrors;
+		});
+	};
+
 	return (
 		<Card className="mt-8 border-border/70">
 			<CardContent className="p-6 sm:p-7">
-				<form onSubmit={handleSubmit} className="space-y-5">
-					{errorMessage ? (
-						<Alert variant="destructive">
-							<AlertTitle>
-								Could not {isEditMode ? "update" : "create"} listing
-							</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					) : null}
-
-					<Field label="Title" htmlFor="title" required>
+				<form
+					onSubmit={handleSubmit}
+					onInvalid={handleInvalid}
+					onInput={handleInput}
+					className="space-y-5"
+				>
+					<Field
+						label="Title"
+						htmlFor="title"
+						required
+						error={fieldErrors.title}
+					>
 						<Input
 							id="title"
 							value={title}
@@ -178,6 +253,7 @@ export default function ListingForm({
 						htmlFor="description"
 						description="Describe the setup, roommate situation, and any useful context a student would want to know early."
 						required
+						error={fieldErrors.description}
 					>
 						<Textarea
 							id="description"
@@ -195,7 +271,12 @@ export default function ListingForm({
 						/>
 					</Field>
 
-					<Field label="Rent ($/month)" htmlFor="rent" required>
+					<Field
+						label="Rent ($/month)"
+						htmlFor="rent"
+						required
+						error={fieldErrors.rent}
+					>
 						<Input
 							id="rent"
 							type="number"
@@ -207,7 +288,12 @@ export default function ListingForm({
 					</Field>
 
 					<div className="grid gap-4 sm:grid-cols-2">
-						<Field label="Start Date" htmlFor="start-date" required>
+						<Field
+							label="Start Date"
+							htmlFor="start-date"
+							required
+							error={fieldErrors["start-date"]}
+						>
 							<Input
 								id="start-date"
 								type="date"
@@ -217,7 +303,12 @@ export default function ListingForm({
 							/>
 						</Field>
 
-						<Field label="End Date" htmlFor="end-date" required>
+						<Field
+							label="End Date"
+							htmlFor="end-date"
+							required
+							error={fieldErrors["end-date"]}
+						>
 							<Input
 								id="end-date"
 								type="date"
@@ -246,7 +337,12 @@ export default function ListingForm({
 					</Field>
 
 					<div className="grid gap-4 sm:grid-cols-2">
-						<Field label="Bedrooms" htmlFor="bedrooms" required>
+						<Field
+							label="Bedrooms"
+							htmlFor="bedrooms"
+							required
+							error={fieldErrors.bedrooms}
+						>
 							<Input
 								id="bedrooms"
 								type="number"
@@ -256,7 +352,12 @@ export default function ListingForm({
 								required
 							/>
 						</Field>
-						<Field label="Bathrooms" htmlFor="bathrooms" required>
+						<Field
+							label="Bathrooms"
+							htmlFor="bathrooms"
+							required
+							error={fieldErrors.bathrooms}
+						>
 							<Input
 								id="bathrooms"
 								type="number"

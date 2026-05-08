@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { ListingImage } from "@/db/schema";
 import { redirect } from "next/navigation";
 import { assertValidListingId } from "@/lib/validation/listing";
-import { AuthorizationError, requireUser } from "@/lib/auth";
+import { AuthorizationError, requireUser } from "@/lib/auth-guards";
 
 export async function deleteListing(listingId: string) {
 	try {
