@@ -4,7 +4,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { awsEnv } from "@/lib/env";
 import { InputValidationError } from "@/lib/errors";
 import { validateImageFile } from "@/lib/validation/upload";
-import { AuthorizationError, requireUser } from "@/lib/auth";
+import { AuthorizationError, requireUser } from "@/lib/auth-guards";
 
 export async function POST(request: NextRequest) {
 	try {
