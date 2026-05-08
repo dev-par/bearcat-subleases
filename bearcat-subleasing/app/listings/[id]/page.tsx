@@ -7,6 +7,7 @@ import { Bath, BedDouble, CalendarRange, Home, MapPin, Sofa } from "lucide-react
 import ThemeToggle from "@/app/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/auth";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -24,7 +25,7 @@ export default async function Page({
 		notFound();
 	}
 
-	const listing = await getListingById(id);
+	const [listing, user] = await Promise.all([getListingById(id), getCurrentUser()]);
 
 	if (!listing) {
 		notFound();
@@ -46,6 +47,7 @@ export default async function Page({
 		listing.furnished ? "Furnished" : null,
 		listing.room_type ? `${listing.room_type} room` : null,
 	].filter(Boolean) as string[];
+	const canManageListing = Boolean(user?.isAdmin || user?.id === listing.user_id);
 
 	return (
 		<div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
@@ -152,7 +154,16 @@ export default async function Page({
 						<Button className="mt-5 w-full">Contact landlord</Button>
 					</div>
 
-					<DeleteButton listingId={listing.id} />
+					{canManageListing ? (
+						<div className="mt-6 space-y-3">
+							<Link href={`/listings/${listing.id}/edit`}>
+								<Button variant="outline" className="w-full">
+									Edit Listing
+								</Button>
+							</Link>
+							<DeleteButton listingId={listing.id} />
+						</div>
+					) : null}
 				</div>
 			</div>
 		</div>
