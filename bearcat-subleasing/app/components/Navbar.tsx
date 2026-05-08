@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import AuthNav from "./AuthNav";
 import MobileNav from "./MobileNav";
 import NavLinks from "./NavLinks";
 import ThemeToggle from "./ThemeToggle";
@@ -32,6 +33,7 @@ export default function Navbar() {
 
           <div className="hidden items-center gap-3 md:flex">
             <ThemeToggle />
+            <AuthNav />
             <Button asChild>
               <Link href={PRIMARY_CTA.href}>{PRIMARY_CTA.label}</Link>
             </Button>

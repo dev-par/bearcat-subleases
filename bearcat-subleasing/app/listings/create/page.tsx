@@ -1,8 +1,16 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import ListingForm from "@/app/listings/components/ListingForm";
+import { getCurrentUser } from "@/lib/auth-guards";
 
-export default function CreatePage() {
+export default async function CreatePage() {
+	const user = await getCurrentUser();
+
+	if (!user) {
+		redirect("/auth/sign-in?redirectTo=/listings/create");
+	}
+
 	return (
 		<div className="mx-auto max-w-xl px-4 py-8 sm:py-10">
 			<div className="mb-4">

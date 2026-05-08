@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
+import AuthNav from "./AuthNav";
 import NavLinks from "./NavLinks";
 import ThemeToggle from "./ThemeToggle";
 import { PRIMARY_CTA } from "./nav-config";
@@ -37,6 +38,7 @@ export default function MobileNav() {
                 {PRIMARY_CTA.label}
               </Link>
             </Button>
+            <AuthNav orientation="mobile" onNavigate={() => setOpen(false)} />
             <ThemeToggle />
           </div>
         </div>
