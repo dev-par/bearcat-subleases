@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getListings } from "@/queries/get";
 import { createListing } from "@/queries/insert";
-import { AuthorizationError, requireUser } from "@/lib/auth";
+import { AuthorizationError, requireUser } from "@/lib/auth-guards";
 import { InputValidationError } from "@/lib/errors";
 import { parseListingSubmissionInput } from "@/lib/validation/listing";
 
