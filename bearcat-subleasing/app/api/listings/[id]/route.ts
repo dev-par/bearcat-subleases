@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { Listing, ListingImage } from "@/db/schema";
 import { getListingById } from "@/queries/get";
-import { AuthorizationError, requireUser } from "@/lib/auth";
+import { AuthorizationError, requireUser } from "@/lib/auth-guards";
 import { InputValidationError } from "@/lib/errors";
 import {
 	assertValidListingId,
