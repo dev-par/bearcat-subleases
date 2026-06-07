@@ -85,3 +85,20 @@
 - Vercel MCP: deployments, logs, preview debugging, browser verification
 - Linear MCP: team and issue workflow
 - GitHub tools: available for future PR, CI, and review workflows when the repo starts using them more actively
+
+## Doc Maintenance
+
+When you finish a task that modified code, scan this table and update any affected docs before marking the task done. Not every change requires a doc update — use judgment.
+
+| If you changed... | Update... |
+|---|---|
+| New feature, route, page, server action, or query | `bearcat-subleasing/docs/mvp-plan.md` — mark completed backlog items, note architecture decisions |
+| Environment variable (added, renamed, removed) | `agents.md` environment section |
+| Coding convention, new utility, or tech stack change | `agents.md` relevant sections |
+| Color token, typography, spacing, or theme variable | `bearcat-subleasing/docs/visual-identity.md` |
+| UI pattern, layout decision, or component design choice | `bearcat-subleasing/docs/design-methodology.md` |
+| Better Auth config or auth flow | The relevant `.agents/skills/` SKILL.md (only if the existing guidance is wrong or missing) |
+
+Keep `agents.md` and `bearcat-subleasing/CLAUDE.md` in sync — if you update guidance in one, apply the same change to the other.
+
+Changes that typically do **not** need doc updates: bug fixes, refactors that don't change behavior, style tweaks within existing design tokens.
