@@ -84,3 +84,20 @@ Do not ship bare framework defaults. Every visible UI change needs design judgme
 - **Design methodology and decision framework**: `docs/design-methodology.md`
 
 Shadcn/ui components in `components/ui/` are source-owned — customize them immediately, do not ship stock defaults. Both light and dark mode are required; class-based dark mode, system default via `next-themes`.
+
+## Doc Maintenance
+
+When you finish a task that modified code, scan this table and update any affected docs before marking the task done. Not every change requires a doc update — use judgment.
+
+| If you changed... | Update... |
+|---|---|
+| New feature, route, page, server action, or query | `docs/mvp-plan.md` — mark completed backlog items, note architecture decisions |
+| Environment variable (added, renamed, removed) | Root `CLAUDE.md` env table |
+| Coding convention, new utility, or tech stack change | `bearcat-subleasing/CLAUDE.md` conventions sections |
+| Color token, typography, spacing, or theme variable | `docs/visual-identity.md` |
+| UI pattern, layout decision, or component design choice | `docs/design-methodology.md` |
+| Better Auth config or auth flow | The relevant `.agents/skills/` SKILL.md (only if the existing guidance is wrong or missing) |
+
+Keep `agents.md` and `bearcat-subleasing/CLAUDE.md` in sync — if you update guidance in one, apply the same change to the other.
+
+Changes that typically do **not** need doc updates: bug fixes, refactors that don't change behavior, style tweaks within existing design tokens.
