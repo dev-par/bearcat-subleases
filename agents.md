@@ -1,90 +1,109 @@
 # Bearcat Subleases Agent Guide
 
-## Scope
-
-- The main application lives in `bearcat-subleasing/`.
-- Prefer working from `bearcat-subleasing/` unless the task is explicitly about repo-level files.
-- Treat this repo as local-development-first today, but keep workflows compatible with future GitHub PR and CI usage.
+The main application lives in `bearcat-subleasing/` — work from that directory for all code tasks.
 
 ## Docs First
 
-- Use Context7 MCP whenever the task involves a library, framework, SDK, API, CLI, or cloud service.
-- Start with `resolve-library-id`, then `query-docs`, and answer from the fetched docs.
-- Prefer Context7 over web search for technical documentation.
+Use Context7 MCP whenever the task involves a library, framework, SDK, API, CLI, or cloud service. Workflow: `resolve-library-id` → `query-docs` → answer from fetched docs. Prefer Context7 over web search for technical documentation.
 
 ## Next.js Rule
 
-- Before any Next.js work, read the relevant local doc in `node_modules/next/dist/docs/` when it exists.
-- If local Next.js docs are unavailable or insufficient, use Context7 for current Next.js documentation.
+Before any Next.js work, check `node_modules/next/dist/docs/` for local docs. If unavailable or insufficient, use Context7 for current Next.js documentation.
 
-## Auth Guidance
+## Tech Stack
 
-- For Better Auth or auth-related work, consult the local Better Auth skills before changing code.
-- Start with `.agents/skills/better-auth-best-practices/SKILL.md` for general Better Auth setup, server/client config, sessions, adapters, plugins, and environment variables.
-- Use `.agents/skills/create-auth-skill/SKILL.md` when implementing or scaffolding authentication flows in the app.
-- Use `.agents/skills/email-and-password-best-practices/SKILL.md` for email/password sign-up, sign-in, verification, password reset, and password policy work.
-- Use `.agents/skills/two-factor-authentication-best-practices/SKILL.md` for MFA, TOTP, OTP, backup codes, and trusted-device flows.
-- Use `.agents/skills/organization-best-practices/SKILL.md` for organizations, teams, invitations, roles, permissions, and RBAC.
-- Use `.agents/skills/better-auth-security-best-practices/SKILL.MD` for security hardening, including secrets, CSRF, trusted origins, rate limiting, cookies, sessions, OAuth token encryption, IP tracking, and audit logging.
-- Still use Context7 for current Better Auth documentation and API details; the local skills are project workflow guidance, not a replacement for up-to-date docs.
+- **Next.js 16**, React 19, TypeScript 5 (strict mode)
+- **Drizzle ORM** — schema at `db/schema.ts`, client at `db/db.ts`, config at `drizzle.config.ts`
+- **Neon PostgreSQL** via `@neondatabase/serverless`
+- **Better Auth 1.6.9** — server: `lib/auth.ts`, client: `lib/auth-client.ts`, guards: `lib/auth-guards.ts`, route handler: `app/api/auth/[...all]/route.ts`
+- **Tailwind CSS v4**, Shadcn UI primitives in `components/ui/`, Radix UI
+- **AWS S3** for file uploads — client: `lib/s3.ts`, upload handlers: `app/api/upload/`
+- **pnpm** workspace
 
 ## Repo Workflow
 
-- Package manager: `pnpm`
-- Key commands:
-  - `pnpm dev`
-  - `pnpm lint`
-  - `pnpm build`
-  - `pnpm drizzle-kit generate`
-  - `pnpm drizzle-kit migrate`
-  - `pnpm drizzle-kit studio`
-- After meaningful changes, prefer verifying with `pnpm lint` and `pnpm build` unless the task is narrowly scoped or blocked by missing env/config.
+```
+pnpm dev                    # start development server
+pnpm lint                   # ESLint 9 check
+pnpm build                  # Next.js production build
+pnpm drizzle-kit generate   # generate migration from schema changes
+pnpm drizzle-kit migrate    # apply pending migrations
+pnpm drizzle-kit studio     # open Drizzle Studio
+```
+
+After meaningful changes, verify with `pnpm lint` and `pnpm build` unless the task is narrowly scoped or blocked by missing env/config.
+
+## Auth Guidance
+
+For Better Auth or auth-related work, read the relevant skill file before changing code. Skills live in `.agents/skills/` (relative to the repo root).
+
+| Skill file | Use when |
+|---|---|
+| `.agents/skills/better-auth-best-practices/SKILL.md` | General Better Auth setup, sessions, adapters, plugins, env vars |
+| `.agents/skills/create-auth-skill/SKILL.md` | Implementing or scaffolding new auth flows |
+| `.agents/skills/email-and-password-best-practices/SKILL.md` | Email/password sign-up, sign-in, verification, password reset |
+| `.agents/skills/two-factor-authentication-best-practices/SKILL.md` | MFA, TOTP, OTP, backup codes, trusted devices |
+| `.agents/skills/organization-best-practices/SKILL.md` | Organizations, teams, invitations, roles, RBAC |
+| `.agents/skills/better-auth-security-best-practices/SKILL.MD` | Security hardening — secrets, CSRF, trusted origins, rate limiting, cookies, OAuth token encryption, audit logging (**note uppercase `.MD` extension**) |
+
+Still use Context7 for current Better Auth API docs; the local skills are project workflow guidance, not a replacement for up-to-date docs.
+
+**Project-specific auth facts:**
+- `requireUser()` and `getCurrentUser()` in `lib/auth-guards.ts` — use for all server-side authorization checks
+- `CurrentUser` type adds `isAdmin: boolean` derived from `DEV_ADMIN_USER_IDS` env var (dev-only; must be replaced with real RBAC before production)
+- Client exports `{ signIn, signUp, signOut, useSession }` from `lib/auth-client.ts`
+
+## Coding Conventions
+
+**Imports:** Use the `@/*` path alias for all imports. No relative imports across directory boundaries. The alias maps to the repo root (`bearcat-subleasing/`) as configured in `tsconfig.json`.
+
+**Naming:**
+- PascalCase — React components, type/interface names, Drizzle table exports (`Listing`, `ListingImage`)
+- camelCase — functions (`getListings`, `requireUser`), variables
+- kebab-case — file names (`auth-guards.ts`, `listing-card.tsx`), Next.js route/folder segments
+
+**TypeScript:** Strict mode is on; no `any`. Props interfaces use a `Props` suffix and are defined in the same file as the component. Prefer explicit return types on exported functions.
+
+**Components:** Server Components by default. Add `"use client"` only when the component needs event handlers, React hooks, or browser APIs. Server actions must have `"use server"` at the file or function level.
+
+**Project layers:**
+- Validation → `lib/validation/`; throw `InputValidationError` from `lib/errors.ts`
+- Read queries → `queries/get.ts`; write queries → `queries/insert.ts`
+- Authorization → always via `requireUser()` or `getCurrentUser()` from `lib/auth-guards.ts`
+
+**Comments:** Minimal. Only explain non-obvious "why" — a hidden constraint, a subtle invariant, a workaround for a specific bug. Never restate what the code does.
 
 ## Environment
 
-- Required envs are defined by code and `.env.example`.
-- Current expected variables:
-  - `DATABASE_URL`
-  - `AWS_REGION`
-  - `AWS_ACCESS_KEY_ID`
-  - `AWS_SECRET_ACCESS_KEY`
-  - `AWS_S3_BUCKET`
-  - `DEV_SEEDED_USER_ID`
-  - `DEV_ADMIN_USER_IDS`
-- Do not invent secrets or silently change env variable names.
+Do not invent secrets or silently rename environment variable keys. The authoritative list is `bearcat-subleasing/lib/env.ts` and `bearcat-subleasing/.env.example`.
+
+| Variable | Notes |
+|---|---|
+| `DATABASE_URL` | Neon PostgreSQL connection string |
+| `AWS_REGION` | AWS region |
+| `AWS_ACCESS_KEY_ID` | AWS credentials |
+| `AWS_SECRET_ACCESS_KEY` | AWS credentials |
+| `AWS_S3_BUCKET` | S3 bucket name |
+| `BETTER_AUTH_SECRET` | Better Auth secret (required) |
+| `BETTER_AUTH_URL` | Better Auth base URL (required) |
 
 ## Vercel
 
-- Assume this repo is linked to a Vercel project even if `.vercel/project.json` is not checked in.
-- When a local dev server is running, verify the UI in the browser instead of relying only on static code inspection.
-- Use Vercel tools for preview/deploy debugging, deployment inspection, and runtime/build log investigation.
+Assume this repo is linked to a Vercel project even if `.vercel/project.json` is not checked in. When a local dev server is running, verify the UI in the browser rather than relying only on static code inspection. Use Vercel tools for preview and deploy debugging, deployment inspection, and runtime/build log investigation.
 
 ## Linear
 
-- Assume Linear is the planning system for this repo.
-- Default team context: `BEA`.
-- Use team-wide Linear context only when the user is asking about planning, prioritization, backlog, roadmap, or general team status and no narrower issue or project is provided.
-- If the user provides a specific Linear issue, project, or initiative, treat that as the primary context instead of searching the whole team.
-- Fetch current issue or project details from Linear tools when needed.
-- Prefer reading existing Linear context before creating or updating issues unless the user explicitly asks for a write action.
-
+Linear is the planning system for this repo. Default team context: `BEA`. Fetch current issue or project details from Linear tools when needed. Prefer reading existing Linear context before creating or updating issues unless the user explicitly asks for a write action. Use team-wide context only when the user is asking about planning, prioritization, backlog, or roadmap and no narrower issue or project is provided.
 
 ## UI Guidance
 
-- Include design judgment in frontend work; do not ship bare framework defaults.
-- Aim for a polished, trustworthy, student-facing product rather than a generic dashboard look.
-- Keep layouts clean and mobile-friendly.
-- Avoid stock styling when making visible UI changes; define or extend a clear visual direction instead.
-- The BEA-11 visual identity source of truth lives at `bearcat-subleasing/docs/visual-identity.md`.
-- Use `bearcat-subleasing/docs/mvp-plan.md` for broader product and architecture planning, and `bearcat-subleasing/docs/visual-identity.md` for brand, theme, and visual-system decisions.
-- If the user later provides a stronger visual direction, follow that over these defaults.
+Do not ship bare framework defaults. Every visible UI change needs design judgment. Aim for a polished, trustworthy, student-facing product rather than a generic dashboard look. Keep layouts clean and mobile-friendly.
 
-## Useful Session Capabilities
+- **Visual identity** (colors, typography, tokens): `bearcat-subleasing/docs/visual-identity.md` — UC-inspired palette, Newsreader/Geist type system
+- **Product and architecture planning**: `bearcat-subleasing/docs/mvp-plan.md`
+- **Design methodology and decision framework**: `bearcat-subleasing/docs/design-methodology.md`
 
-- Context7 MCP: current technical docs
-- Vercel MCP: deployments, logs, preview debugging, browser verification
-- Linear MCP: team and issue workflow
-- GitHub tools: available for future PR, CI, and review workflows when the repo starts using them more actively
+Shadcn/ui components in `components/ui/` are source-owned — customize them immediately, do not ship stock defaults. Both light and dark mode are required; class-based dark mode, system default via `next-themes`.
 
 ## Doc Maintenance
 
@@ -93,8 +112,8 @@ When you finish a task that modified code, scan this table and update any affect
 | If you changed... | Update... |
 |---|---|
 | New feature, route, page, server action, or query | `bearcat-subleasing/docs/mvp-plan.md` — mark completed backlog items, note architecture decisions |
-| Environment variable (added, renamed, removed) | `agents.md` environment section |
-| Coding convention, new utility, or tech stack change | `agents.md` relevant sections |
+| Environment variable (added, renamed, removed) | Root `CLAUDE.md` env table |
+| Coding convention, new utility, or tech stack change | `bearcat-subleasing/CLAUDE.md` conventions sections |
 | Color token, typography, spacing, or theme variable | `bearcat-subleasing/docs/visual-identity.md` |
 | UI pattern, layout decision, or component design choice | `bearcat-subleasing/docs/design-methodology.md` |
 | Better Auth config or auth flow | The relevant `.agents/skills/` SKILL.md (only if the existing guidance is wrong or missing) |
