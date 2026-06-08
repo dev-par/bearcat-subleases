@@ -6,6 +6,7 @@ import { Listing } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { ListingImage } from "@/db/schema";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { assertValidListingId } from "@/lib/validation/listing";
 import { AuthorizationError, requireUser } from "@/lib/auth-guards";
 
@@ -28,6 +29,7 @@ export async function deleteListing(listingId: string) {
 
 		await db.delete(ListingImage).where(eq(ListingImage.listing_id, listingId));
 		await db.delete(Listing).where(eq(Listing.id, listingId));
+		revalidatePath("/listings");
 	} catch (error) {
 		const message =
 			error instanceof Error ? error.message : "Failed to delete listing";

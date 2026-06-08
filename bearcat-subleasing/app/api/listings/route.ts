@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getListings } from "@/queries/get";
 import { createListing } from "@/queries/insert";
 import { AuthorizationError, requireUser } from "@/lib/auth-guards";
@@ -32,6 +33,7 @@ export async function POST(request: NextRequest) {
 			imageUrls,
 		);
 
+		revalidatePath("/listings");
 		return NextResponse.json({ success: true, response }, { status: 201 });
 	} catch (error) {
 		if (error instanceof AuthorizationError) {
