@@ -1,9 +1,5 @@
 # Bearcat Subleasing App
 
-## Scope
-
-Work from this directory. Treat the repo as local-development-first today, but keep workflows compatible with future GitHub PR and CI usage.
-
 ## Docs First
 
 Use Context7 MCP whenever the task involves a library, framework, SDK, API, CLI, or cloud service. Workflow: `resolve-library-id` → `query-docs` → answer from fetched docs. Prefer Context7 over web search for technical documentation.
@@ -84,6 +80,14 @@ Do not ship bare framework defaults. Every visible UI change needs design judgme
 - **Design methodology and decision framework**: `docs/design-methodology.md`
 
 Shadcn/ui components in `components/ui/` are source-owned — customize them immediately, do not ship stock defaults. Both light and dark mode are required; class-based dark mode, system default via `next-themes`.
+
+## Vercel
+
+Assume this repo is linked to a Vercel project even if `.vercel/project.json` is not checked in. When a local dev server is running, verify the UI in the browser rather than relying only on static code inspection. Use Vercel tools for preview and deploy debugging, deployment inspection, and runtime/build log investigation.
+
+## Linear
+
+Linear is the planning system for this repo. Default team context: `BEA`. Fetch current issue or project details from Linear tools when needed. Prefer reading existing Linear context before creating or updating issues unless the user explicitly asks for a write action. Use team-wide context only when the user is asking about planning, prioritization, backlog, or roadmap and no narrower issue or project is provided.
 
 ## Doc Maintenance
 

@@ -5,8 +5,9 @@ import { eq } from "drizzle-orm";
 
 export async function getListings() {
     return await db.query.Listing.findMany({
+        where: eq(Listing.status, 'active'),
         with: {
-            listingImages: true
+            listingImages: { limit: 1 }
         }
     })
 }

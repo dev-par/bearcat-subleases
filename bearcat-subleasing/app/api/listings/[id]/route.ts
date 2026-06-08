@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db/db";
@@ -87,6 +88,8 @@ export async function PUT(
 			);
 		}
 
+		revalidatePath("/listings");
+		revalidatePath(`/listings/${id}`);
 		return NextResponse.json(
 			{ success: true, response: updatedListing },
 			{ status: 200 },

@@ -3,8 +3,6 @@ import Link from "next/link";
 import ListingCard from "../components/ListingCard";
 import { getListings } from "@/queries/get";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Listings",
   description:
