@@ -1,5 +1,5 @@
 import { db } from "../db/db";
-import { Listing } from "@/db/schema";
+import { Listing, user } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 
@@ -19,4 +19,16 @@ export async function getListingById(id: string) {
             listingImages: true
         }
     });
+}
+
+export async function getListingOwnerContact(
+    userId: string
+): Promise<{ name: string; email: string } | null> {
+    const result = await db
+        .select({ name: user.name, email: user.email })
+        .from(user)
+        .where(eq(user.id, userId))
+        .limit(1);
+
+    return result[0] ?? null;
 }
