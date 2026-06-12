@@ -18,9 +18,10 @@ interface WaterfallColumnProps {
   items: WaterfallListing[];
   className?: string;
   speed: string;
+  cardOrigin: "left" | "right";
 }
 
-function WaterfallColumn({ items, className, speed }: WaterfallColumnProps) {
+function WaterfallColumn({ items, className, speed, cardOrigin }: WaterfallColumnProps) {
   const loopedItems = [...items, ...items];
 
   return (
@@ -32,9 +33,9 @@ function WaterfallColumn({ items, className, speed }: WaterfallColumnProps) {
         {loopedItems.map((item, idx) => (
           <div
             key={`${item.id}-${idx}`}
-            className="group relative overflow-hidden rounded-3xl border border-white/20 bg-card/40 p-2 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.1)] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-primary/30 dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_40px_-16px_rgba(0,0,0,0.5)]"
+            className={`group relative overflow-hidden rounded-3xl border border-white/20 bg-card/40 backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:border-primary/30 dark:border-white/10 dark:bg-white/5 ${cardOrigin === "left" ? "origin-left" : "origin-right"}`}
           >
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.25rem] bg-muted/40">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-muted/40">
               <Image
                 src={item.imageSrc}
                 alt={item.title}
@@ -79,8 +80,8 @@ export default function HeroWaterfall({ listings }: HeroWaterfallProps) {
       {/* Grid container with massive negative margin on top/bottom to simulate endless flow */}
       <div className="absolute -inset-y-32 inset-x-0">
         <div className="grid h-full grid-cols-2 gap-4 pl-4 pr-6 sm:gap-6 sm:pl-0 sm:pr-0 lg:gap-8 lg:pr-8">
-          <WaterfallColumn items={col1} speed="45s" className="mt-20 lg:mt-8" />
-          <WaterfallColumn items={col2} speed="55s" className="mt-40 lg:mt-24" />
+          <WaterfallColumn items={col1} speed="45s" className="mt-20 lg:mt-8" cardOrigin="left" />
+          <WaterfallColumn items={col2} speed="55s" className="mt-40 lg:mt-24" cardOrigin="right" />
         </div>
       </div>
     </div>
