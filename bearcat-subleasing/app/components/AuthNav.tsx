@@ -1,10 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, UserRound } from "lucide-react";
+import { ChevronDown, LogOut, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth-client";
 
 interface AuthNavProps {
@@ -60,21 +67,51 @@ export default function AuthNav({
 		);
 	}
 
-	return (
-		<div className={isMobile ? "flex flex-col gap-2" : "hidden items-center gap-2 md:flex"}>
-			<div className="flex min-w-0 items-center gap-2 rounded-full border border-border/80 bg-card/90 px-3 py-2 text-xs font-semibold text-foreground dark:border-white/8">
-				<UserRound className="h-4 w-4 text-primary" />
-				<span className="truncate">{session.user.name}</span>
+	if (isMobile) {
+		return (
+			<div className="flex flex-col gap-2">
+				<Link
+					href="/profile"
+					onClick={onNavigate}
+					className="flex min-w-0 items-center gap-2 rounded-full border border-border/80 bg-card/90 px-3 py-2 text-xs font-semibold text-foreground dark:border-white/8"
+				>
+					<UserRound className="h-4 w-4 text-primary" />
+					<span className="truncate">{session.user.name}</span>
+				</Link>
+				<Button
+					type="button"
+					variant="outline"
+					size="default"
+					onClick={handleSignOut}
+				>
+					<LogOut className="h-4 w-4" />
+					Sign out
+				</Button>
 			</div>
-			<Button
-				type="button"
-				variant="outline"
-				size={isMobile ? "default" : "sm"}
-				onClick={handleSignOut}
-			>
-				<LogOut className="h-4 w-4" />
-				Sign out
-			</Button>
+		);
+	}
+
+	return (
+		<div className="hidden items-center md:flex">
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<button className="group flex min-w-0 items-center gap-2 rounded-full border border-border/80 bg-card/90 px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-card data-[state=open]:border-primary/40 data-[state=open]:bg-card data-[state=open]:text-primary dark:border-white/8 dark:hover:bg-card/70 dark:data-[state=open]:border-primary/30 dark:data-[state=open]:bg-card/70">
+						<UserRound className="h-4 w-4 text-primary" />
+						<span className="truncate">{session.user.name}</span>
+						<ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+					</button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end" className="w-44">
+					<DropdownMenuItem asChild>
+						<Link href="/profile">My Profile</Link>
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem onClick={handleSignOut}>
+						<LogOut className="h-4 w-4" />
+						Sign out
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
 		</div>
 	);
 }

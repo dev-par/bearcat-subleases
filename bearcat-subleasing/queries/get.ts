@@ -1,6 +1,6 @@
 import { db } from "../db/db";
 import { Listing, user } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 
 export async function getListings() {
@@ -19,6 +19,15 @@ export async function getListingById(id: string) {
             listingImages: true
         }
     });
+}
+
+export async function getListingsByUserId(userId: string) {
+    return await db.query.Listing.findMany({
+        where: and(eq(Listing.user_id, userId), eq(Listing.status, 'active')),
+        with: {
+            listingImages: { limit: 1 }
+        }
+    })
 }
 
 export async function getListingOwnerContact(
