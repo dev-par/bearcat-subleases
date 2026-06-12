@@ -41,19 +41,22 @@ export default function AuthNav({
 	}
 
 	if (!session) {
+		if (isMobile) {
+			return (
+				<div className="grid grid-cols-2 gap-2">
+					<Button asChild variant="outline">
+						<Link href="/auth/sign-in" onClick={onNavigate}>Sign in</Link>
+					</Button>
+					<Button asChild>
+						<Link href="/auth/sign-up" onClick={onNavigate}>Sign up</Link>
+					</Button>
+				</div>
+			);
+		}
 		return (
-			<div className={isMobile ? "grid grid-cols-2 gap-2" : "hidden items-center gap-2 md:flex"}>
-				<Button asChild variant="outline" size={isMobile ? "default" : "sm"}>
-					<Link href="/auth/sign-in" onClick={onNavigate}>
-						Sign in
-					</Link>
-				</Button>
-				<Button asChild size={isMobile ? "default" : "sm"}>
-					<Link href="/auth/sign-up" onClick={onNavigate}>
-						Sign up
-					</Link>
-				</Button>
-			</div>
+			<Button asChild variant="ghost" size="sm">
+				<Link href="/auth/sign-in">Sign in</Link>
+			</Button>
 		);
 	}
 

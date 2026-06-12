@@ -32,9 +32,9 @@ function WaterfallColumn({ items, className, speed }: WaterfallColumnProps) {
         {loopedItems.map((item, idx) => (
           <div
             key={`${item.id}-${idx}`}
-            className="group relative overflow-hidden rounded-3xl border border-white/20 bg-card/40 p-2 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.1)] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-primary/30 dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_40px_-16px_rgba(0,0,0,0.5)]"
+            className="group relative overflow-hidden rounded-3xl border border-white/20 bg-card/40 backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:border-primary/30 dark:border-white/10 dark:bg-white/5"
           >
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.25rem] bg-muted/40">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-muted/40">
               <Image
                 src={item.imageSrc}
                 alt={item.title}
@@ -72,7 +72,7 @@ export default function HeroWaterfall({ listings }: HeroWaterfallProps) {
   const col2 = listings.filter((_, i) => i % 2 === 1);
 
   return (
-    <div className="relative h-full w-full max-w-full overflow-hidden lg:-mr-12">
+    <div className="relative h-full w-full max-w-full [clip-path:inset(0_-9999px)] lg:-mr-12">
       {/* Mask out the left edge slightly for a clean fade if needed */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent md:hidden" />
 
