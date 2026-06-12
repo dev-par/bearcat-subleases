@@ -3,10 +3,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import DeleteButton from "@/app/components/DeleteButton";
-import { Bath, BedDouble, CalendarRange, Home, MapPin, Sofa } from "lucide-react";
+import { Bath, BedDouble, CalendarRange, Home, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth-guards";
+import ContactReveal from "@/app/listings/[id]/components/ContactReveal";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -145,11 +146,7 @@ export default async function Page({
 
 					<div className="mt-6 rounded-[1.5rem] border border-border/70 bg-[linear-gradient(180deg,rgba(255,247,240,0.9)_0%,rgba(255,255,255,1)_100%)] p-5 dark:border-primary/18 dark:bg-[linear-gradient(180deg,rgba(255,90,114,0.08)_0%,rgba(20,24,29,0.96)_72%)]">
 						<h2 className="font-heading text-2xl font-semibold text-foreground">Contact</h2>
-						<p className="mt-3 flex items-start gap-2 text-base leading-7 text-muted-foreground">
-							<Sofa className="mt-1 h-4 w-4 shrink-0 text-primary" />
-							<span>Contact visibility will live here once verified-user flows are added.</span>
-						</p>
-						<Button className="mt-5 w-full">Contact landlord</Button>
+						<ContactReveal listingId={listing.id} isLoggedIn={user !== null} />
 					</div>
 
 					{canManageListing ? (
