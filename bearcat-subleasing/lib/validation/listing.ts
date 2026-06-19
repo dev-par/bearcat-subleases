@@ -1,5 +1,7 @@
-import type { ListingMutationInput, ListingSubmissionInput } from "@/types/listing";
+import type { DistanceFromCampus, ListingMutationInput, ListingSubmissionInput } from "@/types/listing";
 import { InputValidationError } from "@/lib/errors";
+
+const DISTANCE_VALUES: DistanceFromCampus[] = ['under_5', '5_to_10', '10_to_20', '20_to_30', 'over_30'];
 
 const MAX_IMAGE_COUNT = 10;
 const UUID_REGEX =
@@ -53,16 +55,28 @@ function parseBoolean(value: unknown, fieldName: string): boolean {
 	return value;
 }
 
-function parseRoomType(value: unknown): "private" | "shared" | null {
-	if (value == null || value === "") {
-		return null;
-	}
-
+function parseRoomType(value: unknown): "private" | "shared" {
 	if (value === "private" || value === "shared") {
 		return value;
 	}
 
 	throw new InputValidationError("room_type must be private or shared");
+}
+
+function parseDistanceFromCampus(value: unknown): DistanceFromCampus {
+	if (typeof value === "string" && (DISTANCE_VALUES as string[]).includes(value)) {
+		return value as DistanceFromCampus;
+	}
+
+	throw new InputValidationError(
+		`distance_from_campus must be one of: ${DISTANCE_VALUES.join(", ")}`,
+	);
+}
+
+function parseOptionalBoolean(value: unknown): boolean | null {
+	if (value == null) return null;
+	if (typeof value === "boolean") return value;
+	throw new InputValidationError("parking_available must be true, false, or null");
 }
 
 function parseIsoDate(value: unknown, fieldName: string): string {
@@ -108,7 +122,6 @@ export function parseListingMutationInput(input: unknown): ListingMutationInput 
 	return {
 		title: parseRequiredString(payload.title, "title", 255),
 		description: normalizeOptionalString(payload.description, 512),
-		address: normalizeOptionalString(payload.address, 255),
 		rent_cents: parseInteger(payload.rent_cents, "rent_cents", 0),
 		start_date: startDate,
 		end_date: endDate,
@@ -117,9 +130,11 @@ export function parseListingMutationInput(input: unknown): ListingMutationInput 
 		bathrooms_in_unit_x2: parseInteger(
 			payload.bathrooms_in_unit_x2,
 			"bathrooms_in_unit_x2",
-			0,
+			1,
 		),
 		private_bathroom: parseBoolean(payload.private_bathroom, "private_bathroom"),
+		distance_from_campus: parseDistanceFromCampus(payload.distance_from_campus),
+		parking_available: parseOptionalBoolean(payload.parking_available),
 		furnished: parseBoolean(payload.furnished, "furnished"),
 	};
 }

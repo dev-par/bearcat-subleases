@@ -63,7 +63,6 @@ export default async function EditListingPage({
 				initialValues={{
 					title: listing.title,
 					description: listing.description,
-					address: listing.address,
 					rent_cents: listing.rent_cents,
 					start_date: listing.start_date,
 					end_date: listing.end_date,
@@ -71,6 +70,8 @@ export default async function EditListingPage({
 					bedrooms_in_unit: listing.bedrooms_in_unit,
 					bathrooms_in_unit_x2: listing.bathrooms_in_unit_x2,
 					private_bathroom: listing.private_bathroom,
+					distance_from_campus: listing.distance_from_campus,
+					parking_available: listing.parking_available,
 					furnished: listing.furnished,
 					imageUrls: listing.listingImages.map((image) => image.url),
 				}}
