@@ -26,7 +26,9 @@ export async function deleteS3Objects(keys: string[]): Promise<void> {
 			}),
 		);
 		if (result.Errors && result.Errors.length > 0) {
-			console.error("S3 delete had per-object errors:", JSON.stringify(result.Errors));
+			console.error("[s3:delete] per-object errors:", JSON.stringify(result.Errors));
+		} else {
+			console.log(`[s3:delete] deleted ${keys.length} object(s):`, keys);
 		}
 	} catch (error) {
 		console.error("S3 batch delete failed:", error);

@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
 			}),
 		);
 
+		console.log(`[upload:profile_photo] key=${filename}`);
 		return NextResponse.json({
 			success: true,
 			key: filename,

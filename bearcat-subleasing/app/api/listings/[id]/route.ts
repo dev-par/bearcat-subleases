@@ -103,6 +103,7 @@ export async function PUT(
 		revalidatePath(`/listings/${id}`);
 
 		await deleteS3Objects(removedKeys);
+		console.log(`[listing:update] listingId=${id} userId=${user.id} removedImages=${removedKeys.length} keptImages=${imageUrls.length}`);
 		return NextResponse.json(
 			{ success: true, response: updatedListing },
 			{ status: 200 },

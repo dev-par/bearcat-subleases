@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
 		);
 
 		revalidatePath("/listings");
+		console.log(`[listing:create] listingId=${response.id} userId=${user.id} images=${imageUrls.length}`);
 		return NextResponse.json({ success: true, response }, { status: 201 });
 	} catch (error) {
 		if (error instanceof AuthorizationError) {

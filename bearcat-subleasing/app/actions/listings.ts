@@ -62,6 +62,7 @@ export async function deleteListing(listingId: string) {
 		revalidatePath("/listings");
 
 		await deleteS3Objects(images.map((img) => extractS3Key(img.url)));
+		console.log(`[listing:delete] listingId=${listingId} userId=${user.id} images=${images.length}`);
 	} catch (error) {
 		const message =
 			error instanceof Error ? error.message : "Failed to delete listing";
