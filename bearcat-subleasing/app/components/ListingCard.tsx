@@ -30,9 +30,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
 				<Image
 					src={imageUrl}
 					alt={listing.title}
-					width={400}
-					height={400}
-					className="aspect-[1.08] w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+					width={600}
+					height={600}
+					className="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.03]"
 				/>
 
 				<div className="flex flex-1 flex-col p-5">

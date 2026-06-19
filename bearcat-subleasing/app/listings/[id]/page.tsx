@@ -73,15 +73,16 @@ export default async function Page({
 			</div>
 
 			{/* Image + info two-column grid */}
-			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch">
+			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start">
 
 				{/* Image */}
-				<div className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-card shadow-soft dark:border-white/8">
+				<div className="overflow-hidden rounded-[2rem] border border-border/80 bg-card shadow-soft dark:border-white/8">
 					<Image
 						src={imageUrl}
 						alt={listing.title}
-						fill
-						className="object-cover"
+						width={800}
+						height={800}
+						className="aspect-square w-full object-cover"
 					/>
 				</div>
 
