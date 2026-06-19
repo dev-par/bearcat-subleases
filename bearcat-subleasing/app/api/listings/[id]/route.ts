@@ -11,6 +11,7 @@ import {
 	assertValidListingId,
 	parseListingSubmissionInput,
 } from "@/lib/validation/listing";
+import { deleteS3Objects, extractS3Key } from "@/lib/s3";
 
 export async function GET(
     request: NextRequest,
@@ -68,6 +69,16 @@ export async function PUT(
 		const submission = parseListingSubmissionInput(body);
 		const { imageUrls, ...listingData } = submission;
 
+		const currentImages = await db
+			.select({ url: ListingImage.url })
+			.from(ListingImage)
+			.where(eq(ListingImage.listing_id, id));
+
+		const incomingUrlSet = new Set(imageUrls);
+		const removedKeys = currentImages
+			.filter((img) => !incomingUrlSet.has(img.url))
+			.map((img) => extractS3Key(img.url));
+
 		const [updatedListing] = await db
 			.update(Listing)
 			.set({
@@ -90,6 +101,8 @@ export async function PUT(
 
 		revalidatePath("/listings");
 		revalidatePath(`/listings/${id}`);
+
+		await deleteS3Objects(removedKeys);
 		return NextResponse.json(
 			{ success: true, response: updatedListing },
 			{ status: 200 },
