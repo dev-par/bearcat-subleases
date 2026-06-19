@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 import type { ListingMutationInput } from "@/types/listing";
+import ImageUploader from "@/app/listings/components/ImageUploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -47,6 +47,35 @@ const defaultValues: ListingFormInitialValues = {
 	imageUrls: [],
 };
 
+const BEDROOM_OPTIONS = [
+	{ label: "1", value: 1 },
+	{ label: "2", value: 2 },
+	{ label: "3", value: 3 },
+	{ label: "4+", value: 4 },
+];
+
+const BATHROOM_OPTIONS = [
+	{ label: "1", value: 2 },
+	{ label: "1.5", value: 3 },
+	{ label: "2", value: 4 },
+	{ label: "2.5", value: 5 },
+	{ label: "3", value: 6 },
+	{ label: "3.5", value: 7 },
+	{ label: "4+", value: 8 },
+];
+
+function SectionHeader({ children }: { children: React.ReactNode }) {
+	return (
+		<p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+			{children}
+		</p>
+	);
+}
+
+function SectionDivider() {
+	return <div className="border-t border-border/50" />;
+}
+
 export default function ListingForm({
 	mode,
 	initialValues = defaultValues,
@@ -69,8 +98,8 @@ export default function ListingForm({
 	const [bedroomsInUnit, setBedroomsInUnit] = useState(
 		initialValues.bedrooms_in_unit,
 	);
-	const [bathroomsInUnit, setBathroomsInUnit] = useState(
-		initialValues.bathrooms_in_unit_x2 / 2,
+	const [bathroomsInUnitX2, setBathroomsInUnitX2] = useState(
+		initialValues.bathrooms_in_unit_x2,
 	);
 	const [privateBathroom, setPrivateBathroom] = useState(
 		initialValues.private_bathroom,
@@ -93,7 +122,6 @@ export default function ListingForm({
 		if (!field.id) {
 			return "this field";
 		}
-
 		const label = document.querySelector(`label[for="${field.id}"]`);
 		return label?.textContent?.replace("*", "").trim() || "this field";
 	};
@@ -102,11 +130,9 @@ export default function ListingForm({
 		field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
 	) => {
 		const label = getFieldLabel(field);
-
 		if (field.validity.valueMissing) {
 			return `Please fill out ${label}.`;
 		}
-
 		return `${label}: ${field.validationMessage}`;
 	};
 
@@ -144,7 +170,7 @@ export default function ListingForm({
 				end_date: endDate,
 				room_type: roomType,
 				bedrooms_in_unit: bedroomsInUnit,
-				bathrooms_in_unit_x2: bathroomsInUnit * 2,
+				bathrooms_in_unit_x2: bathroomsInUnitX2,
 				private_bathroom: privateBathroom,
 				furnished,
 			};
@@ -225,6 +251,11 @@ export default function ListingForm({
 		});
 	};
 
+	const activePillClass =
+		"border-primary bg-primary text-primary-foreground font-semibold";
+	const inactivePillClass =
+		"border-border/70 bg-card text-foreground hover:border-border hover:bg-muted/40";
+
 	return (
 		<Card className="mt-8 border-border/70">
 			<CardContent className="p-6 sm:p-7">
@@ -232,240 +263,265 @@ export default function ListingForm({
 					onSubmit={handleSubmit}
 					onInvalid={handleInvalid}
 					onInput={handleInput}
-					className="space-y-5"
+					className="space-y-6"
 				>
-					<Field
-						label="Title"
-						htmlFor="title"
-						required
-						error={fieldErrors.title}
-					>
-						<Input
-							id="title"
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
-							required
-						/>
-					</Field>
+					{/* BASICS */}
+					<div className="space-y-4">
+						<SectionHeader>Basics</SectionHeader>
 
-					<Field
-						label="Description"
-						htmlFor="description"
-						description="Describe the setup, roommate situation, and any useful context a student would want to know early."
-						required
-						error={fieldErrors.description}
-					>
-						<Textarea
-							id="description"
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
-							required
-						/>
-					</Field>
-
-					<Field label="Address" htmlFor="address">
-						<Input
-							id="address"
-							value={address}
-							onChange={(e) => setAddress(e.target.value)}
-						/>
-					</Field>
-
-					<Field
-						label="Rent ($/month)"
-						htmlFor="rent"
-						required
-						error={fieldErrors.rent}
-					>
-						<Input
-							id="rent"
-							type="number"
-							value={rent}
-							onChange={(e) => setRent(e.target.value)}
-							min="0"
-							required
-						/>
-					</Field>
-
-					<div className="grid gap-4 sm:grid-cols-2">
 						<Field
-							label="Start Date"
-							htmlFor="start-date"
+							label="Title"
+							htmlFor="title"
 							required
-							error={fieldErrors["start-date"]}
+							error={fieldErrors.title}
 						>
 							<Input
-								id="start-date"
-								type="date"
-								value={startDate}
-								onChange={(e) => setStartDate(e.target.value)}
+								id="title"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+								placeholder="e.g. Private room near UC campus"
 								required
 							/>
 						</Field>
 
 						<Field
-							label="End Date"
-							htmlFor="end-date"
+							label="Description"
+							htmlFor="description"
+							description="Describe the setup, roommate situation, and anything a student would want to know before reaching out."
 							required
-							error={fieldErrors["end-date"]}
+							error={fieldErrors.description}
 						>
-							<Input
-								id="end-date"
-								type="date"
-								value={endDate}
-								onChange={(e) => setEndDate(e.target.value)}
+							<Textarea
+								id="description"
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
 								required
+								maxLength={512}
+								rows={4}
 							/>
-						</Field>
-					</div>
-
-					<Field label="Room Type" required>
-						<Select
-							value={roomType}
-							onValueChange={(value) =>
-								setRoomType(value as "private" | "shared")
-							}
-						>
-							<SelectTrigger>
-								<SelectValue placeholder="Choose room type" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="private">Private</SelectItem>
-								<SelectItem value="shared">Shared</SelectItem>
-							</SelectContent>
-						</Select>
-					</Field>
-
-					<div className="grid gap-4 sm:grid-cols-2">
-						<Field
-							label="Bedrooms"
-							htmlFor="bedrooms"
-							required
-							error={fieldErrors.bedrooms}
-						>
-							<Input
-								id="bedrooms"
-								type="number"
-								value={bedroomsInUnit}
-								onChange={(e) => setBedroomsInUnit(Number(e.target.value))}
-								min="1"
-								required
-							/>
-						</Field>
-						<Field
-							label="Bathrooms"
-							htmlFor="bathrooms"
-							required
-							error={fieldErrors.bathrooms}
-						>
-							<Input
-								id="bathrooms"
-								type="number"
-								value={bathroomsInUnit}
-								onChange={(e) => setBathroomsInUnit(Number(e.target.value))}
-								min="0"
-								step="0.5"
-								required
-							/>
-						</Field>
-					</div>
-
-					<div className="grid gap-3 sm:grid-cols-2">
-						<label className="flex items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground dark:border-white/8 dark:bg-white/3">
-							<Checkbox
-								checked={privateBathroom}
-								onCheckedChange={(checked) =>
-									setPrivateBathroom(checked === true)
-								}
-							/>
-							<div>
-								<p className="text-sm font-semibold">Private Bathroom</p>
-								<p className="text-xs text-muted-foreground">
-									Highlight stronger privacy for renters.
-								</p>
-							</div>
-						</label>
-						<label className="flex items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground dark:border-white/8 dark:bg-white/3">
-							<Checkbox
-								checked={furnished}
-								onCheckedChange={(checked) => setFurnished(checked === true)}
-							/>
-							<div>
-								<p className="text-sm font-semibold">Furnished</p>
-								<p className="text-xs text-muted-foreground">
-									Let students know if move-in is easier.
-								</p>
-							</div>
-						</label>
-					</div>
-
-					<Field
-						label="Images"
-						htmlFor="images"
-						description={
-							isEditMode
-								? "Keep existing photos, remove any that should no longer appear, or add new ones."
-								: "Upload one or more photos to help the listing feel credible at a glance."
-						}
-					>
-						{existingImageUrls.length > 0 ? (
-							<div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-								{existingImageUrls.map((url) => (
-									<div
-										key={url}
-										className="overflow-hidden rounded-[1rem] border border-border bg-card"
-									>
-										<Image
-											src={url}
-											alt="Existing listing photo"
-											width={240}
-											height={180}
-											className="aspect-[4/3] w-full object-cover"
-										/>
-										<Button
-											type="button"
-											variant="ghost"
-											className="h-9 w-full rounded-none text-xs"
-											onClick={() =>
-												setExistingImageUrls((current) =>
-													current.filter((item) => item !== url),
-												)
-											}
-										>
-											Remove
-										</Button>
-									</div>
-								))}
-							</div>
-						) : null}
-						<Input
-							id="images"
-							type="file"
-							accept="image/*"
-							multiple
-							onChange={(e) => {
-								const files = e.target.files;
-								if (files) {
-									setSelectedFiles(Array.from(files));
-								}
-							}}
-						/>
-						{selectedFiles.length > 0 ? (
-							<p className="text-sm text-muted-foreground">
-								{selectedFiles.length} file(s) selected
+							<p className="mt-1 text-right text-xs text-muted-foreground">
+								{description.length}/512
 							</p>
-						) : null}
-					</Field>
+						</Field>
 
-					<Button type="submit" disabled={isSubmitting} className="w-full">
-						{isSubmitting
-							? isEditMode
-								? "Saving..."
-								: "Creating..."
-							: isEditMode
-								? "Save Changes"
-								: "Create Listing"}
-					</Button>
+						<Field label="Address" htmlFor="address">
+							<Input
+								id="address"
+								value={address}
+								onChange={(e) => setAddress(e.target.value)}
+								placeholder="e.g. 123 Clifton Ave, Cincinnati, OH"
+							/>
+						</Field>
+					</div>
+
+					<SectionDivider />
+
+					{/* AVAILABILITY */}
+					<div className="space-y-4">
+						<SectionHeader>Availability</SectionHeader>
+
+						<div className="grid gap-4 sm:grid-cols-2">
+							<Field
+								label="Start Date"
+								htmlFor="start-date"
+								required
+								error={fieldErrors["start-date"]}
+							>
+								<Input
+									id="start-date"
+									type="date"
+									value={startDate}
+									onChange={(e) => setStartDate(e.target.value)}
+									required
+								/>
+							</Field>
+
+							<Field
+								label="End Date"
+								htmlFor="end-date"
+								required
+								error={fieldErrors["end-date"]}
+							>
+								<Input
+									id="end-date"
+									type="date"
+									value={endDate}
+									onChange={(e) => setEndDate(e.target.value)}
+									required
+								/>
+							</Field>
+						</div>
+
+						<Field
+							label="Rent (per month)"
+							htmlFor="rent"
+							required
+							error={fieldErrors.rent}
+						>
+							<div className="relative">
+								<span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-muted-foreground">
+									$
+								</span>
+								<Input
+									id="rent"
+									type="number"
+									value={rent}
+									onChange={(e) => setRent(e.target.value)}
+									min="0"
+									required
+									className="pl-7"
+									placeholder="0"
+								/>
+							</div>
+						</Field>
+					</div>
+
+					<SectionDivider />
+
+					{/* DETAILS */}
+					<div className="space-y-4">
+						<SectionHeader>Details</SectionHeader>
+
+						<Field label="Room Type" required>
+							<Select
+								value={roomType}
+								onValueChange={(value) =>
+									setRoomType(value as "private" | "shared")
+								}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Choose room type" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="private">Private room</SelectItem>
+									<SelectItem value="shared">Shared room</SelectItem>
+								</SelectContent>
+							</Select>
+						</Field>
+
+						<div className="grid gap-4 sm:grid-cols-2">
+							<div className="space-y-2">
+								<p className="text-sm font-medium text-foreground">
+									Bedrooms in unit <span className="text-destructive">*</span>
+								</p>
+								<div className="flex flex-wrap gap-2">
+									{BEDROOM_OPTIONS.map(({ label, value }) => (
+										<button
+											key={value}
+											type="button"
+											onClick={() => setBedroomsInUnit(value)}
+											className={[
+												"min-w-11 rounded-full border px-3.5 py-1.5 text-sm transition-colors",
+												bedroomsInUnit === value
+													? activePillClass
+													: inactivePillClass,
+											].join(" ")}
+										>
+											{label}
+										</button>
+									))}
+								</div>
+							</div>
+
+							<div className="space-y-2">
+								<p className="text-sm font-medium text-foreground">
+									Bathrooms in unit <span className="text-destructive">*</span>
+								</p>
+								<div className="flex flex-wrap gap-2">
+									{BATHROOM_OPTIONS.map(({ label, value }) => (
+										<button
+											key={value}
+											type="button"
+											onClick={() => setBathroomsInUnitX2(value)}
+											className={[
+												"min-w-11 rounded-full border px-3.5 py-1.5 text-sm transition-colors",
+												bathroomsInUnitX2 === value
+													? activePillClass
+													: inactivePillClass,
+											].join(" ")}
+										>
+											{label}
+										</button>
+									))}
+								</div>
+							</div>
+						</div>
+
+						<div className="grid gap-3 sm:grid-cols-2">
+							<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
+								<Checkbox
+									checked={privateBathroom}
+									onCheckedChange={(checked) =>
+										setPrivateBathroom(checked === true)
+									}
+								/>
+								<div>
+									<p className="text-sm font-semibold">Private Bathroom</p>
+									<p className="text-xs text-muted-foreground">
+										Highlight stronger privacy for renters.
+									</p>
+								</div>
+							</label>
+							<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
+								<Checkbox
+									checked={furnished}
+									onCheckedChange={(checked) => setFurnished(checked === true)}
+								/>
+								<div>
+									<p className="text-sm font-semibold">Furnished</p>
+									<p className="text-xs text-muted-foreground">
+										Let students know if move-in is easier.
+									</p>
+								</div>
+							</label>
+						</div>
+					</div>
+
+					<SectionDivider />
+
+					{/* PHOTOS */}
+					<div className="space-y-3">
+						<div>
+							<SectionHeader>Photos</SectionHeader>
+							<p className="mt-1 text-xs text-muted-foreground">
+								{isEditMode
+									? "Keep existing photos, remove any that no longer apply, or add new ones."
+									: "Upload one or more photos to help the listing feel credible at a glance."}
+							</p>
+						</div>
+						<ImageUploader
+							existingUrls={existingImageUrls}
+							onRemoveExisting={(url) =>
+								setExistingImageUrls((current) =>
+									current.filter((item) => item !== url),
+								)
+							}
+							files={selectedFiles}
+							onFilesChange={setSelectedFiles}
+						/>
+					</div>
+
+					<SectionDivider />
+
+					<div className="flex gap-3">
+						<Button
+							type="button"
+							variant="ghost"
+							className="flex-1"
+							onClick={() => router.back()}
+						>
+							Cancel
+						</Button>
+						<Button type="submit" disabled={isSubmitting} className="flex-1">
+							{isSubmitting
+								? isEditMode
+									? "Saving..."
+									: "Creating..."
+								: isEditMode
+									? "Save Changes"
+									: "Create Listing"}
+						</Button>
+					</div>
 				</form>
 			</CardContent>
 		</Card>
