@@ -3,11 +3,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import DeleteButton from "@/app/components/DeleteButton";
-import { Bath, BedDouble, CalendarRange, Home, MapPin } from "lucide-react";
+import { Bath, BedDouble, CalendarRange, Home, PersonStanding } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth-guards";
 import ContactReveal from "@/app/listings/[id]/components/ContactReveal";
+import { DISTANCE_LABELS } from "@/types/listing";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -46,6 +47,7 @@ export default async function Page({
 		listing.private_bathroom ? "Private bathroom" : null,
 		listing.furnished ? "Furnished" : null,
 		listing.room_type ? `${listing.room_type} room` : null,
+		listing.parking_available === true ? "Parking available" : null,
 	].filter(Boolean) as string[];
 	const canManageListing = Boolean(user?.isAdmin || user?.id === listing.user_id);
 
@@ -126,7 +128,7 @@ export default async function Page({
 									Room type
 								</div>
 								<p className="mt-1.5 text-base font-semibold capitalize text-foreground">
-									{listing.room_type || "Not specified"}
+									{listing.room_type}
 								</p>
 							</div>
 							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4">
@@ -139,6 +141,15 @@ export default async function Page({
 									{dateFormatter.format(new Date(listing.end_date))}
 								</p>
 							</div>
+							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4 sm:col-span-2">
+								<div className="flex items-center gap-2 text-xs text-muted-foreground">
+									<PersonStanding className="h-3.5 w-3.5 text-primary" />
+									Distance from campus
+								</div>
+								<p className="mt-1.5 text-base font-semibold text-foreground">
+									{DISTANCE_LABELS[listing.distance_from_campus]}
+								</p>
+							</div>
 						</div>
 
 						{/* Description */}
@@ -146,15 +157,6 @@ export default async function Page({
 							<h2 className="font-heading text-base font-semibold text-foreground">Description</h2>
 							<p className="mt-1.5 text-sm leading-6 text-muted-foreground">
 								{listing.description || "No description provided."}
-							</p>
-						</div>
-
-						{/* Location */}
-						<div className="mt-4 border-t border-border/70 pt-4 dark:border-white/8">
-							<h2 className="font-heading text-base font-semibold text-foreground">Location</h2>
-							<p className="mt-1.5 flex items-start gap-2 text-sm leading-6 text-muted-foreground">
-								<MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-								<span>{listing.address || "Address shared after contact."}</span>
 							</p>
 						</div>
 

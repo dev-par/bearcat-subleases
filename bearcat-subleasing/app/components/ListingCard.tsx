@@ -1,5 +1,5 @@
-import { Listing } from "@/types/listing";
-import { Bath, BedDouble, CalendarRange, MapPin, Sofa } from "lucide-react";
+import { DISTANCE_LABELS, Listing } from "@/types/listing";
+import { Bath, BedDouble, CalendarRange, PersonStanding } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -90,17 +90,10 @@ export default function ListingCard({ listing }: ListingCardProps) {
 							<CalendarRange className="h-4 w-4 text-primary" />
 							{dateFormatter.format(new Date(listing.start_date))}
 						</div>
-						{listing.address ? (
-							<div className="flex items-center gap-2">
-								<MapPin className="h-4 w-4 text-primary" />
-								<span className="line-clamp-1 max-w-[12rem]">{listing.address}</span>
-							</div>
-						) : (
-							<div className="flex items-center gap-2">
-								<Sofa className="h-4 w-4 text-primary" />
-								Near-campus details inside
-							</div>
-						)}
+						<div className="flex items-center gap-2">
+							<PersonStanding className="h-4 w-4 text-primary" />
+							{DISTANCE_LABELS[listing.distance_from_campus]}
+						</div>
 					</div>
 				</div>
 			</div>

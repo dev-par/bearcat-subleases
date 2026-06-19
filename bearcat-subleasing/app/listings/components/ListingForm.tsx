@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-import type { ListingMutationInput } from "@/types/listing";
+import type { DistanceFromCampus, ListingMutationInput } from "@/types/listing";
+import { DISTANCE_OPTIONS } from "@/types/listing";
 import ImageUploader from "@/app/listings/components/ImageUploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,7 +36,6 @@ interface ListingFormProps {
 const defaultValues: ListingFormInitialValues = {
 	title: "",
 	description: null,
-	address: null,
 	rent_cents: 0,
 	start_date: "",
 	end_date: "",
@@ -43,26 +43,11 @@ const defaultValues: ListingFormInitialValues = {
 	bedrooms_in_unit: 1,
 	bathrooms_in_unit_x2: 2,
 	private_bathroom: false,
+	distance_from_campus: "under_5",
+	parking_available: null,
 	furnished: false,
 	imageUrls: [],
 };
-
-const BEDROOM_OPTIONS = [
-	{ label: "1", value: 1 },
-	{ label: "2", value: 2 },
-	{ label: "3", value: 3 },
-	{ label: "4+", value: 4 },
-];
-
-const BATHROOM_OPTIONS = [
-	{ label: "1", value: 2 },
-	{ label: "1.5", value: 3 },
-	{ label: "2", value: 4 },
-	{ label: "2.5", value: 5 },
-	{ label: "3", value: 6 },
-	{ label: "3.5", value: 7 },
-	{ label: "4+", value: 8 },
-];
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
 	return (
@@ -86,7 +71,6 @@ export default function ListingForm({
 	const router = useRouter();
 	const [title, setTitle] = useState(initialValues.title);
 	const [description, setDescription] = useState(initialValues.description ?? "");
-	const [address, setAddress] = useState(initialValues.address ?? "");
 	const [rent, setRent] = useState(
 		initialValues.rent_cents ? String(initialValues.rent_cents / 100) : "",
 	);
@@ -98,11 +82,17 @@ export default function ListingForm({
 	const [bedroomsInUnit, setBedroomsInUnit] = useState(
 		initialValues.bedrooms_in_unit,
 	);
-	const [bathroomsInUnitX2, setBathroomsInUnitX2] = useState(
-		initialValues.bathrooms_in_unit_x2,
+	const [bathroomsDisplay, setBathroomsDisplay] = useState(
+		initialValues.bathrooms_in_unit_x2 / 2,
 	);
 	const [privateBathroom, setPrivateBathroom] = useState(
 		initialValues.private_bathroom,
+	);
+	const [distanceFromCampus, setDistanceFromCampus] = useState<DistanceFromCampus>(
+		initialValues.distance_from_campus,
+	);
+	const [parkingAvailable, setParkingAvailable] = useState<boolean | null>(
+		initialValues.parking_available,
 	);
 	const [furnished, setFurnished] = useState(initialValues.furnished);
 	const [existingImageUrls, setExistingImageUrls] = useState(
@@ -164,14 +154,15 @@ export default function ListingForm({
 			const listingData: ListingMutationInput = {
 				title,
 				description: description || null,
-				address: address || null,
 				rent_cents: Number(rent) * 100,
 				start_date: startDate,
 				end_date: endDate,
 				room_type: roomType,
-				bedrooms_in_unit: bedroomsInUnit,
-				bathrooms_in_unit_x2: bathroomsInUnitX2,
+				bedrooms_in_unit: Math.round(bedroomsInUnit),
+				bathrooms_in_unit_x2: Math.round(bathroomsDisplay * 2),
 				private_bathroom: privateBathroom,
+				distance_from_campus: distanceFromCampus,
+				parking_available: parkingAvailable,
 				furnished,
 			};
 
@@ -251,11 +242,6 @@ export default function ListingForm({
 		});
 	};
 
-	const activePillClass =
-		"border-primary bg-primary text-primary-foreground font-semibold";
-	const inactivePillClass =
-		"border-border/70 bg-card text-foreground hover:border-border hover:bg-muted/40";
-
 	return (
 		<Card className="mt-8 border-border/70">
 			<CardContent className="p-6 sm:p-7">
@@ -288,14 +274,12 @@ export default function ListingForm({
 							label="Description"
 							htmlFor="description"
 							description="Describe the setup, roommate situation, and anything a student would want to know before reaching out."
-							required
 							error={fieldErrors.description}
 						>
 							<Textarea
 								id="description"
 								value={description}
 								onChange={(e) => setDescription(e.target.value)}
-								required
 								maxLength={512}
 								rows={4}
 							/>
@@ -304,13 +288,20 @@ export default function ListingForm({
 							</p>
 						</Field>
 
-						<Field label="Address" htmlFor="address">
-							<Input
-								id="address"
-								value={address}
-								onChange={(e) => setAddress(e.target.value)}
-								placeholder="e.g. 123 Clifton Ave, Cincinnati, OH"
-							/>
+						<Field label="Distance from Campus" htmlFor="distance-from-campus" required>
+							<Select
+								value={distanceFromCampus}
+								onValueChange={(value) => setDistanceFromCampus(value as DistanceFromCampus)}
+							>
+								<SelectTrigger id="distance-from-campus">
+									<SelectValue placeholder="Select walking distance" />
+								</SelectTrigger>
+								<SelectContent>
+									{DISTANCE_OPTIONS.map(({ value, label }) => (
+										<SelectItem key={value} value={value}>{label}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 						</Field>
 					</div>
 
@@ -400,54 +391,42 @@ export default function ListingForm({
 						</Field>
 
 						<div className="grid gap-4 sm:grid-cols-2">
-							<div className="space-y-2">
-								<p className="text-sm font-medium text-foreground">
-									Bedrooms in unit <span className="text-destructive">*</span>
-								</p>
-								<div className="flex flex-wrap gap-2">
-									{BEDROOM_OPTIONS.map(({ label, value }) => (
-										<button
-											key={value}
-											type="button"
-											onClick={() => setBedroomsInUnit(value)}
-											className={[
-												"min-w-11 rounded-full border px-3.5 py-1.5 text-sm transition-colors",
-												bedroomsInUnit === value
-													? activePillClass
-													: inactivePillClass,
-											].join(" ")}
-										>
-											{label}
-										</button>
-									))}
-								</div>
-							</div>
+							<Field
+								label="Bedrooms in unit"
+								htmlFor="bedrooms"
+								required
+								error={fieldErrors.bedrooms}
+							>
+								<Input
+									id="bedrooms"
+									type="number"
+									value={bedroomsInUnit}
+									onChange={(e) => setBedroomsInUnit(Number(e.target.value))}
+									min="1"
+									step="0.5"
+									required
+								/>
+							</Field>
 
-							<div className="space-y-2">
-								<p className="text-sm font-medium text-foreground">
-									Bathrooms in unit <span className="text-destructive">*</span>
-								</p>
-								<div className="flex flex-wrap gap-2">
-									{BATHROOM_OPTIONS.map(({ label, value }) => (
-										<button
-											key={value}
-											type="button"
-											onClick={() => setBathroomsInUnitX2(value)}
-											className={[
-												"min-w-11 rounded-full border px-3.5 py-1.5 text-sm transition-colors",
-												bathroomsInUnitX2 === value
-													? activePillClass
-													: inactivePillClass,
-											].join(" ")}
-										>
-											{label}
-										</button>
-									))}
-								</div>
-							</div>
+							<Field
+								label="Bathrooms in unit"
+								htmlFor="bathrooms"
+								required
+								error={fieldErrors.bathrooms}
+							>
+								<Input
+									id="bathrooms"
+									type="number"
+									value={bathroomsDisplay}
+									onChange={(e) => setBathroomsDisplay(Number(e.target.value))}
+									min="0.5"
+									step="0.5"
+									required
+								/>
+							</Field>
 						</div>
 
-						<div className="grid gap-3 sm:grid-cols-2">
+						<div className="grid gap-3 sm:grid-cols-3">
 							<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
 								<Checkbox
 									checked={privateBathroom}
@@ -458,7 +437,7 @@ export default function ListingForm({
 								<div>
 									<p className="text-sm font-semibold">Private Bathroom</p>
 									<p className="text-xs text-muted-foreground">
-										Highlight stronger privacy for renters.
+										Exclusive bathroom access.
 									</p>
 								</div>
 							</label>
@@ -470,7 +449,21 @@ export default function ListingForm({
 								<div>
 									<p className="text-sm font-semibold">Furnished</p>
 									<p className="text-xs text-muted-foreground">
-										Let students know if move-in is easier.
+										Move-in ready.
+									</p>
+								</div>
+							</label>
+							<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
+								<Checkbox
+									checked={parkingAvailable === true}
+									onCheckedChange={(checked) =>
+										setParkingAvailable(checked === true ? true : null)
+									}
+								/>
+								<div>
+									<p className="text-sm font-semibold">Parking Available</p>
+									<p className="text-xs text-muted-foreground">
+										On-site or nearby.
 									</p>
 								</div>
 							</label>

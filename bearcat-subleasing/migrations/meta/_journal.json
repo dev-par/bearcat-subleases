@@ -43,6 +43,13 @@
       "when": 1778201636835,
       "tag": "0005_clean_kate_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781851740409,
+      "tag": "0006_listing_field_overhaul",
+      "breakpoints": true
     }
   ]
 }

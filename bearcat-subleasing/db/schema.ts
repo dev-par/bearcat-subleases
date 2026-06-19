@@ -77,18 +77,23 @@ export const statusEnum = pgEnum('status', ['active', 'inactive'])
 
 export const roomTypeEnum = pgEnum('room_type', ['private', 'shared'])
 
+export const distanceFromCampusEnum = pgEnum('distance_from_campus', [
+    'under_5', '5_to_10', '10_to_20', '20_to_30', 'over_30'
+])
+
 export const Listing = pgTable('listing', {
     id: uuid().defaultRandom().primaryKey(),
     title: varchar({ length: 255 }).notNull(),
     description: varchar({ length: 512 }),
-    address: varchar({ length: 255 }),
     rent_cents: integer().notNull(),
     start_date: date().notNull(),
     end_date: date().notNull(),
-    room_type: roomTypeEnum(),
+    room_type: roomTypeEnum().notNull(),
     bedrooms_in_unit: smallint().notNull(),
     bathrooms_in_unit_x2: smallint().notNull(),
     private_bathroom: boolean().notNull(),
+    distance_from_campus: distanceFromCampusEnum().notNull(),
+    parking_available: boolean(),
     status: statusEnum().notNull().default('active'),
     created_at: timestamp().defaultNow(),
     updated_at: timestamp().defaultNow(),
