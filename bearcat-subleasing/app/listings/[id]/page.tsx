@@ -38,7 +38,7 @@ export default async function Page({
 		maximumFractionDigits: 0,
 	});
 	const dateFormatter = new Intl.DateTimeFormat("en-US", {
-		month: "long",
+		month: "short",
 		day: "numeric",
 		year: "numeric",
 	});
@@ -60,105 +60,122 @@ export default async function Page({
 				</Link>
 			</div>
 
-			<div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-				<div className="overflow-hidden rounded-[2rem] border border-border/80 bg-card shadow-soft dark:border-white/8">
+			{/* Title — full width above the grid */}
+			<div className="mb-8">
+				<p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+					Listing detail
+				</p>
+				<h1 className="font-heading mt-3 text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+					{listing.title}
+				</h1>
+			</div>
+
+			{/* Image + info two-column grid */}
+			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch">
+
+				{/* Image */}
+				<div className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-card shadow-soft dark:border-white/8">
 					<Image
 						src={imageUrl}
 						alt={listing.title}
-						width={600}
-						height={600}
-						className="aspect-square w-full object-cover"
+						fill
+						className="object-cover"
 					/>
 				</div>
 
-				<div className="rounded-[2rem] border border-border/80 bg-card p-6 shadow-soft dark:border-white/8 sm:p-8">
-					<p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-						Listing detail
-					</p>
-					<h1 className="font-heading mt-3 text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
-						{listing.title}
-					</h1>
-					<p className="mt-4 text-4xl font-semibold text-primary">
-						{currencyFormatter.format(listing.rent_cents / 100)}
-						<span className="ml-2 text-base font-medium text-muted-foreground">/ month</span>
-					</p>
+				{/* Info sidebar */}
+				<div>
+					<div className="rounded-[2rem] border border-border/80 bg-card p-5 shadow-soft dark:border-white/8 sm:p-6">
 
-					<div className="mt-5 flex flex-wrap gap-2">
-						{amenityBadges.map((badge) => (
-							<Badge key={badge}>
-								{badge}
-							</Badge>
-						))}
-					</div>
-
-					<div className="mt-8 grid gap-4 sm:grid-cols-2">
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
-							<div className="flex items-center gap-2 text-sm text-muted-foreground">
-								<BedDouble className="h-4 w-4 text-primary" />
-								Bedrooms
-							</div>
-							<p className="mt-2 text-lg font-semibold text-foreground">{listing.bedrooms_in_unit}</p>
-						</div>
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
-							<div className="flex items-center gap-2 text-sm text-muted-foreground">
-								<Bath className="h-4 w-4 text-primary" />
-								Bathrooms
-							</div>
-							<p className="mt-2 text-lg font-semibold text-foreground">
-								{listing.bathrooms_in_unit_x2 / 2}
-							</p>
-						</div>
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
-							<div className="flex items-center gap-2 text-sm text-muted-foreground">
-								<Home className="h-4 w-4 text-primary" />
-								Room type
-							</div>
-							<p className="mt-2 text-lg font-semibold capitalize text-foreground">
-								{listing.room_type || "Not specified"}
-							</p>
-						</div>
-						<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-4 dark:border-white/8 dark:bg-white/4">
-							<div className="flex items-center gap-2 text-sm text-muted-foreground">
-								<CalendarRange className="h-4 w-4 text-primary" />
-								Availability
-							</div>
-							<p className="mt-2 text-base font-semibold text-foreground">
-								{dateFormatter.format(new Date(listing.start_date))} -{" "}
-								{dateFormatter.format(new Date(listing.end_date))}
-							</p>
-						</div>
-					</div>
-
-					<div className="mt-8 rounded-[1.5rem] border border-border/70 bg-white p-5 dark:border-white/8 dark:bg-white/4">
-						<h2 className="font-heading text-2xl font-semibold text-foreground">Description</h2>
-						<p className="mt-3 text-base leading-7 text-muted-foreground">
-							{listing.description || "No description provided."}
+						{/* Price */}
+						<p className="text-3xl font-semibold text-primary">
+							{currencyFormatter.format(listing.rent_cents / 100)}
+							<span className="ml-2 text-sm font-medium text-muted-foreground">/ month</span>
 						</p>
-					</div>
 
-					<div className="mt-6 rounded-[1.5rem] border border-border/70 bg-white p-5 dark:border-white/8 dark:bg-white/4">
-						<h2 className="font-heading text-2xl font-semibold text-foreground">Location</h2>
-						<p className="mt-3 flex items-start gap-2 text-base leading-7 text-muted-foreground">
-							<MapPin className="mt-1 h-4 w-4 shrink-0 text-primary" />
-							<span>{listing.address || "Address shared after contact."}</span>
-						</p>
-					</div>
+						{/* Amenity badges */}
+						{amenityBadges.length > 0 && (
+							<div className="mt-3 flex flex-wrap gap-2">
+								{amenityBadges.map((badge) => (
+									<Badge key={badge}>{badge}</Badge>
+								))}
+							</div>
+						)}
 
-					<div className="mt-6 rounded-[1.5rem] border border-border/70 bg-[linear-gradient(180deg,rgba(255,247,240,0.9)_0%,rgba(255,255,255,1)_100%)] p-5 dark:border-primary/18 dark:bg-[linear-gradient(180deg,rgba(255,90,114,0.08)_0%,rgba(20,24,29,0.96)_72%)]">
-						<h2 className="font-heading text-2xl font-semibold text-foreground">Contact</h2>
-						<ContactReveal listingId={listing.id} isLoggedIn={user !== null} />
-					</div>
-
-					{canManageListing ? (
-						<div className="mt-6 space-y-3">
-							<Link href={`/listings/${listing.id}/edit`}>
-								<Button variant="outline" className="w-full">
-									Edit Listing
-								</Button>
-							</Link>
-							<DeleteButton listingId={listing.id} />
+						{/* Stats grid */}
+						<div className="mt-4 grid gap-2 sm:grid-cols-2">
+							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4">
+								<div className="flex items-center gap-2 text-xs text-muted-foreground">
+									<BedDouble className="h-3.5 w-3.5 text-primary" />
+									Bedrooms
+								</div>
+								<p className="mt-1.5 text-base font-semibold text-foreground">{listing.bedrooms_in_unit}</p>
+							</div>
+							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4">
+								<div className="flex items-center gap-2 text-xs text-muted-foreground">
+									<Bath className="h-3.5 w-3.5 text-primary" />
+									Bathrooms
+								</div>
+								<p className="mt-1.5 text-base font-semibold text-foreground">
+									{listing.bathrooms_in_unit_x2 / 2}
+								</p>
+							</div>
+							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4">
+								<div className="flex items-center gap-2 text-xs text-muted-foreground">
+									<Home className="h-3.5 w-3.5 text-primary" />
+									Room type
+								</div>
+								<p className="mt-1.5 text-base font-semibold capitalize text-foreground">
+									{listing.room_type || "Not specified"}
+								</p>
+							</div>
+							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4">
+								<div className="flex items-center gap-2 text-xs text-muted-foreground">
+									<CalendarRange className="h-3.5 w-3.5 text-primary" />
+									Availability
+								</div>
+								<p className="mt-1.5 text-sm font-semibold text-foreground">
+									{dateFormatter.format(new Date(listing.start_date))} –{" "}
+									{dateFormatter.format(new Date(listing.end_date))}
+								</p>
+							</div>
 						</div>
-					) : null}
+
+						{/* Description */}
+						<div className="mt-4 border-t border-border/70 pt-4 dark:border-white/8">
+							<h2 className="font-heading text-base font-semibold text-foreground">Description</h2>
+							<p className="mt-1.5 text-sm leading-6 text-muted-foreground">
+								{listing.description || "No description provided."}
+							</p>
+						</div>
+
+						{/* Location */}
+						<div className="mt-4 border-t border-border/70 pt-4 dark:border-white/8">
+							<h2 className="font-heading text-base font-semibold text-foreground">Location</h2>
+							<p className="mt-1.5 flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+								<MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+								<span>{listing.address || "Address shared after contact."}</span>
+							</p>
+						</div>
+
+						{/* Contact */}
+						<div className="mt-4 border-t border-border/70 pt-4 dark:border-white/8">
+							<h2 className="font-heading text-base font-semibold text-foreground">Contact</h2>
+							<ContactReveal listingId={listing.id} isLoggedIn={user !== null} />
+						</div>
+
+						{/* Manage */}
+						{canManageListing && (
+							<div className="mt-4 space-y-2 border-t border-border/70 pt-4 dark:border-white/8">
+								<Link href={`/listings/${listing.id}/edit`}>
+									<Button variant="outline" className="w-full">
+										Edit Listing
+									</Button>
+								</Link>
+								<DeleteButton listingId={listing.id} />
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>
