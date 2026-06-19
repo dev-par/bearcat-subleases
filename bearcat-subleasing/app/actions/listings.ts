@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { assertValidListingId } from "@/lib/validation/listing";
 import { AuthorizationError, requireUser } from "@/lib/auth-guards";
+import { deleteS3Objects, extractS3Key } from "@/lib/s3";
 
 export type GetListingContactResult =
   | { success: true; data: { name: string; email: string } }
@@ -51,9 +52,16 @@ export async function deleteListing(listingId: string) {
 			);
 		}
 
+		const images = await db
+			.select({ url: ListingImage.url })
+			.from(ListingImage)
+			.where(eq(ListingImage.listing_id, listingId));
+
 		await db.delete(ListingImage).where(eq(ListingImage.listing_id, listingId));
 		await db.delete(Listing).where(eq(Listing.id, listingId));
 		revalidatePath("/listings");
+
+		await deleteS3Objects(images.map((img) => extractS3Key(img.url)));
 	} catch (error) {
 		const message =
 			error instanceof Error ? error.message : "Failed to delete listing";
