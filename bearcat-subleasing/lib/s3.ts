@@ -19,12 +19,15 @@ export function extractS3Key(url: string): string {
 export async function deleteS3Objects(keys: string[]): Promise<void> {
 	if (keys.length === 0) return;
 	try {
-		await s3Client.send(
+		const result = await s3Client.send(
 			new DeleteObjectsCommand({
 				Bucket: BUCKET_NAME,
-				Delete: { Objects: keys.map((Key) => ({ Key })), Quiet: true },
+				Delete: { Objects: keys.map((Key) => ({ Key })) },
 			}),
 		);
+		if (result.Errors && result.Errors.length > 0) {
+			console.error("S3 delete had per-object errors:", JSON.stringify(result.Errors));
+		}
 	} catch (error) {
 		console.error("S3 batch delete failed:", error);
 	}
