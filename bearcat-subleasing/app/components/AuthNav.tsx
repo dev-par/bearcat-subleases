@@ -103,7 +103,7 @@ export default function AuthNav({
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="w-44">
 					<DropdownMenuItem asChild>
-						<Link href="/profile">My Profile</Link>
+						<Link href="/profile">My Listings</Link>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem onClick={handleSignOut}>

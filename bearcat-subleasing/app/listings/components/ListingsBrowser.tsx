@@ -152,6 +152,7 @@ export default function ListingsBrowser({ listings }: Props) {
 						</Badge>
 					)}
 					<ChevronDown
+						aria-hidden="true"
 						className={cn(
 							"h-4 w-4 transition-transform duration-200",
 							isOpen && "rotate-180",
@@ -189,6 +190,8 @@ export default function ListingsBrowser({ listings }: Props) {
 								</span>
 								<Input
 									type="number"
+									name="min-rent"
+									autoComplete="off"
 									value={filters.minRent}
 									onChange={(e) =>
 										setFilters((prev) => ({ ...prev, minRent: e.target.value }))
@@ -204,6 +207,8 @@ export default function ListingsBrowser({ listings }: Props) {
 								</span>
 								<Input
 									type="number"
+									name="max-rent"
+									autoComplete="off"
 									value={filters.maxRent}
 									onChange={(e) =>
 										setFilters((prev) => ({ ...prev, maxRent: e.target.value }))
@@ -223,9 +228,14 @@ export default function ListingsBrowser({ listings }: Props) {
 						<SectionHeader>Availability</SectionHeader>
 						<div className="grid grid-cols-2 gap-3">
 							<div className="space-y-1">
-								<p className="text-xs text-muted-foreground">I'm moving in on</p>
+								<label htmlFor="filter-date-from" className="text-xs text-muted-foreground">
+									I&apos;m moving in on
+								</label>
 								<Input
+									id="filter-date-from"
 									type="date"
+									name="date-from"
+									autoComplete="off"
 									value={filters.dateFrom}
 									onChange={(e) =>
 										setFilters((prev) => ({ ...prev, dateFrom: e.target.value }))
@@ -233,9 +243,14 @@ export default function ListingsBrowser({ listings }: Props) {
 								/>
 							</div>
 							<div className="space-y-1">
-								<p className="text-xs text-muted-foreground">I'm moving out on</p>
+								<label htmlFor="filter-date-to" className="text-xs text-muted-foreground">
+									I&apos;m moving out on
+								</label>
 								<Input
+									id="filter-date-to"
 									type="date"
+									name="date-to"
+									autoComplete="off"
 									value={filters.dateTo}
 									onChange={(e) =>
 										setFilters((prev) => ({ ...prev, dateTo: e.target.value }))

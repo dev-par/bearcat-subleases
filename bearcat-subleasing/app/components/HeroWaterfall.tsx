@@ -46,7 +46,7 @@ function WaterfallColumn({ items, className, speed }: WaterfallColumnProps) {
 
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="rounded-full bg-white/20 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-widest backdrop-blur-md sm:text-[10px]">
+                  <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-widest backdrop-blur-md sm:text-xs">
                     {item.availability}
                   </span>
                   <span className="text-sm font-semibold sm:text-base">{item.rent}</span>
@@ -54,7 +54,7 @@ function WaterfallColumn({ items, className, speed }: WaterfallColumnProps) {
                 <p className="font-heading text-lg font-semibold leading-tight line-clamp-1 sm:text-xl">{item.title}</p>
                 <div className="mt-1.5 flex items-center gap-2 text-xs font-medium text-white/80">
                   <span>{item.beds} bed</span>
-                  <span className="h-1 w-1 rounded-full bg-white/50"></span>
+                  <span className="h-1 w-1 rounded-full bg-white/50" aria-hidden="true"></span>
                   <span>{item.baths} bath</span>
                 </div>
               </div>

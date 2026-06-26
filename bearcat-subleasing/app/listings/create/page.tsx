@@ -12,7 +12,7 @@ export default async function CreatePage() {
 	}
 
 	return (
-		<div className="mx-auto max-w-xl px-4 py-8 sm:py-10">
+		<div className="mx-auto max-w-2xl px-4 py-8 sm:py-10">
 			<div className="mb-4">
 				<Link
 					href="/listings"

@@ -1,5 +1,5 @@
 import { DISTANCE_LABELS, Listing } from "@/types/listing";
-import { Bath, BedDouble, CalendarRange, PersonStanding } from "lucide-react";
+import { Bath, BedDouble, PersonStanding } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -38,19 +38,20 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
 				<div className="flex flex-1 flex-col p-5">
 					<div className="flex items-start justify-between gap-3">
-						<div>
+						<div className="min-w-0 flex-1">
 							<p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-								{dateFormatter.format(new Date(listing.start_date))} - {dateFormatter.format(new Date(listing.end_date))}
+								{dateFormatter.format(new Date(listing.start_date))} –{" "}
+								{dateFormatter.format(new Date(listing.end_date))}
 							</p>
-							<h2 className="font-heading mt-2 text-2xl font-semibold leading-tight text-card-foreground">
+							<h2 className="font-heading mt-2 text-2xl font-semibold leading-tight text-card-foreground text-balance line-clamp-2">
 								{listing.title}
 							</h2>
 						</div>
-						<div className="flex min-w-[5.5rem] flex-col items-center justify-center rounded-full bg-primary px-3 py-3 text-center text-primary-foreground shadow-lg shadow-primary/15 dark:shadow-primary/10">
-							<p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-primary-foreground/80">
-								Monthly
+						<div className="flex shrink-0 flex-col items-end text-right">
+							<p className="text-2xl font-semibold tabular-nums leading-none text-foreground">
+								{price}
 							</p>
-							<p className="mt-1 text-xl font-semibold leading-none">{price}</p>
+							<p className="mt-1 text-xs font-medium text-muted-foreground">/mo</p>
 						</div>
 					</div>
 
@@ -72,31 +73,29 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					</div>
 
 					<div className="mt-5 grid grid-cols-2 gap-3 text-sm text-card-foreground">
-						<div className="rounded-full border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8 dark:bg-white/3">
+						<div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8 dark:bg-white/3">
 							<div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<BedDouble className="h-4 w-4" />
+								<BedDouble className="h-4 w-4" aria-hidden="true" />
 								Bedrooms
 							</div>
-							<p className="mt-1 text-lg font-semibold leading-none">{listing.bedrooms_in_unit}</p>
+							<p className="mt-1 text-lg font-semibold tabular-nums leading-none">
+								{listing.bedrooms_in_unit}
+							</p>
 						</div>
-						<div className="rounded-full border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8 dark:bg-white/3">
+						<div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8 dark:bg-white/3">
 							<div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<Bath className="h-4 w-4" />
+								<Bath className="h-4 w-4" aria-hidden="true" />
 								Bathrooms
 							</div>
-							<p className="mt-1 text-lg font-semibold leading-none">{listing.bathrooms_in_unit_x2 / 2}</p>
+							<p className="mt-1 text-lg font-semibold tabular-nums leading-none">
+								{listing.bathrooms_in_unit_x2 / 2}
+							</p>
 						</div>
 					</div>
 
-					<div className="mt-5 flex flex-wrap items-center gap-4 border-t border-border/80 pt-4 text-sm text-muted-foreground dark:border-white/8">
-						<div className="flex items-center gap-2">
-							<CalendarRange className="h-4 w-4 text-primary" />
-							{dateFormatter.format(new Date(listing.start_date))}
-						</div>
-						<div className="flex items-center gap-2">
-							<PersonStanding className="h-4 w-4 text-primary" />
-							{DISTANCE_LABELS[listing.distance_from_campus]} from campus
-						</div>
+					<div className="mt-5 flex items-center gap-2 border-t border-border/80 pt-4 text-sm text-muted-foreground dark:border-white/8">
+						<PersonStanding className="h-4 w-4 text-primary" aria-hidden="true" />
+						{DISTANCE_LABELS[listing.distance_from_campus]} from campus
 					</div>
 				</div>
 			</div>
