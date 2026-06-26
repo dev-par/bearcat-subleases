@@ -32,6 +32,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					alt={listing.title}
 					width={600}
 					height={600}
+					sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
 					className="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.03]"
 				/>
 
@@ -53,9 +54,11 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						</div>
 					</div>
 
-					<p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
-						{listing.description || "A quieter Cincinnati sublease with the essential facts ready to scan."}
-					</p>
+					{listing.description && (
+						<p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+							{listing.description}
+						</p>
+					)}
 
 					<div className="mt-4 flex flex-wrap gap-2">
 						{badges.map((badge) => (
@@ -92,7 +95,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						</div>
 						<div className="flex items-center gap-2">
 							<PersonStanding className="h-4 w-4 text-primary" />
-							{DISTANCE_LABELS[listing.distance_from_campus]}
+							{DISTANCE_LABELS[listing.distance_from_campus]} from campus
 						</div>
 					</div>
 				</div>

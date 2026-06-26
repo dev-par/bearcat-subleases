@@ -82,6 +82,8 @@ export default async function Page({
 						alt={listing.title}
 						width={800}
 						height={800}
+						priority
+						sizes="(max-width: 1024px) 100vw, 50vw"
 						className="aspect-square w-full object-cover"
 					/>
 				</div>

@@ -63,8 +63,8 @@ function applyFilters(listings: Listing[], f: Filters): Listing[] {
 	return listings.filter((l) => {
 		if (f.minRent !== "" && l.rent_cents < Number(f.minRent) * 100) return false;
 		if (f.maxRent !== "" && l.rent_cents > Number(f.maxRent) * 100) return false;
-		if (f.dateFrom !== "" && l.start_date < f.dateFrom) return false;
-		if (f.dateTo !== "" && l.end_date > f.dateTo) return false;
+		if (f.dateFrom !== "" && l.start_date > f.dateFrom) return false;
+		if (f.dateTo !== "" && l.end_date < f.dateTo) return false;
 		if (f.roomType !== "" && l.room_type !== f.roomType) return false;
 		if (f.distance.length > 0 && !f.distance.includes(l.distance_from_campus)) return false;
 		if (f.furnished && !l.furnished) return false;
@@ -223,7 +223,7 @@ export default function ListingsBrowser({ listings }: Props) {
 						<SectionHeader>Availability</SectionHeader>
 						<div className="grid grid-cols-2 gap-3">
 							<div className="space-y-1">
-								<p className="text-xs text-muted-foreground">Move-in on/after</p>
+								<p className="text-xs text-muted-foreground">I'm moving in on</p>
 								<Input
 									type="date"
 									value={filters.dateFrom}
@@ -233,7 +233,7 @@ export default function ListingsBrowser({ listings }: Props) {
 								/>
 							</div>
 							<div className="space-y-1">
-								<p className="text-xs text-muted-foreground">Move-out on/before</p>
+								<p className="text-xs text-muted-foreground">I'm moving out on</p>
 								<Input
 									type="date"
 									value={filters.dateTo}
