@@ -36,7 +36,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 					className="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.03]"
 				/>
 
-				<div className="flex flex-1 flex-col p-5">
+				<div className="flex flex-1 flex-col p-4">
 					<div className="flex items-start justify-between gap-3">
 						<div className="min-w-0 flex-1">
 							<p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
@@ -55,48 +55,34 @@ export default function ListingCard({ listing }: ListingCardProps) {
 						</div>
 					</div>
 
-					{listing.description && (
-						<p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
-							{listing.description}
-						</p>
+					<div className="mt-3 flex items-center gap-2.5 text-sm text-muted-foreground">
+						<BedDouble className="h-4 w-4 shrink-0" aria-hidden="true" />
+						<span className="tabular-nums font-medium text-card-foreground">
+							{listing.bedrooms_in_unit}
+						</span>
+						<span className="text-border" aria-hidden="true">·</span>
+						<Bath className="h-4 w-4 shrink-0" aria-hidden="true" />
+						<span className="tabular-nums font-medium text-card-foreground">
+							{listing.bathrooms_in_unit_x2 / 2}
+						</span>
+						<span className="ml-auto flex items-center gap-1.5">
+							<PersonStanding className="h-4 w-4 text-primary" aria-hidden="true" />
+							{DISTANCE_LABELS[listing.distance_from_campus]}
+						</span>
+					</div>
+
+					{badges.length > 0 && (
+						<div className="mt-3 flex flex-wrap gap-2 border-t border-border/80 pt-3 dark:border-white/8">
+							{badges.map((badge) => (
+								<span
+									key={badge}
+									className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground dark:border-white/8 dark:bg-white/4 dark:text-muted-foreground"
+								>
+									{badge}
+								</span>
+							))}
+						</div>
 					)}
-
-					<div className="mt-4 flex flex-wrap gap-2">
-						{badges.map((badge) => (
-							<span
-								key={badge}
-								className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground dark:border-white/8 dark:bg-white/4 dark:text-muted-foreground"
-							>
-								{badge}
-							</span>
-						))}
-					</div>
-
-					<div className="mt-5 grid grid-cols-2 gap-3 text-sm text-card-foreground">
-						<div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8 dark:bg-white/3">
-							<div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<BedDouble className="h-4 w-4" aria-hidden="true" />
-								Bedrooms
-							</div>
-							<p className="mt-1 text-lg font-semibold tabular-nums leading-none">
-								{listing.bedrooms_in_unit}
-							</p>
-						</div>
-						<div className="rounded-2xl border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8 dark:bg-white/3">
-							<div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-								<Bath className="h-4 w-4" aria-hidden="true" />
-								Bathrooms
-							</div>
-							<p className="mt-1 text-lg font-semibold tabular-nums leading-none">
-								{listing.bathrooms_in_unit_x2 / 2}
-							</p>
-						</div>
-					</div>
-
-					<div className="mt-5 flex items-center gap-2 border-t border-border/80 pt-4 text-sm text-muted-foreground dark:border-white/8">
-						<PersonStanding className="h-4 w-4 text-primary" aria-hidden="true" />
-						{DISTANCE_LABELS[listing.distance_from_campus]} from campus
-					</div>
 				</div>
 			</div>
 		</Link>
