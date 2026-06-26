@@ -19,6 +19,7 @@ export default function ImageUploader({
 	const [isDragging, setIsDragging] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const dragCounterRef = useRef(0);
+	const replacingExistingUrlRef = useRef<string | null>(null);
 
 	const previewUrl = useMemo(
 		() => (files[0] ? URL.createObjectURL(files[0]) : null),
@@ -64,6 +65,9 @@ export default function ImageUploader({
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
+			const urlToReplace = replacingExistingUrlRef.current;
+			replacingExistingUrlRef.current = null;
+			if (urlToReplace) onRemoveExisting(urlToReplace);
 			setFile(e.target.files);
 			e.target.value = "";
 		}
@@ -140,7 +144,10 @@ export default function ImageUploader({
 					<div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-linear-to-t from-black/60 to-transparent px-4 pb-3 pt-8 opacity-0 transition-opacity group-hover:opacity-100">
 						<button
 							type="button"
-							onClick={() => inputRef.current?.click()}
+							onClick={() => {
+								replacingExistingUrlRef.current = existingUrl;
+								inputRef.current?.click();
+							}}
 							className="rounded-full bg-white/20 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm hover:bg-white/30"
 						>
 							Replace
