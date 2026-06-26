@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, SlidersHorizontal } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 
 import type { DistanceFromCampus, Listing } from "@/types/listing";
 import { DISTANCE_OPTIONS } from "@/types/listing";
@@ -44,6 +44,111 @@ const DEFAULT_FILTERS: Filters = {
 	privateBathroom: false,
 	parking: false,
 };
+
+type FilterChip = { id: string; label: string; clear: () => void };
+
+function buildChips(
+	filters: Filters,
+	setFilters: React.Dispatch<React.SetStateAction<Filters>>,
+): FilterChip[] {
+	const chips: FilterChip[] = [];
+
+	const fmt = (s: string) => `$${Number(s).toLocaleString()}`;
+	const fmtDate = (s: string) => {
+		const [y, m, d] = s.split("-").map(Number);
+		return new Intl.DateTimeFormat("en-US", {
+			month: "short",
+			day: "numeric",
+		}).format(new Date(y, m - 1, d));
+	};
+
+	if (filters.minRent && filters.maxRent) {
+		chips.push({
+			id: "price",
+			label: `${fmt(filters.minRent)} – ${fmt(filters.maxRent)}`,
+			clear: () => setFilters((p) => ({ ...p, minRent: "", maxRent: "" })),
+		});
+	} else if (filters.minRent) {
+		chips.push({
+			id: "price",
+			label: `From ${fmt(filters.minRent)}`,
+			clear: () => setFilters((p) => ({ ...p, minRent: "" })),
+		});
+	} else if (filters.maxRent) {
+		chips.push({
+			id: "price",
+			label: `Up to ${fmt(filters.maxRent)}`,
+			clear: () => setFilters((p) => ({ ...p, maxRent: "" })),
+		});
+	}
+
+	if (filters.dateFrom && filters.dateTo) {
+		chips.push({
+			id: "dates",
+			label: `${fmtDate(filters.dateFrom)} – ${fmtDate(filters.dateTo)}`,
+			clear: () => setFilters((p) => ({ ...p, dateFrom: "", dateTo: "" })),
+		});
+	} else if (filters.dateFrom) {
+		chips.push({
+			id: "dates",
+			label: `From ${fmtDate(filters.dateFrom)}`,
+			clear: () => setFilters((p) => ({ ...p, dateFrom: "" })),
+		});
+	} else if (filters.dateTo) {
+		chips.push({
+			id: "dates",
+			label: `Until ${fmtDate(filters.dateTo)}`,
+			clear: () => setFilters((p) => ({ ...p, dateTo: "" })),
+		});
+	}
+
+	if (filters.roomType) {
+		chips.push({
+			id: "roomType",
+			label: filters.roomType === "private" ? "Private room" : "Shared room",
+			clear: () => setFilters((p) => ({ ...p, roomType: "" })),
+		});
+	}
+
+	for (const d of filters.distance) {
+		const option = DISTANCE_OPTIONS.find((o) => o.value === d);
+		if (option) {
+			chips.push({
+				id: `distance-${d}`,
+				label: option.label,
+				clear: () =>
+					setFilters((p) => ({
+						...p,
+						distance: p.distance.filter((x) => x !== d),
+					})),
+			});
+		}
+	}
+
+	if (filters.furnished) {
+		chips.push({
+			id: "furnished",
+			label: "Furnished",
+			clear: () => setFilters((p) => ({ ...p, furnished: false })),
+		});
+	}
+	if (filters.privateBathroom) {
+		chips.push({
+			id: "privateBathroom",
+			label: "Private bathroom",
+			clear: () => setFilters((p) => ({ ...p, privateBathroom: false })),
+		});
+	}
+	if (filters.parking) {
+		chips.push({
+			id: "parking",
+			label: "Parking",
+			clear: () => setFilters((p) => ({ ...p, parking: false })),
+		});
+	}
+
+	return chips;
+}
 
 function countActiveFilters(f: Filters): number {
 	let count = 0;
@@ -113,12 +218,26 @@ export default function ListingsBrowser({ listings }: Props) {
 	const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
 	const [sort, setSort] = useState<SortKey>("newest");
 
+	// Draft price state — committed to filters after 250ms debounce
+	const [draftMin, setDraftMin] = useState("");
+	const [draftMax, setDraftMax] = useState("");
+
+	useEffect(() => {
+		const t = setTimeout(() => {
+			setFilters((prev) => ({ ...prev, minRent: draftMin, maxRent: draftMax }));
+		}, 250);
+		return () => clearTimeout(t);
+	}, [draftMin, draftMax]);
+
 	const activeFilterCount = countActiveFilters(filters);
+	const chips = buildChips(filters, setFilters);
 	const filtered = applyFilters(listings, filters);
 	const sorted = applySort(filtered, sort);
 
 	function resetFilters() {
 		setFilters(DEFAULT_FILTERS);
+		setDraftMin("");
+		setDraftMax("");
 	}
 
 	function toggleDistance(value: DistanceFromCampus) {
@@ -144,7 +263,7 @@ export default function ListingsBrowser({ listings }: Props) {
 							: "border-border/80 bg-card/90 text-foreground shadow-card hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary dark:border-white/8 dark:bg-card/92",
 					)}
 				>
-					<SlidersHorizontal className="h-4 w-4" />
+					<SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
 					Filters
 					{activeFilterCount > 0 && (
 						<Badge className="px-1.5 py-0 text-[10px] leading-4">
@@ -159,6 +278,16 @@ export default function ListingsBrowser({ listings }: Props) {
 						)}
 					/>
 				</button>
+
+				{activeFilterCount > 0 && (
+					<button
+						type="button"
+						onClick={resetFilters}
+						className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+					>
+						Clear all
+					</button>
+				)}
 
 				<div className="ml-auto flex items-center gap-2">
 					<span className="text-sm text-muted-foreground">Sort</span>
@@ -176,205 +305,243 @@ export default function ListingsBrowser({ listings }: Props) {
 				</div>
 			</div>
 
-			{/* Expandable filter panel */}
-			{isOpen && (
-				<div className="mt-3 space-y-5 rounded-[1.75rem] border border-border/70 bg-card/55 p-5 dark:border-white/8 dark:bg-card/35 sm:p-6">
-
-					{/* Price */}
-					<div className="space-y-3">
-						<SectionHeader>Price / month</SectionHeader>
-						<div className="grid grid-cols-2 gap-3">
-							<div className="relative">
-								<span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-muted-foreground">
-									$
-								</span>
-								<Input
-									type="number"
-									name="min-rent"
-									autoComplete="off"
-									value={filters.minRent}
-									onChange={(e) =>
-										setFilters((prev) => ({ ...prev, minRent: e.target.value }))
-									}
-									placeholder="No min"
-									min="0"
-									className="pl-7"
-								/>
-							</div>
-							<div className="relative">
-								<span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-muted-foreground">
-									$
-								</span>
-								<Input
-									type="number"
-									name="max-rent"
-									autoComplete="off"
-									value={filters.maxRent}
-									onChange={(e) =>
-										setFilters((prev) => ({ ...prev, maxRent: e.target.value }))
-									}
-									placeholder="No max"
-									min="0"
-									className="pl-7"
-								/>
-							</div>
-						</div>
-					</div>
-
-					<FilterDivider />
-
-					{/* Availability */}
-					<div className="space-y-3">
-						<SectionHeader>Availability</SectionHeader>
-						<div className="grid grid-cols-2 gap-3">
-							<div className="space-y-1">
-								<label htmlFor="filter-date-from" className="text-xs text-muted-foreground">
-									I&apos;m moving in on
-								</label>
-								<Input
-									id="filter-date-from"
-									type="date"
-									name="date-from"
-									autoComplete="off"
-									value={filters.dateFrom}
-									onChange={(e) =>
-										setFilters((prev) => ({ ...prev, dateFrom: e.target.value }))
-									}
-								/>
-							</div>
-							<div className="space-y-1">
-								<label htmlFor="filter-date-to" className="text-xs text-muted-foreground">
-									I&apos;m moving out on
-								</label>
-								<Input
-									id="filter-date-to"
-									type="date"
-									name="date-to"
-									autoComplete="off"
-									value={filters.dateTo}
-									onChange={(e) =>
-										setFilters((prev) => ({ ...prev, dateTo: e.target.value }))
-									}
-								/>
-							</div>
-						</div>
-					</div>
-
-					<FilterDivider />
-
-					{/* Room type */}
-					<div className="space-y-3">
-						<SectionHeader>Room type</SectionHeader>
-						<div className="flex gap-2">
-							{(["", "private", "shared"] as const).map((value) => {
-								const label =
-									value === "" ? "Any" : value === "private" ? "Private" : "Shared";
-								const isActive = filters.roomType === value;
-								return (
-									<button
-										key={value}
-										type="button"
-										onClick={() =>
-											setFilters((prev) => ({ ...prev, roomType: value }))
-										}
-										className={cn(
-											"rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
-											isActive
-												? "border-primary bg-primary text-primary-foreground"
-												: "border-border/80 bg-muted/40 text-foreground hover:border-primary/30 hover:text-primary dark:border-white/8 dark:bg-white/4",
-										)}
-									>
-										{label}
-									</button>
-								);
-							})}
-						</div>
-					</div>
-
-					<FilterDivider />
-
-					{/* Distance from campus */}
-					<div className="space-y-3">
-						<SectionHeader>Distance from campus</SectionHeader>
-						<div className="grid gap-2 sm:grid-cols-2">
-							{DISTANCE_OPTIONS.map(({ value, label }) => (
-								<label
-									key={value}
-									className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3"
-								>
-									<Checkbox
-										checked={filters.distance.includes(value)}
-										onCheckedChange={() => toggleDistance(value)}
-									/>
-									<span className="text-sm font-medium">{label}</span>
-								</label>
-							))}
-						</div>
-					</div>
-
-					<FilterDivider />
-
-					{/* Amenities */}
-					<div className="space-y-3">
-						<SectionHeader>Amenities</SectionHeader>
-						<div className="grid gap-2 sm:grid-cols-3">
-							<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
-								<Checkbox
-									checked={filters.furnished}
-									onCheckedChange={(checked) =>
-										setFilters((prev) => ({
-											...prev,
-											furnished: checked === true,
-										}))
-									}
-								/>
-								<span className="text-sm font-medium">Furnished</span>
-							</label>
-							<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
-								<Checkbox
-									checked={filters.privateBathroom}
-									onCheckedChange={(checked) =>
-										setFilters((prev) => ({
-											...prev,
-											privateBathroom: checked === true,
-										}))
-									}
-								/>
-								<span className="text-sm font-medium">Private bathroom</span>
-							</label>
-							<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
-								<Checkbox
-									checked={filters.parking}
-									onCheckedChange={(checked) =>
-										setFilters((prev) => ({
-											...prev,
-											parking: checked === true,
-										}))
-									}
-								/>
-								<span className="text-sm font-medium">Parking</span>
-							</label>
-						</div>
-					</div>
-
-					{/* Reset */}
-					{activeFilterCount > 0 && (
-						<>
-							<FilterDivider />
-							<div className="flex justify-end">
-								<Button
-									type="button"
-									variant="ghost"
-									size="sm"
-									onClick={resetFilters}
-								>
-									Reset filters
-								</Button>
-							</div>
-						</>
-					)}
+			{/* Active filter chips */}
+			{chips.length > 0 && (
+				<div className="mt-3 flex flex-wrap gap-2">
+					{chips.map((chip) => (
+						<button
+							key={chip.id}
+							type="button"
+							onClick={chip.clear}
+							className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/8 px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/15 dark:bg-primary/12 dark:hover:bg-primary/20"
+						>
+							{chip.label}
+							<X className="h-3 w-3" aria-hidden="true" />
+						</button>
+					))}
 				</div>
 			)}
+
+			{/* Expandable filter panel — animated with grid-rows */}
+			<div
+				className={cn(
+					"grid transition-[grid-template-rows]",
+					isOpen ? "duration-300 grid-rows-[1fr]" : "duration-200 grid-rows-[0fr]",
+				)}
+			>
+				<div className="min-h-0 overflow-hidden">
+					<div className="mt-3 space-y-5 rounded-[1.75rem] border border-border/70 bg-card/55 p-5 dark:border-white/8 dark:bg-card/35 sm:p-6">
+
+						{/* Price */}
+						<div className="space-y-3">
+							<SectionHeader>Price / month</SectionHeader>
+							<div className="grid grid-cols-2 gap-3">
+								<div className="relative">
+									<span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-muted-foreground">
+										$
+									</span>
+									<Input
+										type="number"
+										name="min-rent"
+										autoComplete="off"
+										value={draftMin}
+										onChange={(e) => setDraftMin(e.target.value)}
+										placeholder="No min"
+										min="0"
+										className="pl-7"
+									/>
+								</div>
+								<div className="relative">
+									<span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-muted-foreground">
+										$
+									</span>
+									<Input
+										type="number"
+										name="max-rent"
+										autoComplete="off"
+										value={draftMax}
+										onChange={(e) => setDraftMax(e.target.value)}
+										placeholder="No max"
+										min="0"
+										className="pl-7"
+									/>
+								</div>
+							</div>
+						</div>
+
+						<FilterDivider />
+
+						{/* Availability */}
+						<div className="space-y-3">
+							<SectionHeader>Availability</SectionHeader>
+							<div className="grid grid-cols-2 gap-3">
+								<div className="space-y-1">
+									<label htmlFor="filter-date-from" className="text-xs text-muted-foreground">
+										I&apos;m moving in on
+									</label>
+									<Input
+										id="filter-date-from"
+										type="date"
+										name="date-from"
+										autoComplete="off"
+										value={filters.dateFrom}
+										max={filters.dateTo || undefined}
+										onChange={(e) => {
+											const newFrom = e.target.value;
+											setFilters((prev) => ({
+												...prev,
+												dateFrom: newFrom,
+												dateTo:
+													prev.dateTo && newFrom > prev.dateTo
+														? ""
+														: prev.dateTo,
+											}));
+										}}
+									/>
+								</div>
+								<div className="space-y-1">
+									<label htmlFor="filter-date-to" className="text-xs text-muted-foreground">
+										I&apos;m moving out on
+									</label>
+									<Input
+										id="filter-date-to"
+										type="date"
+										name="date-to"
+										autoComplete="off"
+										value={filters.dateTo}
+										min={filters.dateFrom || undefined}
+										onChange={(e) => {
+											const newTo = e.target.value;
+											setFilters((prev) => ({
+												...prev,
+												dateTo: newTo,
+												dateFrom:
+													prev.dateFrom && newTo < prev.dateFrom
+														? ""
+														: prev.dateFrom,
+											}));
+										}}
+									/>
+								</div>
+							</div>
+						</div>
+
+						<FilterDivider />
+
+						{/* Room type */}
+						<div className="space-y-3">
+							<SectionHeader>Room type</SectionHeader>
+							<div className="flex gap-2">
+								{(["", "private", "shared"] as const).map((value) => {
+									const label =
+										value === "" ? "Any" : value === "private" ? "Private" : "Shared";
+									const isActive = filters.roomType === value;
+									return (
+										<button
+											key={value}
+											type="button"
+											onClick={() =>
+												setFilters((prev) => ({ ...prev, roomType: value }))
+											}
+											className={cn(
+												"rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
+												isActive
+													? "border-primary bg-primary text-primary-foreground"
+													: "border-border/80 bg-muted/40 text-foreground hover:border-primary/30 hover:text-primary dark:border-white/8 dark:bg-white/4",
+											)}
+										>
+											{label}
+										</button>
+									);
+								})}
+							</div>
+						</div>
+
+						<FilterDivider />
+
+						{/* Distance from campus */}
+						<div className="space-y-3">
+							<SectionHeader>Distance from campus</SectionHeader>
+							<div className="grid gap-2 sm:grid-cols-2">
+								{DISTANCE_OPTIONS.map(({ value, label }) => (
+									<label
+										key={value}
+										className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3"
+									>
+										<Checkbox
+											checked={filters.distance.includes(value)}
+											onCheckedChange={() => toggleDistance(value)}
+										/>
+										<span className="text-sm font-medium">{label}</span>
+									</label>
+								))}
+							</div>
+						</div>
+
+						<FilterDivider />
+
+						{/* Amenities */}
+						<div className="space-y-3">
+							<SectionHeader>Amenities</SectionHeader>
+							<div className="grid gap-2 sm:grid-cols-3">
+								<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
+									<Checkbox
+										checked={filters.furnished}
+										onCheckedChange={(checked) =>
+											setFilters((prev) => ({
+												...prev,
+												furnished: checked === true,
+											}))
+										}
+									/>
+									<span className="text-sm font-medium">Furnished</span>
+								</label>
+								<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
+									<Checkbox
+										checked={filters.privateBathroom}
+										onCheckedChange={(checked) =>
+											setFilters((prev) => ({
+												...prev,
+												privateBathroom: checked === true,
+											}))
+										}
+									/>
+									<span className="text-sm font-medium">Private bathroom</span>
+								</label>
+								<label className="flex cursor-pointer items-center gap-3 rounded-[1.35rem] border border-border/70 bg-muted/35 px-4 py-3 text-foreground transition-colors hover:bg-muted/50 dark:border-white/8 dark:bg-white/3">
+									<Checkbox
+										checked={filters.parking}
+										onCheckedChange={(checked) =>
+											setFilters((prev) => ({
+												...prev,
+												parking: checked === true,
+											}))
+										}
+									/>
+									<span className="text-sm font-medium">Parking</span>
+								</label>
+							</div>
+						</div>
+
+						{/* Reset inside panel */}
+						{activeFilterCount > 0 && (
+							<>
+								<FilterDivider />
+								<div className="flex justify-end">
+									<Button
+										type="button"
+										variant="ghost"
+										size="sm"
+										onClick={resetFilters}
+									>
+										Reset filters
+									</Button>
+								</div>
+							</>
+						)}
+					</div>
+				</div>
+			</div>
 
 			{/* Result count */}
 			<p className="mt-4 text-sm text-muted-foreground">
