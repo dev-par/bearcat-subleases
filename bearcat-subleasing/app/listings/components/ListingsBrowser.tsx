@@ -535,6 +535,7 @@ export default function ListingsBrowser({ listings }: Props) {
 					<DialogContent
 						className="inset-x-0 bottom-0 top-auto left-0 w-full max-h-[85dvh] translate-x-0 translate-y-0 flex flex-col gap-0 overflow-hidden rounded-t-[1.75rem] rounded-b-none p-0 sm:max-w-none sm:p-0 data-[state=open]:slide-in-from-bottom-8 data-[state=closed]:slide-out-to-bottom-8"
 						showClose={false}
+						aria-describedby={undefined}
 					>
 						<DialogHeader className="flex-none border-b border-border/50 px-5 py-4">
 							<div className="flex items-center justify-between">
