@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import ThemeProvider from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/toast";
 
@@ -26,9 +27,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <div className="min-h-dvh">
+          <div className="flex min-h-dvh flex-col">
             <Navbar />
-            {children}
+            <main className="flex-1">{children}</main>
+            <Footer />
           </div>
           <Toaster />
         </ThemeProvider>
