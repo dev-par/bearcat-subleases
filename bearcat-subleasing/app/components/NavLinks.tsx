@@ -45,10 +45,13 @@ export default function NavLinks({
             aria-current={active ? "page" : undefined}
             className={cn(
               buttonVariants({
-                variant: active ? "default" : orientation === "desktop" ? "ghost" : "secondary",
+                variant: active ? "default" : "ghost",
                 size: orientation === "desktop" ? "sm" : "default",
               }),
-              orientation === "mobile" && !active ? "justify-start rounded-2xl bg-muted/45 text-foreground" : "",
+              orientation === "mobile" ? "justify-start" : "",
+              orientation === "mobile" && !active
+                ? "font-medium text-foreground/80 hover:bg-transparent hover:text-foreground"
+                : "",
             )}
           >
             {item.label}

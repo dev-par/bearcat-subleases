@@ -15,7 +15,7 @@ import {
 import { signOut, useSession } from "@/lib/auth-client";
 
 interface AuthNavProps {
-	orientation?: "desktop" | "mobile";
+	orientation?: "desktop" | "mobile" | "sidebar";
 	onNavigate?: () => void;
 }
 
@@ -26,6 +26,7 @@ export default function AuthNav({
 	const router = useRouter();
 	const { data: session, isPending } = useSession();
 	const isMobile = orientation === "mobile";
+	const isSidebar = orientation === "sidebar";
 
 	async function handleSignOut() {
 		await signOut();
@@ -40,7 +41,9 @@ export default function AuthNav({
 				className={
 					isMobile
 						? "h-11 rounded-2xl bg-muted/45"
-						: "hidden h-9 w-24 rounded-full bg-muted/45 md:block"
+						: isSidebar
+							? "h-9 w-24 rounded-full bg-muted/45"
+							: "h-9 w-9 rounded-full bg-muted/45 md:w-24"
 				}
 				aria-hidden="true"
 			/>
@@ -91,8 +94,8 @@ export default function AuthNav({
 		);
 	}
 
-	return (
-		<div className="hidden items-center md:flex">
+	if (isSidebar) {
+		return (
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<button className="group flex min-w-0 items-center gap-2 rounded-full border border-border/80 bg-card/90 px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-card data-[state=open]:border-primary/40 data-[state=open]:bg-card data-[state=open]:text-primary dark:border-white/8 dark:hover:bg-card/70 dark:data-[state=open]:border-primary/30 dark:data-[state=open]:bg-card/70">
@@ -101,9 +104,9 @@ export default function AuthNav({
 						<ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
 					</button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end" className="w-44">
+				<DropdownMenuContent align="start" className="w-44">
 					<DropdownMenuItem asChild>
-						<Link href="/profile">My Listings</Link>
+						<Link href="/profile" onClick={onNavigate}>My Listings</Link>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem onClick={handleSignOut}>
@@ -112,6 +115,28 @@ export default function AuthNav({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-		</div>
+		);
+	}
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<button className="group flex min-w-0 items-center gap-2 rounded-full border border-border/80 bg-card/90 px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-card data-[state=open]:border-primary/40 data-[state=open]:bg-card data-[state=open]:text-primary dark:border-white/8 dark:hover:bg-card/70 dark:data-[state=open]:border-primary/30 dark:data-[state=open]:bg-card/70">
+					<UserRound className="h-4 w-4 text-primary" />
+					<span className="hidden truncate md:inline">{session.user.name}</span>
+					<ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+				</button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end" className="w-44">
+				<DropdownMenuItem asChild>
+					<Link href="/profile">My Listings</Link>
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem onClick={handleSignOut}>
+					<LogOut className="h-4 w-4" />
+					Sign out
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }
