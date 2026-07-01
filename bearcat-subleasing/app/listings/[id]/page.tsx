@@ -108,7 +108,7 @@ export default async function Page({
 						)}
 
 						{/* Stats grid */}
-						<div className="mt-4 grid gap-2 sm:grid-cols-2">
+						<div className="mt-4 grid grid-cols-2 gap-2">
 							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4">
 								<div className="flex items-center gap-2 text-xs text-muted-foreground">
 									<BedDouble className="h-3.5 w-3.5 text-primary" />
@@ -144,7 +144,7 @@ export default async function Page({
 									{dateFormatter.format(new Date(listing.end_date))}
 								</p>
 							</div>
-							<div className="rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4 sm:col-span-2">
+							<div className="col-span-2 rounded-[1.5rem] border border-border/70 bg-muted/40 p-3 dark:border-white/8 dark:bg-white/4">
 								<div className="flex items-center gap-2 text-xs text-muted-foreground">
 									<PersonStanding className="h-3.5 w-3.5 text-primary" />
 									Distance from campus
