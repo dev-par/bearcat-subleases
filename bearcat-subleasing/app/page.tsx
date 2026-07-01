@@ -76,7 +76,7 @@ export default function HomePage() {
           {/* Left Text Block */}
           <div className="relative flex max-w-2xl flex-col justify-center py-10 lg:pr-6">
             <div className="relative">
-              <h1 className="font-heading text-balance text-6xl font-semibold leading-[0.94] tracking-tight text-foreground sm:text-[5rem] lg:text-[5.4rem] xl:text-[6.2rem]">
+              <h1 className="font-heading text-balance text-5xl font-semibold leading-[0.94] tracking-tight text-foreground sm:text-[5rem] lg:text-[5.4rem] xl:text-[6.2rem]">
                 UC housing, made simpler.
               </h1>
 

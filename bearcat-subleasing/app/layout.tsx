@@ -4,6 +4,10 @@ import Navbar from "./components/Navbar";
 import ThemeProvider from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/toast";
 
+export const viewport = {
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: {
     default: "Bearcat Subleasing",
