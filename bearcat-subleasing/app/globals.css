@@ -228,8 +228,7 @@
   body {
     @apply bg-background text-foreground;
     background-image: var(--page-glow), var(--page-fade);
-    background-attachment: fixed;
-    min-height: 100vh;
+    min-height: 100dvh;
   }
   ::selection {
     background: color-mix(in srgb, var(--primary) 32%, transparent);
