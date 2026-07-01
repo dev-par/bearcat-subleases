@@ -32,7 +32,7 @@ export default async function SignInPage({
 				<section>
 					<Link
 						href="/listings"
-						className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+						className="inline-flex items-center -my-2 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
 					>
 						← Back to listings
 					</Link>
