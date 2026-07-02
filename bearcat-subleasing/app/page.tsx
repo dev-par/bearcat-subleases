@@ -77,7 +77,7 @@ export default function HomePage() {
           <div className="relative flex max-w-2xl flex-col justify-center py-10 lg:pr-6">
             <div className="relative">
               <h1 className="font-heading text-balance text-5xl font-semibold leading-[0.94] tracking-tight text-foreground sm:text-[5rem] lg:text-[5.4rem] xl:text-[6.2rem]">
-                UC housing, made simpler.
+                UC subleasing, made simpler.
               </h1>
 
               <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">

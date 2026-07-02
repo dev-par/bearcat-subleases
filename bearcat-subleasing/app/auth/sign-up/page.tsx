@@ -36,16 +36,6 @@ export default async function SignUpPage({
 					>
 						← Back to listings
 					</Link>
-					<p className="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-						New account
-					</p>
-					<h1 className="font-heading mt-3 text-3xl font-semibold leading-tight text-foreground sm:text-5xl">
-						Start with an account built for UC subleases.
-					</h1>
-					<p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">
-						Create an account to post listings, add photos, and return later to
-						keep your sublease details current.
-					</p>
 				</section>
 
 				<AuthForm mode="sign-up" redirectTo={safeRedirectTo} />

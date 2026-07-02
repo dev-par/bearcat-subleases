@@ -26,17 +26,36 @@ export default function NavLinks({
 }: NavLinksProps) {
   const pathname = usePathname();
 
+  if (orientation === "mobile") {
+    return (
+      <>
+        {NAV_ITEMS.map((item) => {
+          const active = isActive(pathname, item.href, item.match);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onNavigate}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "w-full py-3 text-base font-medium transition-colors",
+                active
+                  ? "font-semibold text-primary"
+                  : "text-foreground hover:text-primary",
+              )}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </>
+    );
+  }
+
   return (
-    <div
-      className={
-        orientation === "desktop"
-          ? "hidden items-center gap-2 md:flex"
-          : "flex flex-col items-stretch gap-2"
-      }
-    >
+    <div className="hidden items-center gap-2 md:flex">
       {NAV_ITEMS.map((item) => {
         const active = isActive(pathname, item.href, item.match);
-
         return (
           <Link
             key={item.href}
@@ -46,12 +65,8 @@ export default function NavLinks({
             className={cn(
               buttonVariants({
                 variant: active ? "default" : "ghost",
-                size: orientation === "desktop" ? "sm" : "default",
+                size: "sm",
               }),
-              orientation === "mobile" ? "justify-start" : "",
-              orientation === "mobile" && !active
-                ? "font-medium text-foreground/80 hover:bg-transparent hover:text-foreground"
-                : "",
             )}
           >
             {item.label}

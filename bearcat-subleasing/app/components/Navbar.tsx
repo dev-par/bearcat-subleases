@@ -28,13 +28,15 @@ export default function Navbar() {
 				<NavLinks />
 
 				<div className="flex items-center justify-end gap-3">
+					<ThemeToggle />
+					<div className="hidden md:flex">
+						<AuthNav />
+					</div>
 					<div className="hidden items-center gap-3 md:flex">
-						<ThemeToggle />
 						<Button asChild>
 							<Link href={PRIMARY_CTA.href}>{PRIMARY_CTA.label}</Link>
 						</Button>
 					</div>
-					<AuthNav />
 					<MobileNav />
 				</div>
 			</div>
