@@ -12,6 +12,7 @@ import {
 	Sheet,
 	SheetClose,
 	SheetContent,
+	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
 import { signOut, useSession } from "@/lib/auth-client";
@@ -70,9 +71,9 @@ export default function MobileNav() {
 								height={36}
 								className="shrink-0 rounded-lg"
 							/>
-							<span className="text-sm font-semibold text-foreground">
+							<SheetTitle className="text-sm font-semibold text-foreground">
 								Bearcat Subleasing
-							</span>
+							</SheetTitle>
 						</Link>
 						<SheetClose asChild>
 							<Button
@@ -89,7 +90,11 @@ export default function MobileNav() {
 					{isPending ? (
 						<div className="h-16 animate-pulse rounded-lg bg-muted" />
 					) : user ? (
-						<div className="flex items-center gap-3 border-b border-border py-4">
+						<Link
+						href="/profile"
+						onClick={() => setOpen(false)}
+						className="flex items-center gap-3 border-b border-border py-4 transition-opacity hover:opacity-80"
+					>
 							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
 								{getInitials(user.name ?? user.email)}
 							</div>
@@ -101,7 +106,7 @@ export default function MobileNav() {
 									{user.email}
 								</p>
 							</div>
-						</div>
+						</Link>
 					) : (
 						<div className="grid grid-cols-2 gap-2 border-b border-border pb-4">
 							<Button variant="outline" asChild>
