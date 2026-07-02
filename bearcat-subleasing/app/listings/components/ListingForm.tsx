@@ -40,8 +40,8 @@ const defaultValues: ListingFormInitialValues = {
 	start_date: "",
 	end_date: "",
 	room_type: "private",
-	bedrooms_in_unit: 1,
-	bathrooms_in_unit_x2: 2,
+	bedrooms_in_unit: 0,
+	bathrooms_in_unit_x2: 0,
 	private_bathroom: false,
 	distance_from_campus: "under_5",
 	parking_available: null,
@@ -80,10 +80,10 @@ export default function ListingForm({
 		initialValues.room_type ?? "private",
 	);
 	const [bedroomsInUnit, setBedroomsInUnit] = useState(
-		initialValues.bedrooms_in_unit,
+		initialValues.bedrooms_in_unit ? String(initialValues.bedrooms_in_unit) : "",
 	);
 	const [bathroomsDisplay, setBathroomsDisplay] = useState(
-		initialValues.bathrooms_in_unit_x2 / 2,
+		initialValues.bathrooms_in_unit_x2 ? String(initialValues.bathrooms_in_unit_x2 / 2) : "",
 	);
 	const [privateBathroom, setPrivateBathroom] = useState(
 		initialValues.private_bathroom,
@@ -158,8 +158,8 @@ export default function ListingForm({
 				start_date: startDate,
 				end_date: endDate,
 				room_type: roomType,
-				bedrooms_in_unit: Math.round(bedroomsInUnit),
-				bathrooms_in_unit_x2: Math.round(bathroomsDisplay * 2),
+				bedrooms_in_unit: Math.round(Number(bedroomsInUnit)),
+				bathrooms_in_unit_x2: Math.round(Number(bathroomsDisplay) * 2),
 				private_bathroom: privateBathroom,
 				distance_from_campus: distanceFromCampus,
 				parking_available: parkingAvailable,
@@ -401,10 +401,11 @@ export default function ListingForm({
 									id="bedrooms"
 									type="number"
 									value={bedroomsInUnit}
-									onChange={(e) => setBedroomsInUnit(Number(e.target.value))}
+									onChange={(e) => setBedroomsInUnit(e.target.value)}
 									min="1"
 									step="0.5"
 									required
+									placeholder="0"
 								/>
 							</Field>
 
@@ -418,10 +419,11 @@ export default function ListingForm({
 									id="bathrooms"
 									type="number"
 									value={bathroomsDisplay}
-									onChange={(e) => setBathroomsDisplay(Number(e.target.value))}
+									onChange={(e) => setBathroomsDisplay(e.target.value)}
 									min="0.5"
 									step="0.5"
 									required
+									placeholder="0"
 								/>
 							</Field>
 						</div>

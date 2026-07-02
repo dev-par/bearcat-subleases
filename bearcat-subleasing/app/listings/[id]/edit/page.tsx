@@ -53,10 +53,6 @@ export default async function EditListingPage({
 			<h1 className="font-heading mt-2 text-4xl font-semibold text-foreground">
 				Edit Listing
 			</h1>
-			<p className="mt-2 text-sm leading-6 text-muted-foreground">
-				Update the listing details students use to compare price, availability,
-				photos, and fit.
-			</p>
 
 			<ListingForm
 				mode="edit"

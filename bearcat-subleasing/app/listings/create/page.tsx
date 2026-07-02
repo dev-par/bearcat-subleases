@@ -24,10 +24,6 @@ export default async function CreatePage() {
 			<h1 className="font-heading text-4xl font-semibold text-foreground">
 				Create Listing
 			</h1>
-			<p className="mt-2 text-sm leading-6 text-muted-foreground">
-				Add the core housing facts first. The listing dashboard is designed to
-				surface these details clearly.
-			</p>
 
 			<ListingForm
 				mode="create"
