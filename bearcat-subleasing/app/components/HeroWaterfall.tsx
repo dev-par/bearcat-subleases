@@ -72,15 +72,15 @@ export default function HeroWaterfall({ listings }: HeroWaterfallProps) {
   const col2 = listings.filter((_, i) => i % 2 === 1);
 
   return (
-    <div className="relative h-full w-full max-w-full [clip-path:inset(0_-9999px)] lg:-mr-12">
+    <div className="waterfall-top-fade relative h-full w-full max-w-full [clip-path:inset(0_-9999px)] md:-mr-12">
       {/* Mask out the left edge slightly for a clean fade if needed */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent md:hidden" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-linear-to-r from-background to-transparent md:hidden" />
 
       {/* Grid container with massive negative margin on top/bottom to simulate endless flow */}
       <div className="absolute -inset-y-32 inset-x-0">
-        <div className="grid h-full grid-cols-2 gap-4 pl-4 pr-6 sm:gap-6 sm:pl-0 sm:pr-0 lg:gap-8 lg:pr-8">
-          <WaterfallColumn items={col1} speed="45s" className="mt-20 lg:mt-8" />
-          <WaterfallColumn items={col2} speed="55s" className="mt-40 lg:mt-24" />
+        <div className="grid h-full grid-cols-2 gap-3 pl-3 pr-5 sm:gap-6 sm:pl-0 sm:pr-0 md:gap-8 md:pr-8">
+          <WaterfallColumn items={col1} speed="45s" className="mt-12 sm:mt-16 md:mt-8" />
+          <WaterfallColumn items={col2} speed="55s" className="mt-24 sm:mt-32 md:mt-24" />
         </div>
       </div>
     </div>

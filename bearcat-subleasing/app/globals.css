@@ -256,6 +256,14 @@
   }
 }
 
+/* Soft top fade on the waterfall strip on mobile — eliminates the clip-path hard-edge artifact */
+@media (max-width: 767px) {
+  .waterfall-top-fade {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 3rem, black 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 3rem, black 100%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
