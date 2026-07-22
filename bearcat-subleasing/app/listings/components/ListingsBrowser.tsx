@@ -320,6 +320,7 @@ function FilterControls({
 							type="date"
 							name="date-from"
 							autoComplete="off"
+							className="block"
 							value={filters.dateFrom}
 							max={filters.dateTo || undefined}
 							onChange={(e) => {
@@ -345,6 +346,7 @@ function FilterControls({
 							type="date"
 							name="date-to"
 							autoComplete="off"
+							className="block"
 							value={filters.dateTo}
 							min={filters.dateFrom || undefined}
 							onChange={(e) => {
