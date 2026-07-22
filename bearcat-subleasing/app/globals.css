@@ -235,6 +235,10 @@
   ::selection {
     background: color-mix(in srgb, var(--primary) 32%, transparent);
   }
+  input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+  }
 }
 
 @utility font-heading {
