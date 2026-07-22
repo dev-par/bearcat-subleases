@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How Bearcat Subleases collects, uses, and protects your information.",
+    "How Bearcat Subleasing collects, uses, and protects your information.",
 };
 
 const sections = [

@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-5 py-6 sm:px-8">
         <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
           <p className="text-xs text-muted-foreground">
-            © 2026 Bearcat Subleases
+            © 2026 Bearcat Subleasing
           </p>
           <div className="flex items-center gap-3">
             <Link

@@ -28,15 +28,13 @@ export default async function SignUpPage({
 
 	return (
 		<main className="px-5 py-10 sm:px-8 sm:py-14">
-			<div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1fr] lg:items-center">
-				<section>
-					<Link
-						href="/listings"
-						className="inline-flex items-center -my-2 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-					>
-						← Back to listings
-					</Link>
-				</section>
+			<div className="mx-auto flex max-w-md flex-col gap-6">
+				<Link
+					href="/listings"
+					className="inline-flex items-center -my-2 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+				>
+					← Back to listings
+				</Link>
 
 				<AuthForm mode="sign-up" redirectTo={safeRedirectTo} />
 			</div>
