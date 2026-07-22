@@ -1,4 +1,4 @@
-import { DISTANCE_LABELS, Listing } from "@/types/listing";
+import { DISTANCE_LABELS, Listing, ROOM_TYPE_LABELS } from "@/types/listing";
 import { Bath, BedDouble, PersonStanding } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 		maximumFractionDigits: 0,
 	}).format(listing.rent_cents / 100);
 	const badges = [
-		listing.room_type ? `${listing.room_type} room` : null,
+		listing.room_type ? ROOM_TYPE_LABELS[listing.room_type] : null,
 		listing.furnished ? "Furnished" : null,
 		listing.private_bathroom ? "Private bath" : null,
 		listing.gender_preference === "female" ? "Female only" : null,

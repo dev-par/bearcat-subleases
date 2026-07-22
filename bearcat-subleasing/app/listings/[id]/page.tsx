@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth-guards";
 import ContactReveal from "@/app/listings/[id]/components/ContactReveal";
-import { DISTANCE_LABELS } from "@/types/listing";
+import { DISTANCE_LABELS, ROOM_TYPE_LABELS } from "@/types/listing";
 
 function isValidUUID(id: string): boolean {
 	const uuidRegex =
@@ -46,7 +46,7 @@ export default async function Page({
 	const amenityBadges = [
 		listing.private_bathroom ? "Private bathroom" : null,
 		listing.furnished ? "Furnished" : null,
-		listing.room_type ? `${listing.room_type} room` : null,
+		listing.room_type ? ROOM_TYPE_LABELS[listing.room_type] : null,
 		listing.parking_available === true ? "Parking available" : null,
 		listing.gender_preference === "female" ? "Female only" : null,
 		listing.gender_preference === "male" ? "Male only" : null,

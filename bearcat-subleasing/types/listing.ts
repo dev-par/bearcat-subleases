@@ -16,6 +16,11 @@ export const DISTANCE_OPTIONS: { value: DistanceFromCampus; label: string }[] = 
     { value: 'over_30',  label: DISTANCE_LABELS.over_30 },
 ]
 
+export const ROOM_TYPE_LABELS: Record<'private' | 'shared', string> = {
+    private: 'Private room',
+    shared:  'Shared room',
+}
+
 export type GenderPreference = 'any' | 'female' | 'male'
 
 export const GENDER_PREFERENCE_LABELS: Record<GenderPreference, string> = {
