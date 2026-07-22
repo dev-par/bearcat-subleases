@@ -224,6 +224,8 @@
   }
   html {
     @apply font-sans scroll-smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   body {
     @apply bg-background text-foreground;
