@@ -287,7 +287,7 @@ function FilterControls({
 			{/* Availability */}
 			<div className="space-y-3">
 				<SectionHeader>Availability</SectionHeader>
-				<div className="grid grid-cols-2 gap-3">
+				<div className="grid grid-cols-1 gap-3 md:grid-cols-2">
 					<div className="min-w-0 space-y-1">
 						<label
 							htmlFor={`${id}-date-from`}
