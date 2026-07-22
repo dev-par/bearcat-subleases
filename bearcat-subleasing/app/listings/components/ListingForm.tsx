@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-import type { DistanceFromCampus, ListingMutationInput } from "@/types/listing";
-import { DISTANCE_OPTIONS } from "@/types/listing";
+import type { DistanceFromCampus, GenderPreference, ListingMutationInput } from "@/types/listing";
+import { DISTANCE_OPTIONS, GENDER_PREFERENCE_OPTIONS } from "@/types/listing";
 import ImageUploader from "@/app/listings/components/ImageUploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -44,6 +44,7 @@ const defaultValues: ListingFormInitialValues = {
 	bathrooms_in_unit_x2: 0,
 	private_bathroom: false,
 	distance_from_campus: "under_5",
+	gender_preference: "any",
 	parking_available: null,
 	furnished: false,
 	imageUrls: [],
@@ -93,6 +94,9 @@ export default function ListingForm({
 	);
 	const [parkingAvailable, setParkingAvailable] = useState<boolean | null>(
 		initialValues.parking_available,
+	);
+	const [genderPreference, setGenderPreference] = useState<GenderPreference>(
+		initialValues.gender_preference ?? "any",
 	);
 	const [furnished, setFurnished] = useState(initialValues.furnished);
 	const [existingImageUrls, setExistingImageUrls] = useState(
@@ -162,6 +166,7 @@ export default function ListingForm({
 				bathrooms_in_unit_x2: Math.round(Number(bathroomsDisplay) * 2),
 				private_bathroom: privateBathroom,
 				distance_from_campus: distanceFromCampus,
+				gender_preference: genderPreference,
 				parking_available: parkingAvailable,
 				furnished,
 			};
@@ -373,22 +378,42 @@ export default function ListingForm({
 					<div className="space-y-4">
 						<SectionHeader>Details</SectionHeader>
 
-						<Field label="Room Type" required>
-							<Select
-								value={roomType}
-								onValueChange={(value) =>
-									setRoomType(value as "private" | "shared")
-								}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Choose room type" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="private">Private room</SelectItem>
-									<SelectItem value="shared">Shared room</SelectItem>
-								</SelectContent>
-							</Select>
-						</Field>
+						<div className="grid gap-4 sm:grid-cols-2">
+							<Field label="Room Type" required>
+								<Select
+									value={roomType}
+									onValueChange={(value) =>
+										setRoomType(value as "private" | "shared")
+									}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Choose room type" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="private">Private room</SelectItem>
+										<SelectItem value="shared">Shared room</SelectItem>
+									</SelectContent>
+								</Select>
+							</Field>
+
+							<Field label="Gender Preference" required>
+								<Select
+									value={genderPreference}
+									onValueChange={(value) =>
+										setGenderPreference(value as GenderPreference)
+									}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Choose gender preference" />
+									</SelectTrigger>
+									<SelectContent>
+										{GENDER_PREFERENCE_OPTIONS.map(({ value, label }) => (
+											<SelectItem key={value} value={value}>{label}</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</Field>
+						</div>
 
 						<div className="grid gap-4 sm:grid-cols-2">
 							<Field

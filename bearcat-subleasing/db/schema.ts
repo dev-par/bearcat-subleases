@@ -81,6 +81,8 @@ export const distanceFromCampusEnum = pgEnum('distance_from_campus', [
     'under_5', '5_to_10', '10_to_20', '20_to_30', 'over_30'
 ])
 
+export const genderPreferenceEnum = pgEnum('gender_preference', ['any', 'female', 'male'])
+
 export const Listing = pgTable('listing', {
     id: uuid().defaultRandom().primaryKey(),
     title: varchar({ length: 255 }).notNull(),
@@ -93,6 +95,7 @@ export const Listing = pgTable('listing', {
     bathrooms_in_unit_x2: smallint().notNull(),
     private_bathroom: boolean().notNull(),
     distance_from_campus: distanceFromCampusEnum().notNull(),
+    gender_preference: genderPreferenceEnum().notNull().default('any'),
     parking_available: boolean(),
     status: statusEnum().notNull().default('active'),
     created_at: timestamp().defaultNow(),

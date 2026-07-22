@@ -1,7 +1,8 @@
-import type { DistanceFromCampus, ListingMutationInput, ListingSubmissionInput } from "@/types/listing";
+import type { DistanceFromCampus, GenderPreference, ListingMutationInput, ListingSubmissionInput } from "@/types/listing";
 import { InputValidationError } from "@/lib/errors";
 
 const DISTANCE_VALUES: DistanceFromCampus[] = ['under_5', '5_to_10', '10_to_20', '20_to_30', 'over_30'];
+const GENDER_PREFERENCE_VALUES: GenderPreference[] = ['any', 'female', 'male'];
 
 const MAX_IMAGE_COUNT = 10;
 const UUID_REGEX =
@@ -73,6 +74,16 @@ function parseDistanceFromCampus(value: unknown): DistanceFromCampus {
 	);
 }
 
+function parseGenderPreference(value: unknown): GenderPreference {
+	if (typeof value === "string" && (GENDER_PREFERENCE_VALUES as string[]).includes(value)) {
+		return value as GenderPreference;
+	}
+
+	throw new InputValidationError(
+		`gender_preference must be one of: ${GENDER_PREFERENCE_VALUES.join(", ")}`,
+	);
+}
+
 function parseOptionalBoolean(value: unknown): boolean | null {
 	if (value == null) return null;
 	if (typeof value === "boolean") return value;
@@ -134,6 +145,7 @@ export function parseListingMutationInput(input: unknown): ListingMutationInput 
 		),
 		private_bathroom: parseBoolean(payload.private_bathroom, "private_bathroom"),
 		distance_from_campus: parseDistanceFromCampus(payload.distance_from_campus),
+		gender_preference: parseGenderPreference(payload.gender_preference),
 		parking_available: parseOptionalBoolean(payload.parking_available),
 		furnished: parseBoolean(payload.furnished, "furnished"),
 	};

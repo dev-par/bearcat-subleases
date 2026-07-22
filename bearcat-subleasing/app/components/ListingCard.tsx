@@ -22,6 +22,8 @@ export default function ListingCard({ listing }: ListingCardProps) {
 		listing.room_type ? `${listing.room_type} room` : null,
 		listing.furnished ? "Furnished" : null,
 		listing.private_bathroom ? "Private bath" : null,
+		listing.gender_preference === "female" ? "Female only" : null,
+		listing.gender_preference === "male" ? "Male only" : null,
 	].filter(Boolean) as string[];
 
 	return (
