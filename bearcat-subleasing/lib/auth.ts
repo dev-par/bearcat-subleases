@@ -9,4 +9,11 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 	},
+	trustedOrigins: [
+		"https://www.bearcatsubleasing.com",
+		"https://bearcatsubleasing.com",
+		"https://bearcat-subleasing.vercel.app",
+		"https://bearcat-subleases.vercel.app",
+		"https://*-dev-pars-projects.vercel.app",
+	],
 });
