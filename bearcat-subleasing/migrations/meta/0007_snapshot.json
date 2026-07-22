@@ -1,6 +1,6 @@
 {
-  "id": "f2557ff2-1add-4696-b490-709e79b01b33",
-  "prevId": "c690de7f-9667-43e5-86c6-54af83b1416b",
+  "id": "1827113d-4eb1-436a-9213-9c09c7fee810",
+  "prevId": "f2557ff2-1add-4696-b490-709e79b01b33",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -77,6 +77,14 @@
           "primaryKey": false,
           "notNull": true
         },
+        "gender_preference": {
+          "name": "gender_preference",
+          "type": "gender_preference",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'any'"
+        },
         "parking_available": {
           "name": "parking_available",
           "type": "boolean",
@@ -123,15 +131,15 @@
         "listing_user_id_user_id_fk": {
           "name": "listing_user_id_user_id_fk",
           "tableFrom": "listing",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -176,15 +184,15 @@
         "listing_image_listing_id_listing_id_fk": {
           "name": "listing_image_listing_id_listing_id_fk",
           "tableFrom": "listing_image",
+          "tableTo": "listing",
           "columnsFrom": [
             "listing_id"
           ],
-          "tableTo": "listing",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -289,24 +297,24 @@
             }
           ],
           "isUnique": false,
-          "with": {},
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {
         "account_user_id_user_id_fk": {
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -381,34 +389,34 @@
             }
           ],
           "isUnique": false,
-          "with": {},
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {
         "session_user_id_user_id_fk": {
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "session_token_unique": {
           "name": "session_token_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "token"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
       "policies": {},
@@ -471,10 +479,10 @@
       "uniqueConstraints": {
         "user_email_unique": {
           "name": "user_email_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
       "policies": {},
@@ -536,9 +544,9 @@
             }
           ],
           "isUnique": false,
-          "with": {},
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -561,6 +569,15 @@
         "over_30"
       ]
     },
+    "public.gender_preference": {
+      "name": "gender_preference",
+      "schema": "public",
+      "values": [
+        "any",
+        "female",
+        "male"
+      ]
+    },
     "public.room_type": {
       "name": "room_type",
       "schema": "public",
@@ -579,10 +596,10 @@
     }
   },
   "schemas": {},
-  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

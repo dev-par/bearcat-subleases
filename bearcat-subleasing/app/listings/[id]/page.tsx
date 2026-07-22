@@ -48,6 +48,8 @@ export default async function Page({
 		listing.furnished ? "Furnished" : null,
 		listing.room_type ? `${listing.room_type} room` : null,
 		listing.parking_available === true ? "Parking available" : null,
+		listing.gender_preference === "female" ? "Female only" : null,
+		listing.gender_preference === "male" ? "Male only" : null,
 	].filter(Boolean) as string[];
 	const canManageListing = Boolean(user?.isAdmin || user?.id === listing.user_id);
 

@@ -67,6 +67,7 @@ export default async function EditListingPage({
 					bathrooms_in_unit_x2: listing.bathrooms_in_unit_x2,
 					private_bathroom: listing.private_bathroom,
 					distance_from_campus: listing.distance_from_campus,
+					gender_preference: listing.gender_preference,
 					parking_available: listing.parking_available,
 					furnished: listing.furnished,
 					imageUrls: listing.listingImages.map((image) => image.url),

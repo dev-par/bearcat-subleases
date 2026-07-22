@@ -16,6 +16,20 @@ export const DISTANCE_OPTIONS: { value: DistanceFromCampus; label: string }[] = 
     { value: 'over_30',  label: DISTANCE_LABELS.over_30 },
 ]
 
+export type GenderPreference = 'any' | 'female' | 'male'
+
+export const GENDER_PREFERENCE_LABELS: Record<GenderPreference, string> = {
+    any:    'No preference',
+    female: 'Female only',
+    male:   'Male only',
+}
+
+export const GENDER_PREFERENCE_OPTIONS: { value: GenderPreference; label: string }[] = [
+    { value: 'any',    label: GENDER_PREFERENCE_LABELS.any },
+    { value: 'female', label: GENDER_PREFERENCE_LABELS.female },
+    { value: 'male',   label: GENDER_PREFERENCE_LABELS.male },
+]
+
 export interface ListingImage {
     id: string;
     listing_id: string;
@@ -35,6 +49,7 @@ export interface Listing {
     bathrooms_in_unit_x2: number;
     private_bathroom: boolean;
     distance_from_campus: DistanceFromCampus;
+    gender_preference: GenderPreference;
     parking_available: boolean | null;
     status: 'active' | 'inactive';
     created_at: Date | null;
@@ -55,6 +70,7 @@ export interface CreateListingInput {
     bathrooms_in_unit_x2: number;
     private_bathroom: boolean;
     distance_from_campus: DistanceFromCampus;
+    gender_preference: GenderPreference;
     parking_available: boolean | null;
     furnished: boolean;
     user_id: string;
@@ -71,6 +87,7 @@ export interface ListingMutationInput {
     bathrooms_in_unit_x2: number;
     private_bathroom: boolean;
     distance_from_campus: DistanceFromCampus;
+    gender_preference: GenderPreference;
     parking_available: boolean | null;
     furnished: boolean;
 }

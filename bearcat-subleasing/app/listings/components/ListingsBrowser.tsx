@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 
-import type { DistanceFromCampus, Listing } from "@/types/listing";
-import { DISTANCE_OPTIONS } from "@/types/listing";
+import type { DistanceFromCampus, GenderPreference, Listing } from "@/types/listing";
+import { DISTANCE_OPTIONS, GENDER_PREFERENCE_OPTIONS } from "@/types/listing";
 import ListingCard from "@/app/components/ListingCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ interface Filters {
 	dateFrom: string;
 	dateTo: string;
 	roomType: "private" | "shared" | "";
+	genderPreference: GenderPreference | "";
 	distance: DistanceFromCampus[];
 	furnished: boolean;
 	privateBathroom: boolean;
@@ -48,6 +49,7 @@ const DEFAULT_FILTERS: Filters = {
 	dateFrom: "",
 	dateTo: "",
 	roomType: "",
+	genderPreference: "",
 	distance: [],
 	furnished: false,
 	privateBathroom: false,
@@ -119,6 +121,17 @@ function buildChips(
 		});
 	}
 
+	if (filters.genderPreference && filters.genderPreference !== "any") {
+		const option = GENDER_PREFERENCE_OPTIONS.find((o) => o.value === filters.genderPreference);
+		if (option) {
+			chips.push({
+				id: "genderPreference",
+				label: option.label,
+				clear: () => setFilters((p) => ({ ...p, genderPreference: "" })),
+			});
+		}
+	}
+
 	for (const d of filters.distance) {
 		const option = DISTANCE_OPTIONS.find((o) => o.value === d);
 		if (option) {
@@ -166,6 +179,7 @@ function countActiveFilters(f: Filters): number {
 	if (f.dateFrom !== "") count++;
 	if (f.dateTo !== "") count++;
 	if (f.roomType !== "") count++;
+	if (f.genderPreference !== "" && f.genderPreference !== "any") count++;
 	if (f.distance.length > 0) count++;
 	if (f.furnished) count++;
 	if (f.privateBathroom) count++;
@@ -180,6 +194,12 @@ function applyFilters(listings: Listing[], f: Filters): Listing[] {
 		if (f.dateFrom !== "" && l.start_date > f.dateFrom) return false;
 		if (f.dateTo !== "" && l.end_date < f.dateTo) return false;
 		if (f.roomType !== "" && l.room_type !== f.roomType) return false;
+		if (
+			f.genderPreference !== "" &&
+			f.genderPreference !== "any" &&
+			l.gender_preference !== f.genderPreference
+		)
+			return false;
 		if (f.distance.length > 0 && !f.distance.includes(l.distance_from_campus)) return false;
 		if (f.furnished && !l.furnished) return false;
 		if (f.privateBathroom && !l.private_bathroom) return false;
@@ -345,32 +365,62 @@ function FilterControls({
 
 			<FilterDivider />
 
-			{/* Room type */}
-			<div className="space-y-3">
-				<SectionHeader>Room type</SectionHeader>
-				<div className="flex gap-2">
-					{(["", "private", "shared"] as const).map((value) => {
-						const label =
-							value === "" ? "Any" : value === "private" ? "Private" : "Shared";
-						const isActive = filters.roomType === value;
-						return (
-							<button
-								key={value}
-								type="button"
-								onClick={() =>
-									setFilters((prev) => ({ ...prev, roomType: value }))
-								}
-								className={cn(
-									"rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
-									isActive
-										? "border-primary bg-primary text-primary-foreground"
-										: "border-border/80 bg-muted/40 text-foreground hover:border-primary/30 hover:text-primary dark:border-white/8 dark:bg-white/4",
-								)}
-							>
-								{label}
-							</button>
-						);
-					})}
+			{/* Room type + Gender preference */}
+			<div className="grid gap-5 md:grid-cols-2 md:gap-x-6">
+				<div className="space-y-3">
+					<SectionHeader>Room type</SectionHeader>
+					<div className="flex gap-2">
+						{(["", "private", "shared"] as const).map((value) => {
+							const label =
+								value === "" ? "Any" : value === "private" ? "Private" : "Shared";
+							const isActive = filters.roomType === value;
+							return (
+								<button
+									key={value}
+									type="button"
+									onClick={() =>
+										setFilters((prev) => ({ ...prev, roomType: value }))
+									}
+									className={cn(
+										"rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
+										isActive
+											? "border-primary bg-primary text-primary-foreground"
+											: "border-border/80 bg-muted/40 text-foreground hover:border-primary/30 hover:text-primary dark:border-white/8 dark:bg-white/4",
+									)}
+								>
+									{label}
+								</button>
+							);
+						})}
+					</div>
+				</div>
+
+				<div className="space-y-3">
+					<SectionHeader>Gender preference</SectionHeader>
+					<div className="flex gap-2">
+						{(["", "female", "male"] as const).map((value) => {
+							const label =
+								value === "" ? "Any" : value === "female" ? "Female only" : "Male only";
+							const isActive = filters.genderPreference === value;
+							return (
+								<button
+									key={value || "any"}
+									type="button"
+									onClick={() =>
+										setFilters((prev) => ({ ...prev, genderPreference: value }))
+									}
+									className={cn(
+										"rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
+										isActive
+											? "border-primary bg-primary text-primary-foreground"
+											: "border-border/80 bg-muted/40 text-foreground hover:border-primary/30 hover:text-primary dark:border-white/8 dark:bg-white/4",
+									)}
+								>
+									{label}
+								</button>
+							);
+						})}
+					</div>
 				</div>
 			</div>
 
