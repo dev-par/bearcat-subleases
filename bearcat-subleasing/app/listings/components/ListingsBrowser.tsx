@@ -288,7 +288,7 @@ function FilterControls({
 			<div className="space-y-3">
 				<SectionHeader>Availability</SectionHeader>
 				<div className="grid grid-cols-2 gap-3">
-					<div className="space-y-1">
+					<div className="min-w-0 space-y-1">
 						<label
 							htmlFor={`${id}-date-from`}
 							className="text-xs text-muted-foreground"
@@ -313,7 +313,7 @@ function FilterControls({
 							}}
 						/>
 					</div>
-					<div className="space-y-1">
+					<div className="min-w-0 space-y-1">
 						<label
 							htmlFor={`${id}-date-to`}
 							className="text-xs text-muted-foreground"
@@ -551,7 +551,7 @@ export default function ListingsBrowser({ listings }: Props) {
 								</DialogClose>
 							</div>
 						</DialogHeader>
-						<div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5">
+						<div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-5 py-5">
 							<FilterControls id="mobile" {...sharedFilterProps} />
 						</div>
 						<DialogFooter className="flex-none border-t border-border/50 px-5 py-4">
