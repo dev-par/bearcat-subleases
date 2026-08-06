@@ -216,6 +216,15 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 						/>
 					</Field>
 
+					{!isSignUp ? (
+						<div className="flex justify-end">
+							<Link
+								href="/auth/forgot-password"
+								className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+							>
+								Forgot password?
+							</Link>
+						</div>
 					{isSignUp ? (
 						<Field label="Confirm password" htmlFor="confirmPassword" required>
 							<Input
