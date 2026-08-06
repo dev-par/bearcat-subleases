@@ -225,6 +225,8 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 								Forgot password?
 							</Link>
 						</div>
+					) : null}
+
 					{isSignUp ? (
 						<Field label="Confirm password" htmlFor="confirmPassword" required>
 							<Input
