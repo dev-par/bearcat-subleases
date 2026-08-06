@@ -209,6 +209,17 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 						/>
 					</Field>
 
+					{!isSignUp ? (
+						<div className="flex justify-end">
+							<Link
+								href="/auth/forgot-password"
+								className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+							>
+								Forgot password?
+							</Link>
+						</div>
+					) : null}
+
 					<Button type="submit" className="w-full" disabled={isSubmitting}>
 						{isSubmitting ? pendingLabel : submitLabel}
 						{!isSubmitting ? <ArrowRight className="h-4 w-4" /> : null}
