@@ -28,6 +28,7 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isAwaitingVerification, setIsAwaitingVerification] = useState(false);
@@ -47,6 +48,12 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setErrorMessage(null);
+
+		if (isSignUp && password !== confirmPassword) {
+			setErrorMessage("Passwords do not match.");
+			return;
+		}
+
 		setIsSubmitting(true);
 
 		const authAction = isSignUp
@@ -208,6 +215,21 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 							required
 						/>
 					</Field>
+
+					{isSignUp ? (
+						<Field label="Confirm password" htmlFor="confirmPassword" required>
+							<Input
+								id="confirmPassword"
+								name="confirmPassword"
+								type="password"
+								autoComplete="new-password"
+								value={confirmPassword}
+								onChange={(event) => setConfirmPassword(event.target.value)}
+								minLength={8}
+								required
+							/>
+						</Field>
+					) : null}
 
 					<Button type="submit" className="w-full" disabled={isSubmitting}>
 						{isSubmitting ? pendingLabel : submitLabel}
