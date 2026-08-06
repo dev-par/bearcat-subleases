@@ -22,6 +22,7 @@ Do not invent secrets or silently rename environment variable keys. The authorit
 | `AWS_S3_BUCKET` | S3 bucket name |
 | `BETTER_AUTH_SECRET` | Better Auth secret (required) |
 | `BETTER_AUTH_URL` | Better Auth base URL (required) |
+| `RESEND_API_KEY` | Resend API key, used for transactional email (verification, etc.) |
 
 ## MCP Tools Available
 

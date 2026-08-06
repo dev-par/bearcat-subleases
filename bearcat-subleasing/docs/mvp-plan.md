@@ -118,6 +118,9 @@ This document is the working source of truth for product architecture, delivery 
 - Implement UC-only authentication late in the MVP.
 - Restrict create, edit, delete, and contact access to verified UC users.
 - Enforce role-aware authorization for owner and admin behaviors.
+- Email verification (Better Auth `requireEmailVerification`) now gates sign-in; this is a
+  prerequisite building block, not the UC-domain-restricted auth described above — email
+  sending is currently mocked to server console logging pending a real provider.
 
 ## Recommended Implementation Order
 
@@ -191,3 +194,4 @@ This document is the working source of truth for product architecture, delivery 
 - 2026-03-30: Created initial MVP planning document covering architecture, authorization model, lifecycle rules, and feature sequencing.
 - 2026-03-31: Added explicit design-system requirements and linked the dedicated visual identity brief.
 - 2026-03-31: Locked editorial serif plus sans typography and embedded-first admin controls for the BEA-11 design direction.
+- 2026-08-05: Added Better Auth email verification (mocked email delivery via console logging); sign-in now blocks unverified users.

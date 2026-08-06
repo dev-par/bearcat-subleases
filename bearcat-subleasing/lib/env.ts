@@ -36,6 +36,10 @@ export const awsEnv = {
 	AWS_S3_BUCKET: requireEnv("AWS_S3_BUCKET"),
 } as const;
 
+export const emailEnv = {
+	RESEND_API_KEY: requireEnv("RESEND_API_KEY"),
+} as const;
+
 export const devEnv = {
 	DEV_SEEDED_USER_ID:
 		process.env.DEV_SEEDED_USER_ID ?? DEFAULT_DEV_SEEDED_USER_ID,

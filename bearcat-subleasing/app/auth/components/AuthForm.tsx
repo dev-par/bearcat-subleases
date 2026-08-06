@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AlertCircle, ArrowRight } from "lucide-react";
+import { AlertCircle, ArrowRight, MailCheck } from "lucide-react";
 import { useState } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signIn, signUp } from "@/lib/auth-client";
+import { signIn, signUp, sendVerificationEmail } from "@/lib/auth-client";
 
 interface AuthFormProps {
 	mode: "sign-in" | "sign-up";
@@ -30,6 +30,8 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 	const [password, setPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isAwaitingVerification, setIsAwaitingVerification] = useState(false);
+	const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
 
 	const isSignUp = mode === "sign-up";
 	const title = isSignUp ? "Create your account" : "Welcome back";
@@ -52,6 +54,7 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 					email,
 					password,
 					name,
+					callbackURL: redirectTo,
 				})
 			: signIn.email({
 					email,
@@ -66,8 +69,81 @@ export default function AuthForm({ mode, redirectTo }: AuthFormProps) {
 			return;
 		}
 
+		if (isSignUp) {
+			setIsSubmitting(false);
+			setIsAwaitingVerification(true);
+			return;
+		}
+
 		router.push(redirectTo);
 		router.refresh();
+	}
+
+	if (isAwaitingVerification) {
+		return (
+			<Card className="w-full">
+				<CardHeader>
+					<CardTitle>Check your email</CardTitle>
+					<CardDescription>
+						We sent a verification link to {email}. Click it to activate your
+						account and sign in.
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="space-y-4">
+					{errorMessage ? (
+						<Alert variant="destructive">
+							<AlertCircle className="absolute right-4 top-4 h-4 w-4" />
+							<AlertTitle>Could not continue</AlertTitle>
+							<AlertDescription>{errorMessage}</AlertDescription>
+						</Alert>
+					) : null}
+
+					<Alert>
+						<MailCheck className="absolute right-4 top-4 h-4 w-4" />
+						<AlertTitle>Almost there</AlertTitle>
+						<AlertDescription>
+							Didn&apos;t get it? Check your spam folder, or{" "}
+							<Link
+								href={`/auth/sign-in?redirectTo=${encodeURIComponent(redirectTo)}`}
+								className="font-semibold text-primary transition hover:text-[color:var(--brand-primary-hover)]"
+							>
+								try signing in
+							</Link>{" "}
+							once verified.
+						</AlertDescription>
+					</Alert>
+
+					<Button
+						type="button"
+						variant="outline"
+						className="w-full"
+						disabled={resendState === "sending" || resendState === "sent"}
+						onClick={async () => {
+							setResendState("sending");
+							const { error } = await sendVerificationEmail({
+								email,
+								callbackURL: redirectTo,
+							});
+
+							if (error) {
+								setErrorMessage(
+									error.message ||
+										"Could not resend verification email. Try again.",
+								);
+								setResendState("idle");
+								return;
+							}
+
+							setResendState("sent");
+						}}
+					>
+						{resendState === "sent"
+							? "Verification email sent"
+							: "Resend verification email"}
+					</Button>
+				</CardContent>
+			</Card>
+		);
 	}
 
 	return (
