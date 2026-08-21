@@ -158,6 +158,17 @@ export default function ListingForm({
 				}
 			}
 
+			const finalImageUrl = uploadedImageUrl ?? existingImageUrl;
+			const finalImageKey = uploadedImageKey ?? existingImageKey;
+
+			if (!finalImageUrl || !finalImageKey) {
+				setFieldErrors((current) => ({
+					...current,
+					photo: "Please add a listing photo.",
+				}));
+				throw new Error("Please add a listing photo.");
+			}
+
 			const listingData: ListingMutationInput = {
 				title,
 				description: description || null,
@@ -172,8 +183,8 @@ export default function ListingForm({
 				gender_preference: genderPreference,
 				parking_available: parkingAvailable,
 				furnished,
-				image_url: uploadedImageUrl ?? existingImageUrl,
-				image_key: uploadedImageKey ?? existingImageKey,
+				image_url: finalImageUrl,
+				image_key: finalImageKey,
 			};
 
 			const res = await fetch(submitUrl, {
@@ -504,7 +515,9 @@ export default function ListingForm({
 					{/* PHOTO */}
 					<div className="space-y-3">
 						<div>
-							<SectionHeader>Photo</SectionHeader>
+							<SectionHeader>
+								Photo<span className="ml-1 text-primary">*</span>
+							</SectionHeader>
 							<p className="mt-1 text-xs text-muted-foreground">
 								{isEditMode
 									? "Replace or remove your listing photo."
@@ -518,8 +531,20 @@ export default function ListingForm({
 								setExistingImageKey(null);
 							}}
 							file={selectedFile}
-							onFileChange={setSelectedFile}
+							onFileChange={(file) => {
+								setSelectedFile(file);
+								if (file) {
+									setFieldErrors((current) => {
+										const nextErrors = { ...current };
+										delete nextErrors.photo;
+										return nextErrors;
+									});
+								}
+							}}
 						/>
+						{fieldErrors.photo && (
+							<p className="text-sm font-medium text-destructive">{fieldErrors.photo}</p>
+						)}
 					</div>
 
 					<SectionDivider />

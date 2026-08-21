@@ -72,8 +72,8 @@ export interface ListingMutationInput {
     gender_preference: GenderPreference;
     parking_available: boolean | null;
     furnished: boolean;
-    image_url: string | null;
-    image_key: string | null;
+    image_url: string;
+    image_key: string;
 }
 
 export interface CreateListingInput extends ListingMutationInput {

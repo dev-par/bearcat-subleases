@@ -102,22 +102,6 @@ function parseIsoDate(value: unknown, fieldName: string): string {
 	return trimmed;
 }
 
-function parseNullableString(value: unknown, fieldName: string, maxLength: number): string | null {
-	if (value === null || value === undefined || value === "") {
-		return null;
-	}
-
-	if (typeof value !== "string") {
-		throw new InputValidationError(`${fieldName} must be a string`);
-	}
-
-	if (value.length > maxLength) {
-		throw new InputValidationError(`${fieldName} must be ${maxLength} characters or fewer`);
-	}
-
-	return value;
-}
-
 export function parseListingMutationInput(input: unknown): ListingMutationInput {
 	if (!input || typeof input !== "object") {
 		throw new InputValidationError("Listing data is required");
@@ -149,8 +133,8 @@ export function parseListingMutationInput(input: unknown): ListingMutationInput 
 		gender_preference: parseGenderPreference(payload.gender_preference),
 		parking_available: parseOptionalBoolean(payload.parking_available),
 		furnished: parseBoolean(payload.furnished, "furnished"),
-		image_url: parseNullableString(payload.image_url, "image URL", 512),
-		image_key: parseNullableString(payload.image_key, "image key", 512),
+		image_url: parseRequiredString(payload.image_url, "image URL", 512),
+		image_key: parseRequiredString(payload.image_key, "image key", 512),
 	};
 }
 
