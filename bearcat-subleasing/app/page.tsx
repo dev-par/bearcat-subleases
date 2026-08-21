@@ -34,7 +34,7 @@ const sampleListings = [
   {
     id: "4",
     title: "Corryville Loft Space",
-    imageSrc: "/house.jpg",
+    imageSrc: "/vine_street_house.webp",
     rent: "$950",
     availability: "Immediate",
     beds: 1,
@@ -43,7 +43,7 @@ const sampleListings = [
   {
     id: "5",
     title: "Straight Street Duplex",
-    imageSrc: "/cincy-house1.webp",
+    imageSrc: "/riddle_rd.webp",
     rent: "$720",
     availability: "Jan 1 - May 5",
     beds: 3,
@@ -51,8 +51,8 @@ const sampleListings = [
   },
   {
     id: "6",
-    title: "Calhoun Corner",
-    imageSrc: "/house.webp",
+    title: "Room in 4x2",
+    imageSrc: "/apt.png",
     rent: "$810",
     availability: "Fall Semester",
     beds: 2,
