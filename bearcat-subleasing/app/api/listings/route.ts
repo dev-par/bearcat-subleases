@@ -4,7 +4,7 @@ import { getListings } from "@/queries/get";
 import { createListing } from "@/queries/insert";
 import { AuthorizationError, requireUser } from "@/lib/auth-guards";
 import { InputValidationError } from "@/lib/errors";
-import { parseListingSubmissionInput } from "@/lib/validation/listing";
+import { parseListingMutationInput } from "@/lib/validation/listing";
 
 export async function GET() {
 	try {
@@ -22,19 +22,15 @@ export async function POST(request: NextRequest) {
 	try {
 		const user = await requireUser();
 		const body = await request.json();
-		const submission = parseListingSubmissionInput(body);
-		const { imageUrls, ...listingData } = submission;
+		const listingData = parseListingMutationInput(body);
 
-		const response = await createListing(
-			{
-				...listingData,
-				user_id: user.id,
-			},
-			imageUrls,
-		);
+		const response = await createListing({
+			...listingData,
+			user_id: user.id,
+		});
 
 		revalidatePath("/listings");
-		console.log(`[listing:create] listingId=${response.id} userId=${user.id} images=${imageUrls.length}`);
+		console.log(`[listing:create] listingId=${response.id} userId=${user.id} hasImage=${!!response.image_url}`);
 		return NextResponse.json({ success: true, response }, { status: 201 });
 	} catch (error) {
 		if (error instanceof AuthorizationError) {

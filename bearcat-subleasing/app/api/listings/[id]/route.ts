@@ -3,15 +3,15 @@ import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db/db";
-import { Listing, ListingImage } from "@/db/schema";
+import { Listing } from "@/db/schema";
 import { getListingById } from "@/queries/get";
 import { AuthorizationError, requireUser } from "@/lib/auth-guards";
 import { InputValidationError } from "@/lib/errors";
 import {
-	assertValidListingId,
-	parseListingSubmissionInput,
+    assertValidListingId,
+    parseListingMutationInput,
 } from "@/lib/validation/listing";
-import { deleteS3Objects, extractS3Key } from "@/lib/s3";
+import { deleteS3Objects } from "@/lib/s3";
 
 export async function GET(
     request: NextRequest,
@@ -66,18 +66,9 @@ export async function PUT(
 		}
 
 		const body = await request.json();
-		const submission = parseListingSubmissionInput(body);
-		const { imageUrls, ...listingData } = submission;
-
-		const currentImages = await db
-			.select({ url: ListingImage.url })
-			.from(ListingImage)
-			.where(eq(ListingImage.listing_id, id));
-
-		const incomingUrlSet = new Set(imageUrls);
-		const removedKeys = currentImages
-			.filter((img) => !incomingUrlSet.has(img.url))
-			.map((img) => extractS3Key(img.url));
+		const listingData = parseListingMutationInput(body);
+		const oldImageKey = listing.image_key;
+		const imageChanged = oldImageKey !== null && oldImageKey !== listingData.image_key;
 
 		const [updatedListing] = await db
 			.update(Listing)
@@ -88,22 +79,14 @@ export async function PUT(
 			.where(eq(Listing.id, id))
 			.returning();
 
-		await db.delete(ListingImage).where(eq(ListingImage.listing_id, id));
-
-		if (imageUrls.length > 0) {
-			await db.insert(ListingImage).values(
-				imageUrls.map((url) => ({
-					listing_id: id,
-					url,
-				})),
-			);
-		}
-
 		revalidatePath("/listings");
 		revalidatePath(`/listings/${id}`);
 
-		await deleteS3Objects(removedKeys);
-		console.log(`[listing:update] listingId=${id} userId=${user.id} removedImages=${removedKeys.length} keptImages=${imageUrls.length}`);
+		if (oldImageKey !== null && oldImageKey !== listingData.image_key) {
+			await deleteS3Objects([oldImageKey]);
+		}
+
+		console.log(`[listing:update] listingId=${id} userId=${user.id} imageReplacedOrRemoved=${imageChanged}`);
 		return NextResponse.json(
 			{ success: true, response: updatedListing },
 			{ status: 200 },

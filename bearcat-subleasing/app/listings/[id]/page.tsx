@@ -32,7 +32,7 @@ export default async function Page({
 		notFound();
 	}
 
-	const imageUrl = listing.listingImages?.[0]?.url || "/house.jpg";
+	const imageUrl = listing.image_url || "/house.jpg";
 	const currencyFormatter = new Intl.NumberFormat("en-US", {
 		style: "currency",
 		currency: "USD",

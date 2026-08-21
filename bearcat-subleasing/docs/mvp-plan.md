@@ -22,7 +22,7 @@ This document is the working source of truth for product architecture, delivery 
 - Create a listing.
 - Edit their own listing.
 - Delete their own listing.
-- Upload and manage multiple listing images.
+- Upload and manage a single listing image.
 
 ### Admins
 
@@ -32,7 +32,7 @@ This document is the working source of truth for product architecture, delivery 
 ## Current State
 
 - The app is a Next.js 16 App Router project using React 19, Drizzle ORM, Neon Postgres, and AWS S3.
-- Listings, users, and listing images already exist in the schema.
+- Listings and users already exist in the schema; each listing carries a single optional image (`image_url`, `image_key`) as flat columns.
 - Listing create and delete flows exist, but they are not authorization-safe yet.
 - Authentication is intentionally deferred until late in the MVP.
 - The current create flow hardcodes a seeded user ID for local development.
@@ -76,7 +76,10 @@ This document is the working source of truth for product architecture, delivery 
 - Keep `email` as the canonical identity field.
 - Add support for admin role assignment.
 - Store `@uc.edu` email for contact visibility.
-- Support optional phone or text contact information.
+- Support optional phone or text contact information. (Implemented: nullable `phone` text column +
+  `preferred_contact_method` enum [`email`|`phone`] on `user`, default `email`; unverified,
+  format-validated only — no OTP/SMS. Editable from the profile page; `ContactReveal` on the
+  listing detail page shows only the owner's preferred channel.)
 
 ### Listing
 
@@ -89,9 +92,9 @@ This document is the working source of truth for product architecture, delivery 
 
 ### Listing images
 
-- Multiple images are a firm MVP requirement.
-- Add image ordering so the product can control the primary image and gallery order.
-- Store S3 object keys as well as public URLs to support cleanup when images are deleted or listings are removed.
+- Single image per listing is the MVP direction (reversed from the earlier multi-image requirement).
+- `image_url` and `image_key` are stored as flat columns on `listing` (implemented) — the S3 object key is captured at upload time and persisted directly, rather than derived from the URL at delete time.
+- Multiple images and image ordering are explicitly out of scope, not just deferred.
 
 ## Feature Backlog
 
@@ -109,7 +112,7 @@ This document is the working source of truth for product architecture, delivery 
 - Build listing edit flow with form reuse.
 - Harden delete flow around owner and admin authorization.
 - Add owner contact display to the listing detail page.
-- Add support for multiple image upload, image removal, and image ordering.
+- Image upload and removal are implemented for the single listing image; multiple images and ordering are out of scope for MVP.
 - Filter expired listings out of public views.
 - Add admin listing management capabilities.
 
@@ -125,7 +128,7 @@ This document is the working source of truth for product architecture, delivery 
 ## Recommended Implementation Order
 
 1. Foundation cleanup and shared validation/auth utilities.
-2. Schema updates for roles, listing statuses, contact fields, and image ordering.
+2. Schema updates for roles, listing statuses, contact fields, and single-image columns.
 3. Convert listing creation to server actions.
 4. Implement listing edit flow.
 5. Harden delete flow for owner and admin access.
@@ -186,7 +189,6 @@ This document is the working source of truth for product architecture, delivery 
 
 ## Open Questions
 
-- What exact phone UX is preferred: raw phone number display, explicit text-only preference, or both?
 - Should admin deletion be hard delete or soft delete via `removed` status in the MVP?
 
 ## Change Log
@@ -195,3 +197,5 @@ This document is the working source of truth for product architecture, delivery 
 - 2026-03-31: Added explicit design-system requirements and linked the dedicated visual identity brief.
 - 2026-03-31: Locked editorial serif plus sans typography and embedded-first admin controls for the BEA-11 design direction.
 - 2026-08-05: Added Better Auth email verification (mocked email delivery via console logging); sign-in now blocks unverified users.
+- 2026-08-20: Added preferred contact method (email or phone) to the profile page; resolves the phone UX open question. Phone is a plain, unverified, format-validated field — no Better Auth phone/OTP plugin.
+- 2026-08-21: Flattened listing images from a one-to-many `listing_image` table to single `image_url`/`image_key` columns on `listing`. Reverses the earlier multi-image requirement — single image per listing is now the confirmed MVP direction; image ordering is out of scope.

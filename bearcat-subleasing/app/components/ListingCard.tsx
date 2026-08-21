@@ -8,7 +8,7 @@ interface ListingCardProps {
 }
 
 export default function ListingCard({ listing }: ListingCardProps) {
-	const imageUrl = listing.listingImages?.[0]?.url || "/house.jpg";
+	const imageUrl = listing.image_url || "/house.jpg";
 	const dateFormatter = new Intl.DateTimeFormat("en-US", {
 		month: "short",
 		day: "numeric",

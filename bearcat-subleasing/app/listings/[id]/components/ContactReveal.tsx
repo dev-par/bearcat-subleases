@@ -2,14 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, User } from "lucide-react";
+import { Mail, Phone, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getListingContact, type GetListingContactResult } from "@/app/actions/listings";
+import { formatPhoneNumber } from "@/lib/format";
+import type { PreferredContactMethod } from "@/types/user";
 
 type RevealState =
 	| { status: "idle" }
 	| { status: "loading" }
-	| { status: "revealed"; name: string; email: string }
+	| {
+			status: "revealed";
+			name: string;
+			email: string;
+			phone: string | null;
+			preferredContactMethod: PreferredContactMethod;
+	  }
 	| { status: "error"; message: string };
 
 interface Props {
@@ -24,7 +32,13 @@ export default function ContactReveal({ listingId, isLoggedIn }: Props) {
 		setState({ status: "loading" });
 		const result: GetListingContactResult = await getListingContact(listingId);
 		if (result.success) {
-			setState({ status: "revealed", name: result.data.name, email: result.data.email });
+			setState({
+				status: "revealed",
+				name: result.data.name,
+				email: result.data.email,
+				phone: result.data.phone,
+				preferredContactMethod: result.data.preferredContactMethod,
+			});
 		} else {
 			setState({ status: "error", message: result.error });
 		}
@@ -47,6 +61,8 @@ export default function ContactReveal({ listingId, isLoggedIn }: Props) {
 	}
 
 	if (state.status === "revealed") {
+		const showPhone = state.preferredContactMethod === "phone" && state.phone;
+
 		return (
 			<div className="mt-5 space-y-2">
 				<div className="flex items-center gap-3 rounded-[1.25rem] border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8">
@@ -55,13 +71,25 @@ export default function ContactReveal({ listingId, isLoggedIn }: Props) {
 						{state.name.split(" ")[0]}
 					</span>
 				</div>
-				<a
-					href={`mailto:${state.email}`}
-					className="flex items-center gap-3 rounded-[1.25rem] border border-border/70 bg-muted/30 px-4 py-3 transition hover:border-primary/30 dark:border-white/8"
-				>
-					<Mail className="h-4 w-4 shrink-0 text-primary" />
-					<span className="text-sm font-medium text-primary">{state.email}</span>
-				</a>
+				{showPhone ? (
+					<a
+						href={`tel:+1${state.phone}`}
+						className="flex items-center gap-3 rounded-[1.25rem] border border-border/70 bg-muted/30 px-4 py-3 transition hover:border-primary/30 dark:border-white/8"
+					>
+						<Phone className="h-4 w-4 shrink-0 text-primary" />
+						<span className="text-sm font-medium text-primary">
+							{formatPhoneNumber(state.phone as string)}
+						</span>
+					</a>
+				) : (
+					<a
+						href={`mailto:${state.email}`}
+						className="flex items-center gap-3 rounded-[1.25rem] border border-border/70 bg-muted/30 px-4 py-3 transition hover:border-primary/30 dark:border-white/8"
+					>
+						<Mail className="h-4 w-4 shrink-0 text-primary" />
+						<span className="text-sm font-medium text-primary">{state.email}</span>
+					</a>
+				)}
 			</div>
 		);
 	}

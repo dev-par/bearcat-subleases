@@ -4,26 +4,26 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface ImageUploaderProps {
-	existingUrls: string[];
-	onRemoveExisting: (url: string) => void;
-	files: File[];
-	onFilesChange: (files: File[]) => void;
+	existingUrl: string | null;
+	onRemoveExisting: () => void;
+	file: File | null;
+	onFileChange: (file: File | null) => void;
 }
 
 export default function ImageUploader({
-	existingUrls,
+	existingUrl,
 	onRemoveExisting,
-	files,
-	onFilesChange,
+	file,
+	onFileChange,
 }: ImageUploaderProps) {
 	const [isDragging, setIsDragging] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const dragCounterRef = useRef(0);
-	const replacingExistingUrlRef = useRef<string | null>(null);
+	const replacingExistingRef = useRef(false);
 
 	const previewUrl = useMemo(
-		() => (files[0] ? URL.createObjectURL(files[0]) : null),
-		[files],
+		() => (file ? URL.createObjectURL(file) : null),
+		[file],
 	);
 
 	useEffect(() => {
@@ -32,12 +32,12 @@ export default function ImageUploader({
 		};
 	}, [previewUrl]);
 
-	const setFile = useCallback(
+	const applyFile = useCallback(
 		(incoming: FileList | File[]) => {
 			const first = Array.from(incoming).find((f) => f.type.startsWith("image/"));
-			if (first) onFilesChange([first]);
+			if (first) onFileChange(first);
 		},
-		[onFilesChange],
+		[onFileChange],
 	);
 
 	const handleDragEnter = (e: React.DragEvent) => {
@@ -60,20 +60,19 @@ export default function ImageUploader({
 		e.preventDefault();
 		dragCounterRef.current = 0;
 		setIsDragging(false);
-		if (e.dataTransfer.files) setFile(e.dataTransfer.files);
+		if (e.dataTransfer.files) applyFile(e.dataTransfer.files);
 	};
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
-			const urlToReplace = replacingExistingUrlRef.current;
-			replacingExistingUrlRef.current = null;
-			if (urlToReplace) onRemoveExisting(urlToReplace);
-			setFile(e.target.files);
+			const wasReplacingExisting = replacingExistingRef.current;
+			replacingExistingRef.current = false;
+			if (wasReplacingExisting) onRemoveExisting();
+			applyFile(e.target.files);
 			e.target.value = "";
 		}
 	};
 
-	const existingUrl = existingUrls[0] ?? null;
 	const hasImage = existingUrl !== null || previewUrl !== null;
 
 	return (
@@ -145,7 +144,7 @@ export default function ImageUploader({
 						<button
 							type="button"
 							onClick={() => {
-								replacingExistingUrlRef.current = existingUrl;
+								replacingExistingRef.current = true;
 								inputRef.current?.click();
 							}}
 							className="rounded-full bg-white/20 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm hover:bg-white/30"
@@ -154,7 +153,7 @@ export default function ImageUploader({
 						</button>
 						<button
 							type="button"
-							onClick={() => onRemoveExisting(existingUrl)}
+							onClick={() => onRemoveExisting()}
 							className="rounded-full bg-white/20 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm hover:bg-white/30"
 							aria-label="Remove photo"
 						>
@@ -182,7 +181,7 @@ export default function ImageUploader({
 						</button>
 						<button
 							type="button"
-							onClick={() => onFilesChange([])}
+							onClick={() => onFileChange(null)}
 							className="rounded-full bg-white/20 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm hover:bg-white/30"
 						>
 							Remove

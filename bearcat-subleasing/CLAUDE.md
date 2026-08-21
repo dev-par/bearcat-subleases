@@ -56,7 +56,7 @@ Still use Context7 for current Better Auth API docs; the local skills are projec
 **Imports:** Use the `@/*` path alias for all imports. No relative imports across directory boundaries. The alias maps to the repo root (`bearcat-subleasing/`) as configured in `tsconfig.json`.
 
 **Naming:**
-- PascalCase — React components, type/interface names, Drizzle table exports (`Listing`, `ListingImage`)
+- PascalCase — React components, type/interface names, Drizzle table exports (`Listing`, `user`)
 - camelCase — functions (`getListings`, `requireUser`), variables
 - kebab-case — file names (`auth-guards.ts`, `listing-card.tsx`), Next.js route/folder segments
 

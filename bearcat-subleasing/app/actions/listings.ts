@@ -2,16 +2,25 @@
 
 import { db } from "@/db/db";
 import { getListingById, getListingOwnerContact } from "@/queries/get";
-import { Listing, ListingImage } from "@/db/schema";
+import { Listing } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { assertValidListingId } from "@/lib/validation/listing";
 import { AuthorizationError, requireUser } from "@/lib/auth-guards";
-import { deleteS3Objects, extractS3Key } from "@/lib/s3";
+import { deleteS3Objects } from "@/lib/s3";
+import type { PreferredContactMethod } from "@/types/user";
 
 export type GetListingContactResult =
-  | { success: true; data: { name: string; email: string } }
+  | {
+      success: true;
+      data: {
+        name: string;
+        email: string;
+        phone: string | null;
+        preferredContactMethod: PreferredContactMethod;
+      };
+    }
   | { success: false; error: string };
 
 export async function getListingContact(listingId: string): Promise<GetListingContactResult> {
@@ -52,17 +61,14 @@ export async function deleteListing(listingId: string) {
 			);
 		}
 
-		const images = await db
-			.select({ url: ListingImage.url })
-			.from(ListingImage)
-			.where(eq(ListingImage.listing_id, listingId));
-
-		await db.delete(ListingImage).where(eq(ListingImage.listing_id, listingId));
 		await db.delete(Listing).where(eq(Listing.id, listingId));
 		revalidatePath("/listings");
 
-		await deleteS3Objects(images.map((img) => extractS3Key(img.url)));
-		console.log(`[listing:delete] listingId=${listingId} userId=${user.id} images=${images.length}`);
+		const hadImage = listing.image_key !== null;
+		if (listing.image_key !== null) {
+			await deleteS3Objects([listing.image_key]);
+		}
+		console.log(`[listing:delete] listingId=${listingId} userId=${user.id} hadImage=${hadImage}`);
 	} catch (error) {
 		const message =
 			error instanceof Error ? error.message : "Failed to delete listing";

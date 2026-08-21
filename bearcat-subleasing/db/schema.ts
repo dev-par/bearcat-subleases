@@ -1,12 +1,18 @@
 import { varchar, pgTable, uuid, boolean, smallint, timestamp, integer, date, pgEnum, text, index } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm'
 
+export const preferredContactMethodEnum = pgEnum('preferred_contact_method', ['email', 'phone'])
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  phone: text("phone"),
+  preferredContactMethod: preferredContactMethodEnum("preferred_contact_method")
+    .default('email')
+    .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -102,13 +108,8 @@ export const Listing = pgTable('listing', {
     updated_at: timestamp().defaultNow(),
     furnished: boolean().notNull(),
     user_id: text().references(() => user.id).notNull(),
-})
-
-export const ListingImage = pgTable('listing_image', {
-    id: uuid().defaultRandom().primaryKey(),
-    listing_id: uuid().references(() => Listing.id).notNull(),
-    url: varchar({ length: 512 }).notNull(),
-    created_at: timestamp().defaultNow(),
+    image_url: varchar({ length: 512 }),
+    image_key: varchar({ length: 512 }),
 })
 
 
@@ -132,17 +133,9 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const listingRelations = relations(Listing, ({ one, many }) => ({
+export const listingRelations = relations(Listing, ({ one }) => ({
   user: one(user, {
     fields: [Listing.user_id],
     references: [user.id],
   }),
-  listingImages: many(ListingImage),
 }));
-
-export const listingImageRelations = relations(ListingImage, ({ one }) => ({
-  listing: one(Listing, {
-    fields: [ListingImage.listing_id],
-    references: [Listing.id],
-  }),
-}))

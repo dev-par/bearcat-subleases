@@ -21,8 +21,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 
-export interface ListingFormInitialValues extends ListingMutationInput {
-	imageUrls: string[];
+export interface ListingFormInitialValues extends Omit<ListingMutationInput, "image_url" | "image_key"> {
+	imageUrl: string | null;
+	imageKey: string | null;
 }
 
 interface ListingFormProps {
@@ -47,7 +48,8 @@ const defaultValues: ListingFormInitialValues = {
 	gender_preference: "any",
 	parking_available: null,
 	furnished: false,
-	imageUrls: [],
+	imageUrl: null,
+	imageKey: null,
 };
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
@@ -99,10 +101,9 @@ export default function ListingForm({
 		initialValues.gender_preference ?? "any",
 	);
 	const [furnished, setFurnished] = useState(initialValues.furnished);
-	const [existingImageUrls, setExistingImageUrls] = useState(
-		initialValues.imageUrls,
-	);
-	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+	const [existingImageUrl, setExistingImageUrl] = useState(initialValues.imageUrl);
+	const [existingImageKey, setExistingImageKey] = useState(initialValues.imageKey);
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 	const hasShownValidationToast = useRef(false);
@@ -137,10 +138,11 @@ export default function ListingForm({
 		setFieldErrors({});
 
 		try {
-			const uploadedImageUrls: string[] = [];
-			for (const file of selectedFiles) {
+			let uploadedImageUrl: string | null = null;
+			let uploadedImageKey: string | null = null;
+			if (selectedFile) {
 				const formData = new FormData();
-				formData.append("file", file);
+				formData.append("file", selectedFile);
 
 				const uploadRes = await fetch("/api/upload/listing_photo", {
 					method: "POST",
@@ -149,7 +151,8 @@ export default function ListingForm({
 
 				const uploadData = await uploadRes.json();
 				if (uploadData.success) {
-					uploadedImageUrls.push(uploadData.url);
+					uploadedImageUrl = uploadData.url;
+					uploadedImageKey = uploadData.key;
 				} else {
 					throw new Error(uploadData.error || "Failed to upload image");
 				}
@@ -169,15 +172,14 @@ export default function ListingForm({
 				gender_preference: genderPreference,
 				parking_available: parkingAvailable,
 				furnished,
+				image_url: uploadedImageUrl ?? existingImageUrl,
+				image_key: uploadedImageKey ?? existingImageKey,
 			};
 
 			const res = await fetch(submitUrl, {
 				method: submitMethod,
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					...listingData,
-					imageUrls: [...existingImageUrls, ...uploadedImageUrls],
-				}),
+				body: JSON.stringify(listingData),
 			});
 			const data = await res.json();
 
@@ -499,25 +501,24 @@ export default function ListingForm({
 
 					<SectionDivider />
 
-					{/* PHOTOS */}
+					{/* PHOTO */}
 					<div className="space-y-3">
 						<div>
-							<SectionHeader>Photos</SectionHeader>
+							<SectionHeader>Photo</SectionHeader>
 							<p className="mt-1 text-xs text-muted-foreground">
 								{isEditMode
-									? "Keep existing photos, remove any that no longer apply, or add new ones."
-									: "Upload one or more photos to help the listing feel credible at a glance."}
+									? "Replace or remove your listing photo."
+									: "Upload a photo to help the listing feel credible at a glance."}
 							</p>
 						</div>
 						<ImageUploader
-							existingUrls={existingImageUrls}
-							onRemoveExisting={(url) =>
-								setExistingImageUrls((current) =>
-									current.filter((item) => item !== url),
-								)
-							}
-							files={selectedFiles}
-							onFilesChange={setSelectedFiles}
+							existingUrl={existingImageUrl}
+							onRemoveExisting={() => {
+								setExistingImageUrl(null);
+								setExistingImageKey(null);
+							}}
+							file={selectedFile}
+							onFileChange={setSelectedFile}
 						/>
 					</div>
 

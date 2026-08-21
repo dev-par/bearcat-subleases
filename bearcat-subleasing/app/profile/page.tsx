@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ListingCard from "@/app/components/ListingCard";
+import ContactPreferencesForm from "@/app/profile/components/ContactPreferencesForm";
 import { requireUser } from "@/lib/auth-guards";
-import { getListingsByUserId } from "@/queries/get";
+import { getListingsByUserId, getUserContactPreferences } from "@/queries/get";
 
 export const metadata: Metadata = {
   title: "My Profile",
@@ -11,11 +12,31 @@ export const metadata: Metadata = {
 
 export default async function ProfilePage() {
   const user = await requireUser();
-  const listings = await getListingsByUserId(user.id);
+  const [listings, contactPreferences] = await Promise.all([
+    getListingsByUserId(user.id),
+    getUserContactPreferences(user.id),
+  ]);
 
   return (
     <main className="px-5 py-8 sm:px-8 sm:py-10">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <section className="rounded-[2rem] border border-border/70 bg-card/55 px-6 pb-8 pt-6 shadow-soft dark:border-white/8 dark:bg-card/35 sm:px-8 sm:pb-10">
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your account</p>
+            <h2 className="font-heading mt-2 text-3xl font-semibold text-foreground">
+              Contact preferences
+            </h2>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
+              Choose how interested students should reach you when they view your listings.
+            </p>
+          </div>
+          <ContactPreferencesForm
+            email={user.email}
+            initialPhone={contactPreferences?.phone ?? null}
+            initialPreferredContactMethod={contactPreferences?.preferredContactMethod ?? "email"}
+          />
+        </section>
+
         <section className="rounded-[2rem] border border-border/70 bg-card/55 px-6 pb-8 pt-6 shadow-soft dark:border-white/8 dark:bg-card/35 sm:px-8 sm:pb-10">
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>

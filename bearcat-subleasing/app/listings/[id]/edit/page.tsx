@@ -70,7 +70,8 @@ export default async function EditListingPage({
 					gender_preference: listing.gender_preference,
 					parking_available: listing.parking_available,
 					furnished: listing.furnished,
-					imageUrls: listing.listingImages.map((image) => image.url),
+					imageUrl: listing.image_url,
+					imageKey: listing.image_key,
 				}}
 				submitUrl={`/api/listings/${listing.id}`}
 				submitMethod="PUT"

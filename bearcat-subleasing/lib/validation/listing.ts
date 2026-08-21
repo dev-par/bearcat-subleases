@@ -1,10 +1,9 @@
-import type { DistanceFromCampus, GenderPreference, ListingMutationInput, ListingSubmissionInput } from "@/types/listing";
+import type { DistanceFromCampus, GenderPreference, ListingMutationInput } from "@/types/listing";
 import { InputValidationError } from "@/lib/errors";
 
 const DISTANCE_VALUES: DistanceFromCampus[] = ['under_5', '5_to_10', '10_to_20', '20_to_30', 'over_30'];
 const GENDER_PREFERENCE_VALUES: GenderPreference[] = ['any', 'female', 'male'];
 
-const MAX_IMAGE_COUNT = 10;
 const UUID_REGEX =
 	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -103,18 +102,20 @@ function parseIsoDate(value: unknown, fieldName: string): string {
 	return trimmed;
 }
 
-function parseImageUrls(value: unknown): string[] {
-	if (!Array.isArray(value)) {
-		throw new InputValidationError("imageUrls must be an array");
+function parseNullableString(value: unknown, fieldName: string, maxLength: number): string | null {
+	if (value === null || value === undefined || value === "") {
+		return null;
 	}
 
-	if (value.length > MAX_IMAGE_COUNT) {
-		throw new InputValidationError(
-			`No more than ${MAX_IMAGE_COUNT} images can be uploaded`,
-		);
+	if (typeof value !== "string") {
+		throw new InputValidationError(`${fieldName} must be a string`);
 	}
 
-	return value.map((item) => parseRequiredString(item, "image URL", 512));
+	if (value.length > maxLength) {
+		throw new InputValidationError(`${fieldName} must be ${maxLength} characters or fewer`);
+	}
+
+	return value;
 }
 
 export function parseListingMutationInput(input: unknown): ListingMutationInput {
@@ -148,19 +149,8 @@ export function parseListingMutationInput(input: unknown): ListingMutationInput 
 		gender_preference: parseGenderPreference(payload.gender_preference),
 		parking_available: parseOptionalBoolean(payload.parking_available),
 		furnished: parseBoolean(payload.furnished, "furnished"),
-	};
-}
-
-export function parseListingSubmissionInput(input: unknown): ListingSubmissionInput {
-	if (!input || typeof input !== "object") {
-		throw new InputValidationError("Listing submission is required");
-	}
-
-	const payload = input as Record<string, unknown>;
-
-	return {
-		...parseListingMutationInput(payload),
-		imageUrls: parseImageUrls(payload.imageUrls ?? []),
+		image_url: parseNullableString(payload.image_url, "image URL", 512),
+		image_key: parseNullableString(payload.image_key, "image key", 512),
 	};
 }
 

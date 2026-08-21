@@ -35,13 +35,6 @@ export const GENDER_PREFERENCE_OPTIONS: { value: GenderPreference; label: string
     { value: 'male',   label: GENDER_PREFERENCE_LABELS.male },
 ]
 
-export interface ListingImage {
-    id: string;
-    listing_id: string;
-    url: string;
-    created_at: Date | null;
-}
-
 export interface Listing {
     id: string;
     title: string;
@@ -61,24 +54,8 @@ export interface Listing {
     updated_at: Date | null;
     furnished: boolean;
     user_id: string | null;
-    listingImages: ListingImage[];
-}
-
-export interface CreateListingInput {
-    title: string;
-    description: string | null;
-    rent_cents: number;
-    start_date: string;
-    end_date: string;
-    room_type: 'private' | 'shared';
-    bedrooms_in_unit: number;
-    bathrooms_in_unit_x2: number;
-    private_bathroom: boolean;
-    distance_from_campus: DistanceFromCampus;
-    gender_preference: GenderPreference;
-    parking_available: boolean | null;
-    furnished: boolean;
-    user_id: string;
+    image_url: string | null;
+    image_key: string | null;
 }
 
 export interface ListingMutationInput {
@@ -95,8 +72,10 @@ export interface ListingMutationInput {
     gender_preference: GenderPreference;
     parking_available: boolean | null;
     furnished: boolean;
+    image_url: string | null;
+    image_key: string | null;
 }
 
-export interface ListingSubmissionInput extends ListingMutationInput {
-    imageUrls: string[];
+export interface CreateListingInput extends ListingMutationInput {
+    user_id: string;
 }
