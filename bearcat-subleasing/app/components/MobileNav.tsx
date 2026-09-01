@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, Menu, X } from "lucide-react";
+import { ChevronRight, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -92,13 +92,17 @@ export default function MobileNav() {
 							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
 								{getInitials(user.name ?? user.email)}
 							</div>
-							<div className="min-w-0">
+							<div className="min-w-0 flex-1">
 								<p className="truncate text-sm font-semibold text-foreground">
 									{user.name}
 								</p>
 								<p className="truncate text-xs text-muted-foreground">
 									{user.email}
 								</p>
+							</div>
+							<div className="flex shrink-0 items-center gap-0.5 text-xs font-semibold text-primary">
+								My Profile
+								<ChevronRight className="h-3.5 w-3.5" aria-hidden />
 							</div>
 						</Link>
 					) : (
