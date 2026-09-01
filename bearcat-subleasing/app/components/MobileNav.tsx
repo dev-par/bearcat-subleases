@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import BrandLogo from "./BrandLogo";
 import NavLinks from "./NavLinks";
 import { Button } from "@/components/ui/button";
 import {
@@ -64,13 +64,7 @@ export default function MobileNav() {
 							onClick={() => setOpen(false)}
 							className="flex items-center gap-2"
 						>
-							<Image
-								src="/BC_LOGO.png"
-								alt="Bearcat Subleasing"
-								width={36}
-								height={36}
-								className="shrink-0 rounded-lg"
-							/>
+							<BrandLogo size={36} />
 							<SheetTitle className="text-sm font-semibold text-foreground">
 								Bearcat Subleasing
 							</SheetTitle>
