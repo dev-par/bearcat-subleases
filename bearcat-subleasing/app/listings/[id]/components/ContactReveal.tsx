@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Mail, Phone, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getListingContact, type GetListingContactResult } from "@/app/actions/listings";
-import { formatPhoneNumber } from "@/lib/format";
+import { formatFirstNameLastInitial, formatPhoneNumber } from "@/lib/format";
 import type { PreferredContactMethod } from "@/types/user";
 
 type RevealState =
@@ -68,7 +68,7 @@ export default function ContactReveal({ listingId, isLoggedIn }: Props) {
 				<div className="flex items-center gap-3 rounded-[1.25rem] border border-border/70 bg-muted/30 px-4 py-3 dark:border-white/8">
 					<User className="h-4 w-4 shrink-0 text-primary" />
 					<span className="text-sm font-medium text-foreground">
-						{state.name.split(" ")[0]}
+						{formatFirstNameLastInitial(state.name)}
 					</span>
 				</div>
 				{showPhone ? (
