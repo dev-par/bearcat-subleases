@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import HeroFilmStrip from "./components/HeroFilmStrip";
 import HeroWaterfall from "./components/HeroWaterfall";
 
 const sampleListings = [
@@ -68,13 +69,13 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="h-[calc(100dvh-77px)] max-h-[1000px] w-full overflow-hidden">
+    <div className="h-[calc(100dvh-77px-env(safe-area-inset-top))] max-h-[1000px] w-full overflow-hidden">
       <div className="mx-auto flex h-full w-full max-w-[1440px] px-5 sm:px-8">
         {/* Architecturally Structured 2-Column Grid */}
         <section className="grid h-full w-full grid-rows-[auto_1fr] gap-0 md:grid-cols-[1fr_minmax(360px,1.1fr)] md:grid-rows-none md:gap-8 xl:grid-cols-[1fr_minmax(400px,1.2fr)] xl:gap-16">
           
           {/* Left Text Block */}
-          <div className="relative flex max-w-2xl flex-col justify-center py-8 sm:py-10 md:pr-6">
+          <div className="relative flex max-w-2xl flex-col justify-center py-8 text-center sm:py-10 md:pr-6 md:text-left">
             <div className="relative">
               <h1 className="font-heading text-balance text-5xl font-semibold leading-[0.94] tracking-tight text-foreground md:text-[4.6rem] lg:text-[5.4rem] xl:text-[6.2rem]">
                 UC subleasing, made simpler.
@@ -84,7 +85,7 @@ export default function HomePage() {
                 Find and post UC-area subleases in one place, without bouncing between scattered housing posts.
               </p>
 
-              <div className="mt-10">
+              <div className="mt-10 flex justify-center md:justify-start">
                 <Link
                   href="/listings"
                   className="inline-flex min-h-15 items-center justify-center gap-4 rounded-full bg-primary px-9 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-[color:var(--brand-primary-hover)] dark:shadow-[0_8px_20px_-8px_rgba(255,90,114,0.3)] sm:px-10 sm:text-lg"
@@ -97,11 +98,16 @@ export default function HomePage() {
           </div>
 
           {/* Right Side Waterfall Edge Boundary */}
-          <div className="relative -mx-5 w-[calc(100%+2.5rem)] sm:-mx-8 sm:w-[calc(100%+4rem)] md:mx-0 md:-mr-[28%] md:ml-0 md:h-full md:w-[128%] lg:-mr-[30%] lg:w-[130%] xl:-mr-[40%] xl:w-[140%]">
-            <HeroWaterfall listings={sampleListings} />
+          <div className="relative -mx-5 min-h-0 w-[calc(100%+2.5rem)] sm:-mx-8 sm:w-[calc(100%+4rem)] md:mx-0 md:-mr-[28%] md:ml-0 md:h-full md:w-[128%] lg:-mr-[30%] lg:w-[130%] xl:-mr-[40%] xl:w-[140%]">
+            <div className="hidden h-full md:block">
+              <HeroWaterfall listings={sampleListings} />
+            </div>
+            <div className="h-full md:hidden">
+              <HeroFilmStrip listings={sampleListings} />
+            </div>
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

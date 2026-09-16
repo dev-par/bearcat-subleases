@@ -262,12 +262,19 @@
   }
 }
 
-/* Soft top fade on the waterfall strip on mobile — eliminates the clip-path hard-edge artifact */
-@media (max-width: 767px) {
-  .waterfall-top-fade {
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 3rem, black 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 3rem, black 100%);
+@keyframes float-left {
+  0% {
+    transform: translateX(0);
   }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Soft left/right fade on the mobile hero film strip so cards emerge and exit gently */
+.filmstrip-edge-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 2.5rem, black calc(100% - 2.5rem), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 2.5rem, black calc(100% - 2.5rem), transparent 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {

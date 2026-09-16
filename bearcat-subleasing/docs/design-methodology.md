@@ -56,6 +56,7 @@ The homepage hero is the first reference surface for this methodology.
 - The primary CTA should route to the listing dashboard.
 - Supporting callouts should be factual trust signals, not decorative social proof.
 - The hero visual should imply real housing inventory, not abstract SaaS illustration.
+- The hero visual has two orientation-specific treatments sharing one card component (`HeroListingCard`): the vertical two-column waterfall (`HeroWaterfall`) on md+ and a horizontal auto-drifting film strip (`HeroFilmStrip`) below md. Only the visible variant animates; the hero fits one viewport on both.
 
 ### Listing Dashboard
 

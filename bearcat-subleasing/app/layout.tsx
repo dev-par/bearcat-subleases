@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import ConditionalFooter from "./components/ConditionalFooter";
 import ThemeProvider from "./components/ThemeProvider";
 import { Toaster } from "@/components/ui/toast";
 
@@ -30,7 +30,7 @@ export default function RootLayout({
           <div className="flex min-h-dvh flex-col">
             <Navbar />
             <main className="flex-1">{children}</main>
-            <Footer />
+            <ConditionalFooter />
           </div>
           <Toaster />
         </ThemeProvider>
