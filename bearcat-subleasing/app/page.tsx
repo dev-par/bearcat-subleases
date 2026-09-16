@@ -82,7 +82,7 @@ export default function HomePage() {
               </h1>
 
               <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-                Find and post UC-area subleases in one place, without bouncing between scattered housing posts.
+                Scrolling through endless facebook posts is a hassle. Filter and only see listings just for your situation, exclusively from other UC students
               </p>
 
               <div className="mt-10 flex justify-center md:justify-start">
